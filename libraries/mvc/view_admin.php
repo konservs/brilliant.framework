@@ -3,8 +3,6 @@
 // View class for admin panel
 //
 // Author: Andrii Biriev
-// Author: Andrii Karepin
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 bimport('html.bootstrap-helper');
 //============================================================

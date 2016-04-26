@@ -4,8 +4,6 @@
 //
 //
 // Author: Andrii Biriev
-// Author: Andrii Karepin
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 bimport('softmodules.single');
 bimport('softmodules.group');

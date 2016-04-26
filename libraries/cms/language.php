@@ -3,8 +3,6 @@
 // Sets of functions and classes to work with language.
 //
 // Author: Andrii Biriev
-// Author: Andrii Karepin
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 define('DEBUG_BLANG',0);
 bimport('cms.singleton');

@@ -3,8 +3,6 @@
  * Sets of functions and classes to work with breadcrumbs
  * 
  * @author Andrii Birev
- * @author Andrii Karepin 
- * @copyright © Brilliant IT corporation, www.it.brilliant.ua
  */
 class BBreadcrumbs{
 	protected $data;
@@ -60,7 +58,6 @@ class BBreadcrumbs{
  * General class for inter-component breadcrumbs.
  *
  * @author Andrii Biriev
- * @author Andrii Karepin
  */
 class BGeneralBreadcrumbs extends BBreadcrumbs{
 	public static $instance=NULL;

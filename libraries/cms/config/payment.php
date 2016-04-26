@@ -3,8 +3,6 @@
  * Settings for payment systems & general payments settings. 
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigPayment extends BConfigCategory{
 	public $alias='payment';

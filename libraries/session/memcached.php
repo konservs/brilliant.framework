@@ -3,7 +3,6 @@
 // Sets of functions and classes to work with sessions
 //
 // Author: Andrii Biriev, b@brilliant.ua
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'defines.php');
 require_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'db_api.php');

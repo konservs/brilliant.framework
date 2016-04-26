@@ -3,9 +3,6 @@
  * Basic component field class. Allow to 
  * 
  * @author Andrii Biriev <a@konservs.com>
- * @author Andrii Karepin <karepinandrei@gmail.com>
- * @author Yuriy Galin <ygalin21@gmail.com>
- * @copyright © 2014 Brilliant IT corporation, www.it.brilliant.ua
  */
 class BControllerField{
 	public $id;

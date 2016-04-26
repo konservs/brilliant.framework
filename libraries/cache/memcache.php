@@ -4,7 +4,6 @@
 // MemCache
 //
 // Author: Andrii Biriev, b@brilliant.ua
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 if(DEBUG_MODE){
 	bimport('debug.general');

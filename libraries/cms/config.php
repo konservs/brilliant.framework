@@ -6,8 +6,6 @@ bimport('cms.config.payment');
  * Configuration library class
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfig{
 	protected static $instance=NULL;
@@ -90,8 +88,6 @@ class BConfig{
  * General abstract class for config category
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigCategory{
 	public $alias;
@@ -123,8 +119,6 @@ class BConfigCategory{
  * General abstract class for config category group
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigCategoryGroup{
 	public $alias;
@@ -136,8 +130,6 @@ class BConfigCategoryGroup{
  * General abstract class for config field
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigField{
 	public $value=NULL;//re-defined value
@@ -201,8 +193,6 @@ class BConfigField{
  * Integer field class
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldInt extends BConfigField{
 	public $min;
@@ -237,8 +227,6 @@ class BConfigFieldInt extends BConfigField{
  * String field
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldString extends BConfigField{
 	}
@@ -247,8 +235,6 @@ class BConfigFieldString extends BConfigField{
  * Password field class
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldPassword extends BConfigField{
 	/**
@@ -266,8 +252,6 @@ class BConfigFieldPassword extends BConfigField{
  * Folder selector class
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldPath extends BConfigField{
 	/**
@@ -295,8 +279,6 @@ class BConfigFieldPath extends BConfigField{
  * Rubric selector class
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldRubric extends BConfigField{
 	/**
@@ -334,8 +316,6 @@ class BConfigFieldRubric extends BConfigField{
  * Full-text field (for meta description, for example)
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldText extends BConfigField{
 	/**
@@ -353,8 +333,6 @@ class BConfigFieldText extends BConfigField{
  * Full-text field (for meta description, for example)
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldHTML extends BConfigField{
 	//
@@ -364,8 +342,6 @@ class BConfigFieldHTML extends BConfigField{
  * List field (for example, cache type)
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigFieldList extends BConfigField{
 	public $values=array();

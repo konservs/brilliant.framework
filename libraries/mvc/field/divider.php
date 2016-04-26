@@ -3,9 +3,6 @@
  * Base component field class for divider.
  * 
  * @author Andrii Biriev <a@konservs.com>
- * @author Andrii Karepin <karepinandrei@gmail.com>
- * @author Yuriy Galin <ygalin21@gmail.com>
- * @copyright © 2014 Brilliant IT corporation, www.it.brilliant.ua
  */
 bimport('mvc.field');
 class BControllerField_divider extends BControllerField{

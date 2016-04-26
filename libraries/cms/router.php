@@ -6,8 +6,6 @@
  * Get the MVC and convert into URL.
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © 2014 Brilliant IT corporation, www.it.brilliant.ua
  */
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);

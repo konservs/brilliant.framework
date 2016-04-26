@@ -3,8 +3,6 @@
  * Settings for media subsystem. 
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigSystems extends BConfigCategory{
 	public $alias='systems';

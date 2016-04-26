@@ -4,8 +4,6 @@
 //
 //
 // Author: Andrii Birev
-// Author: Andrii Karepin 
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 //Some defines...
 define('PGTYPE_GET',0);

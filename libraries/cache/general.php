@@ -3,7 +3,6 @@
 // Sets of functions and classes to work with cache
 //
 // Author: Andrii Biriev, b@brilliant.ua
-// Copyright � Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 define('DEBUG_CACHE',0);
 //============================================================

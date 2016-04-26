@@ -3,8 +3,6 @@
  * Pretty class for extended DateTime functions
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 
 //define('BDATE_FORMAT_',1);

@@ -5,8 +5,6 @@
 //
 //
 // Author: Andrii Biriev
-// Author: Andrii Karepin
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 
 class BSoftModule{

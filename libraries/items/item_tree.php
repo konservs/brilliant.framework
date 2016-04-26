@@ -4,7 +4,6 @@
  *
  * @author Andrii Biriev
  *
- * @copyright Copyright © Brilliant IT corporation, www.it.brilliant.ua
  */
 bimport('items.item');
 

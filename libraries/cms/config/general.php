@@ -3,8 +3,6 @@
  * General configuration
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright © Brilliant IT corporation, http://it.brilliant.ua
  */
 class BConfigGeneral extends BConfigCategory{
 	public $alias='general';

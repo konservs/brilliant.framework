@@ -3,8 +3,6 @@
 // Abstract class for collections
 //
 // Author: Andrii Biriev
-// Author: Andrii Karepin
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 bimport('items.item');
 bimport('log.general');

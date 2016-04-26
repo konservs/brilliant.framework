@@ -3,7 +3,6 @@
 // Sets of functions and classes to work with cache as files
 //
 // Author: Andrii Biriev, b@brilliant.ua
-// Copyright © Brilliant IT corporation, www.it.brilliant.ua
 //============================================================
 if(!defined('PATH_CACHE')){
 	define('PATH_CACHE',BROOTPATH.DIRECTORY_SEPARATOR.'filecache'.DIRECTORY_SEPARATOR);

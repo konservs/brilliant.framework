@@ -9,9 +9,6 @@ defined('BEXEC') or die('No direct access!');
 bimport('mvc.component');
 bimport('mvc.model');
 bimport('http.request');
-if(DEBUG_MODE){
-	bimport('debug.general');
-	}
 
 class Model_users_login extends BModel{
 	/**
@@ -44,8 +41,7 @@ class Model_users_login extends BModel{
 			
 			if(!is_numeric($user->id)){
 				if(DEBUG_MODE){
-					bimport('debug.general');
-					BDebug::error('Could not login!');
+					BLog::addtolog('Could not login!');
 					}
 				//Send warning to IP ban system
 				bimport('ip.ban');
@@ -69,12 +65,12 @@ class Model_users_login extends BModel{
 				$red='//'.$brouter->generateURL('users',BLang::$langcode,array('view'=>'dashboard'));
 
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). Redirect URL is empty!');
+					BLog::addtolog('[com_users]: login(). Redirect URL is empty!');
 					}
 				}else{
 				$red=base64_decode($rget);
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). Redirect URL='.$red);
+					BLog::addtolog('[com_users]: login(). Redirect URL='.$red);
 					}
 				}
 			//----------------------------------------
@@ -84,26 +80,26 @@ class Model_users_login extends BModel{
 			if((strlen($red)>2)&&(substr($red,0,2)=='//')){
 				$purl=parse_url('http:'.$red);
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). the link is with uncompleted protocol');
+					BLog::addtolog('[com_users]: login(). the link is with uncompleted protocol');
 					}
 				}
 			elseif((strlen($red)>7)&&(substr($red,0,7)=='http://')){
 				$purl=parse_url($red);
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). the link is with http protocol');
+					BLog::addtolog('[com_users]: login(). the link is with http protocol');
 					}
 				}
 			elseif((strlen($red)>8)&&(substr($red,0,8)=='https://')){
 				$purl=parse_url($red);
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). the link is with https protocol');
+					BLog::addtolog('[com_users]: login(). the link is with https protocol');
 					}
 				}
 			else{
 				$purl=parse_url('http://'.$red);
 				$red='//'.$red;
 				if(DEBUG_MODE){
-					BDebug::message('[com_users]: login(). the link is without protocol');
+					BLog::addtolog('[com_users]: login(). the link is without protocol');
 					}
 				}
 			//----------------------------------------
@@ -112,8 +108,8 @@ class Model_users_login extends BModel{
 			$purl_host=$purl['host'];
 			$purl_path=$purl['path'];
 			if(DEBUG_MODE){
-				BDebug::message('[com_users]: login(). Redirect host='.$purl_host);
-				BDebug::message('[com_users]: login(). Redirect path='.$purl_path);
+				BLog::addtolog('[com_users]: login(). Redirect host='.$purl_host);
+				BLog::addtolog('[com_users]: login(). Redirect path='.$purl_path);
 				}
 			//----------------------------------------
 			// Redirecting
@@ -122,7 +118,7 @@ class Model_users_login extends BModel{
 				$data->redirect=$red;
 				}else{
 				if(DEBUG_MODE){
-					BDebug::error('[com_users]: login(). Wrong redirect host!');
+					BLog::addtolog('[com_users]: login(). Wrong redirect host!');
 					}
 				}
         		if(empty($data->redirect)){

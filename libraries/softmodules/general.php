@@ -28,14 +28,12 @@ class BSoftModules{
 	//====================================================
 	public function get_tree(){
 		if(DEBUG_MODE){
-			bimport('debug.general');
-			BDebug::message('[SoftModules]: get_tree()');
+			BLog::addtolog('[SoftModules]: get_tree()');
 			}
 		$brouter=BRouter::getInstance();
 		$pages=$brouter->getsoftmodules();
 		if(DEBUG_MODE){
-			bimport('debug.general');
-			BDebug::message('[SoftModules]: Pages: '.var_export($pages,true));
+			BLog::addtolog('[SoftModules]: Pages: '.var_export($pages,true));
 			}
 		$this->get_tree_node($pages);
 		return $pages;
@@ -45,8 +43,7 @@ class BSoftModules{
 	//====================================================
 	public function get_tree_node(&$itms){
 		if(DEBUG_MODE){
-			bimport('debug.general');
-			BDebug::message('[SoftModules]: get_tree_node()');
+			BLog::addtolog('[SoftModules]: get_tree_node()');
 			}
 		foreach($itms as &$itm){
 			if($itm->active){
@@ -100,21 +97,18 @@ class BSoftModules{
 		bimport('sql.mysql');		
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
-			bimport('debug.general');
-			BDebug::error('BSoftModules: Could not connect to the database!');
+			BLog::addtolog('BSoftModules: Could not connect to the database!',LL_ERROR);
 			return NULL;
 			}
 		$qr='SELECT * from `soft_modules_alias` where id='.$id;
 		$q=$db->Query($qr);
 		if(empty($q)){
-			bimport('debug.general');
-			BDebug::error('BSoftModules: Could not execute query!');
+			BLog::addtolog('BSoftModules: Could not execute query!',LL_ERROR);
 			return NULL;
 			}
 		if(!$l=$db->fetch($q)){
 			//Error or not error?
-			//bimport('debug.general');
-			//BDebug::error('BSoftModules: not such id!');
+			//('BSoftModules: not such id!');
 			return NULL;
 			}
 		//
@@ -155,21 +149,18 @@ class BSoftModules{
 		bimport('sql.mysql');		
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
-			bimport('debug.general');
-			BDebug::error('BSoftModules: Could not connect to the database!');
+			BLog::addtolog('BSoftModules: Could not connect to the database!',LL_ERROR);
 			return NULL;
 			}
 		$qr='SELECT * from `soft_modules_alias` where alias='.$db->escape_string($alias);
 		$q=$db->Query($qr);
 		if(empty($q)){
-			bimport('debug.general');
-			BDebug::error('BSoftModules: Could not execute query!');
+			BLog::addtolog('BSoftModules: Could not execute query!',LL_ERROR);
 			return NULL;
 			}
 		if(!$l=$db->fetch($q)){
 			//Error or not error?
-			//bimport('debug.general');
-			//BDebug::error('BSoftModules: not such alias!');
+			//BLog::addtolog('BSoftModules: not such alias!',LL_ERROR);
 			return NULL;
 			}
 		//

@@ -8,6 +8,7 @@ if(!defined('PATH_CACHE')){
 	define('PATH_CACHE',BROOTPATH.DIRECTORY_SEPARATOR.'filecache'.DIRECTORY_SEPARATOR);
 	}
 bimport('cache.general');
+bimport('log.general');
 class BCacheFiles extends BCache{
 	protected $cachedir='';
 	//================================================================================
@@ -37,8 +38,7 @@ class BCacheFiles extends BCache{
 	//================================================================================
 	public function get($key){
 		if(DEBUG_CACHE){
-			bimport('debug.general');
-			BDebug::message('[FilesCache]: get('.$key.')');
+			BLog::addtolog('[FilesCache]: get('.$key.')');
 			}
 		$this->queries_get_count++;
 		$fn=$this->cachedir.sha1($key).'.dat';
@@ -66,9 +66,8 @@ class BCacheFiles extends BCache{
 	//================================================================================
 	public function set($key,$value,$expired){
 		if(DEBUG_CACHE){
-			bimport('debug.general');
-			//BDebug::message('[FilesCache]: set('.$key.','.var_export($value,true).')');
-			BDebug::message('[FilesCache]: set('.$key.',...)');
+			//BLog::addtolog('[FilesCache]: set('.$key.','.var_export($value,true).')');
+			BLog::addtolog('[FilesCache]: set('.$key.',...)');
 			}
 		$dt_exp=new DateTime();
 		$dt_exp->add(new DateInterval('PT'.$expired.'S'));
@@ -87,8 +86,7 @@ class BCacheFiles extends BCache{
 	//================================================================================
 	public function delete($key){
 		if(DEBUG_MODE){
-			bimport('debug.general');
-			BDebug::message('[FilesCache]: delete('.$key.')...)');
+			BLog::addtolog('[FilesCache]: delete('.$key.')...)');
 			}
 		$fn=$this->cachedir.sha1($key).'.dat';
 		if(!file_exists($fn)){
@@ -101,7 +99,7 @@ class BCacheFiles extends BCache{
 	//================================================================================
 	public function invalidate(){
 		if(DEBUG_MODE){
-			BDebug::message('[FilesCache]: Delete key('.$key.')');
+			BLog::addtolog('[FilesCache]: Delete key('.$key.')');
 			}
 		$dir=$this->cachedir;
 		$lastchar=substr($dir,-1,1);

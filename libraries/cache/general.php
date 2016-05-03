@@ -5,9 +5,9 @@
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
 define('DEBUG_CACHE',0);
-//============================================================
-//
-//============================================================
+
+bimport('log.general');
+
 class BCache{
 	protected static $instance=NULL;
 	public $queries_set_count=0;
@@ -23,8 +23,7 @@ class BCache{
 	public static function getInstance(){
 		if(!is_object(self::$instance)){
 			if(DEBUG_CACHE){
-				bimport('debug.general');
-				BDebug::message('[BCache]: Creating cache object ('.CACHE_TYPE.')...');
+				BLog::addtolog('[BCache]: Creating cache object ('.CACHE_TYPE.')...');
 				}
 			switch(CACHE_TYPE){
 				case 'files':

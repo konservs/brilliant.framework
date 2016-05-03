@@ -902,12 +902,12 @@ class BRouterBase{
 		if(ROUTER_DEBUG){
 			BLog::addtolog('[Router]: Router started! URL='.$URL.'; host='.$host);
 			}
-		bimport('ip.ban');
-		$r=BIpBan::check();
-		if($r===false){
-			header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden');
-			return $this->errorpage('ipban');
-			}
+		//bimport('ip.ban');
+		//$r=BIpBan::check();
+		//if($r===false){
+		//	header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden');
+		//	return $this->errorpage('ipban');
+		//	}
 		$this->url=$URL;
 		$this->host=$host;
 

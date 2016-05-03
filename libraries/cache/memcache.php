@@ -5,9 +5,7 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-if(DEBUG_MODE){
-	bimport('debug.general');
-	}
+bimport('log.general');
 class BCacheMemcache extends BCache{
 	protected $memcache=NULL;
 	protected $memcache_ver='';
@@ -18,7 +16,7 @@ class BCacheMemcache extends BCache{
 		if (!is_object($this->memcache)){
 			if(!class_exists('Memcache')){
 				if(DEBUG_MODE){
-					BDebug::error('Memcache class not found!');
+					BLog::addtolog('Memcache class not found!',LL_ERROR);
 					}
 				return NULL;
 				}

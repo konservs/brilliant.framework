@@ -1,8 +1,5 @@
 <?php
 bimport('sql.mysql');
-if(DEBUG_MODE){
-	bimport('debug.general');
-	}
 
 class BSearchSphinxQl extends BMySQL{
 	protected static $sphinxinstance=NULL;

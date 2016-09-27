@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Brilliant Framework Application Initialization Tool
+ */
+echo "-----------------------------------------------------\r\n";
+echo " Brilliant Framework Application Initialization Tool \r\n";
+echo "-----------------------------------------------------\r\n";
+

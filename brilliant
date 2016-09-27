@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Brilliant Framework console file.
+ */
+echo "-----------------------------------------------------\r\n";
+echo "        Brilliant Framework console tools\r\n";
+echo "-----------------------------------------------------\r\n";

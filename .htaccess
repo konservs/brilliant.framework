@@ -5,5 +5,5 @@ RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule .* /htdocs/www/index.php [L,QSA]
-RewriteRule ^$ /htdocs/www/index.php [L,QSA]
+RewriteRule .* index.php [L,QSA]
+RewriteRule ^$ index.php [L,QSA]

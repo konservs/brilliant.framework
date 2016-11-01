@@ -2,7 +2,7 @@
 	<testsuites>
 		<!-- Cache tests -->
 		<testsuite name="Cache">
-			<file>tests/cache/test1.php</file>
+			<file>tests/cache/cache1.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

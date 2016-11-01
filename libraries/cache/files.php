@@ -22,25 +22,29 @@ class BCacheFiles extends BCache{
 	public function __construct(){
 		$this->cachedir=PATH_CACHE;
 		}
-	//================================================================================
-	// Garbage collector
-	// Garbage collect expired cache data
-	// return  boolean  True on success, false otherwise.
-	//================================================================================
+	/**
+	 * Garbage collector
+	 * Garbage collect expired cache data
+	 * @return bool True on success, false otherwise.
+	 */
 	public function gc(){
 		$result = true;
 		return $result;
 		}
-	//================================================================================
-	// Test to see if the cache storage is available.
-	// return  boolean  True on success, false otherwise.
-	//================================================================================
+	/**
+	 * Test to see if the cache storage is available.
+	 *
+	 * @return bool True on success, false otherwise.
+	 */
 	public static function selftest(){
 		return True;
 		}
-	//================================================================================
-	// Get the data from cache...
-	//================================================================================
+	/**
+	 * Get the data from cache...
+	 *
+	 * @param $key
+	 * @return bool|mixed
+	 */
 	public function get($key){
 		if(DEBUG_CACHE){
 			BLog::addtolog('[FilesCache]: get('.$key.')');
@@ -66,9 +70,14 @@ class BCacheFiles extends BCache{
 		$data=unserialize($ss);
 		return $data;
 		}
-	//================================================================================
-	// Set the data to the cache...
-	//================================================================================
+	/**
+	 * Set the data to the cache...
+	 *
+	 * @param $key
+	 * @param $value
+	 * @param $expired
+	 * @return bool
+	 */
 	public function set($key,$value,$expired){
 		if(DEBUG_CACHE){
 			//BLog::addtolog('[FilesCache]: set('.$key.','.var_export($value,true).')');
@@ -86,9 +95,12 @@ class BCacheFiles extends BCache{
 		fclose($f);
 		return true;
 		}
-	//================================================================================
-	// Delete the data in the cache...
-	//================================================================================
+	/**
+	 * Delete the data in the cache...
+	 *
+	 * @param $key
+	 * @return bool
+	 */
 	public function delete($key){
 		if(DEBUG_MODE){
 			BLog::addtolog('[FilesCache]: delete('.$key.')...)');
@@ -99,9 +111,11 @@ class BCacheFiles extends BCache{
 			}
 		return unlink($fn);
 		}
-	//================================================================================
-	// Clear all data.
-	//================================================================================
+	/**
+	 * Clear all data.
+	 *
+	 * @return bool
+	 */
 	public function invalidate(){
 		if(DEBUG_MODE){
 			BLog::addtolog('[FilesCache]: Delete key('.$key.')');

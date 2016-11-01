@@ -1,0 +1,8 @@
+<phpunit bootstrap="libraries/init.php">
+	<testsuites>
+		<!-- Cache tests -->
+		<testsuite name="Cache">
+			<file>tests/cache/test1.php</file>
+		</testsuite>
+	</testsuites>
+</phpunit>

@@ -5,7 +5,7 @@
  * 
  * Get the MVC and convert into URL
  * 
- * @author Andrii Biriev
+ * @author Andrii Biriev, <a@konservs.com>
  * 
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
@@ -16,15 +16,13 @@ bimport('log.general');
 class BRouter extends BRouterBase{
 	protected static $starttime=0;
 	protected static $instance=NULL;
-	protected $components=array('news','blogs','menu','htmlblocks','other','polls');
+	protected $components=array('content','users');
 	protected $router=array();
 	protected $positions=array();
 	protected $rules=array();
 	protected $soft_rules=array();
 	protected $maincom=NULL;
 	protected $langcode='';
-	public $rubric=NULL; //Will use in "smart" menu items.
-	public $newscat=NULL; //News category. Will use in "smart" menu items.
 	public $templatename='default';
 	public $frontendtemplate='default';
 	/**

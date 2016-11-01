@@ -4,8 +4,8 @@
  * logout and all other operations with users.
  *
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright � Brilliant IT corporation, www.it.brilliant.ua
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
  */
 bimport('users.single');
 bimport('cms.datetime');

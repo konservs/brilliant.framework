@@ -3,8 +3,8 @@
  * Sets of functions and classes to work with HTML
  * 
  * @author Andrii Biriev
- * @author Andrii Karepin
- * @copyright ©2014 Brilliant IT corporation, www.it.brilliant.ua
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
  */
 define('DOCTYPE_UNKNOWN',0);
 define('DOCTYPE_HTML4_TRANSITIONAL',1);

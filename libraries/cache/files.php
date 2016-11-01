@@ -1,19 +1,24 @@
 <?php
-//============================================================
-// Sets of functions and classes to work with cache as files
-//
-// Author: Andrii Biriev, b@brilliant.ua
-//============================================================
+/**
+ * Sets of functions and classes to work with cache as files
+ * 
+ * @author Andrii Biriev, <a@konservs.com>
+ * 
+ * @copyright © Andrii Biriev, <a@konservs.com>
+ */
+
 if(!defined('PATH_CACHE')){
 	define('PATH_CACHE',BROOTPATH.DIRECTORY_SEPARATOR.'filecache'.DIRECTORY_SEPARATOR);
 	}
+
 bimport('cache.general');
 bimport('log.general');
+
 class BCacheFiles extends BCache{
 	protected $cachedir='';
-	//================================================================================
-	//
-	//================================================================================
+	/**
+	 * Constructor
+	 */
 	public function __construct(){
 		$this->cachedir=PATH_CACHE;
 		}

@@ -23,6 +23,7 @@ class BRouter extends BRouterBase{
 	protected $soft_rules=array();
 	protected $maincom=NULL;
 	protected $langcode='';
+	protected $deflang='en';
 	public $templatename='default';
 	public $frontendtemplate='default';
 	/**
@@ -47,78 +48,6 @@ class BRouter extends BRouterBase{
 			}else{	
 			$uid=NULL;
 			}
-		bimport('http.useragent');
-		$device=BBrowserUseragent::detectDevice();
-
-		if(($device!=DEVICE_TYPE_MPHONE)&&($device!=DEVICE_TYPE_TABLET)){
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'headmenu',
-				'segments' => array('view'=>'menu','id'=>2,'url'=>$this->host.$this->url),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'mainmenu',
-				'segments' => array('view'=>'menu','id'=>1,'url'=>$this->host.$this->url),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'news',
-				'position' => 'newssearch',
-				'segments' => array('view'=>'mod_search'),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'other',
-				'position' => 'addbutton',
-				'segments' => array('view'=>'addoffer'),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'footermenu',
-				'segments' => array('view'=>'menu','id'=>4,'url'=>$this->host.$this->url),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'news',
-				'position' => 'footerphoto',
-				'segments' => array('view'=>'mod_photo','style'=>'footer'),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'news',
-				'position' => 'footervideo',
-				'segments' => array('view'=>'mod_video','style'=>'footer'),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'htmlblocks',
-				'position' => 'footerbanner',
-				'segments' => array('view'=>'banner','id'=>9),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'footermenunews',
-				'segments' => array('view'=>'menu','id'=>5,'url'=>$this->host.$this->url),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'footermenuabout',
-				'segments' => array('view'=>'menu','id'=>6,'url'=>$this->host.$this->url),
-				);
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'footermenusocial',
-				'segments' => array('view'=>'menu','id'=>7,'url'=>$this->host.$this->url),
-				);
-			}
-		else{
-			$this->rules[]=(object)array(
-				'com' => 'menu',
-				'position' => 'topmenu',
-				'segments' => array('view'=>'menu','id'=>6,'url'=>$this->host.$this->url),
-				);
-			}
-		$this->rules[]=(object)array(
-			'com' => 'language',
-			'position' => 'headlang',
-			'segments' => array('view'=>'languagespanel','lang'=>BLang::$langcode,'url'=>$this->host.$this->url),
-			);
 		if(!empty($uid)){
 			$this->rules[]=(object)array(
 				'com' => 'users',
@@ -134,286 +63,11 @@ class BRouter extends BRouterBase{
 			}
 		}
 	/**
-	 * Return list of news categories (for softmodules).
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_news(){
-		$lnews=(object)array(
-			'active'=>false,
-			'name'=>BLang::_('ADMIN_SOFTMODULES_PAGE_NEWS'),
-			'alias'=>'',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		//
-		$lnews->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Поиск',
-			'alias'=>'news:search',
-			'subalias'=>'',
-			//'subname'=>BLang::_('ADMIN_SOFTMODULES_PAGE_CATNEWS'),
-			'children'=>array(),
-			);
-		//
-		$lnews->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Фото',
-			'alias'=>'news:photo',
-			'subalias'=>'',
-			//'subname'=>BLang::_('ADMIN_SOFTMODULES_PAGE_CATNEWS'),
-			'children'=>array(),
-			);
-		//
-		$lnews->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Видео',
-			'alias'=>'news:video',
-			'subalias'=>'',
-			//'subname'=>BLang::_('ADMIN_SOFTMODULES_PAGE_CATNEWS'),
-			'children'=>array(),
-			);
-		//
-		$lnews->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Архив',
-			'alias'=>'news:archive',
-			'subalias'=>'',
-			//'subname'=>BLang::_('ADMIN_SOFTMODULES_PAGE_CATNEWS'),
-			'children'=>array(),
-			);
-		//
-		$lnewscats=(object)array(
-			'active'=>false,
-			'name'=>'Новости: категории',
-			'alias'=>'',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		//
-		bimport('news.categories');
-		$bnewsc=BNewsCategories::getInstance();
-		if(empty($bnewsc)){
-			return $lnews;
-			}
-		$tree=$bnewsc->getsimpletree(array('level','articles'),array('name'));
-		foreach($tree as $value){
-			$itm=(object)array(
-				'active'=>true,
-				'name'=>'Категория "'.$value->name.'"',
-				'alias'=>'news:category:'.$value->id,
-				'subname'=>'новости категории',
-				'subalias'=>'news:newscat:'.$value->id,
-				'children'=>array(),
-				);
-			$lnewscats->children[]=$itm;
-			}
-		return array($lnews,$lnewscats);
-		}
-	/**
-	 * Return list of
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_blogs(){
-		$lsm=(object)array(
-			'active'=>true,
-			'name'=>'Блоги: главная',
-			'alias'=>'blogs:home',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		//
-		$lsm->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Блоги: поиск',
-			'alias'=>'blogs:search',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		//
-		$lsm->children[]=(object)array(
-			'active'=>true,
-			'name'=>'Блоги: темы',
-			'alias'=>'blogs:categories',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-
-		return $lsm;
-		}
-
-	/**
-	 * Return list of
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_affiche(){
-		$lsm=(object)array(
-			'active'=>true,
-			'name'=>'Афиша: главная',
-			'alias'=>'affiche:home',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		return $lsm;
-		}
-	/**
-	 * Return list of
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_quizzes(){
-		$lsm=(object)array(
-			'active'=>true,
-			'name'=>'Викторины: главная',
-			'alias'=>'quizzes:home',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		return $lsm;
-		}
-	/**
-	 * Return list of
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_contests(){
-		$lsm=(object)array(
-			'active'=>true,
-			'name'=>'Конкурсы: главная',
-			'alias'=>'contests:home',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		return $lsm;
-		}
-	/**
-	 * Return list of general pages (without some categories)..
-	 *
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules_general(){
-		$lsm=(object)array(
-			'active'=>true,
-			'name'=>'Главная страница',
-			'alias'=>'mainpage',
-			'subalias'=>'',
-			'children'=>array(),
-			);
-		return $lsm;
-		}
-
-	/**
-	 * Return list of soft modules categories.
-	 * Using this in admin panel to group softmodules.
-	 *
-	 * @return array array of softmodules groups
-	 */
-	public function getsoftmodulescats(){
-		$children=array();
-		$children['general']=(object)array(
-			'alias'=>'news',
-			'name'=>'Общие страницы',
-			'url'=>'/softmodules/general/',
-			);
-		$children['news']=(object)array(
-			'alias'=>'news',
-			'name'=>'Новости',
-			'url'=>'/softmodules/news/',
-			);
-		$children['blogs']=(object)array(
-			'alias'=>'blogs',
-			'name'=>'Блоги',
-			'url'=>'/softmodules/blogs/',
-			);
-		$children['affiche']=(object)array(
-			'alias'=>'affiche',
-			'name'=>'Афиша',
-			'url'=>'/softmodules/affiche/',
-			);
-		$children['quizzes']=(object)array(
-			'alias'=>'quizzes',
-			'name'=>'Викторины',
-			'url'=>'/softmodules/quizzes/',
-			);
-		$children['contests']=(object)array(
-			'alias'=>'contests',
-			'name'=>'Конкурсы',
-			'url'=>'/softmodules/contests/',
-			);
-		return $children;
-		}
-	/**
-	 * Using in breadcrumbs & close buttons in admin panel.
-	 */
-	public function getsoftmodules_group($alias){
-		$cats=$this->getsoftmodulescats();
-		if(!isset($cats[$alias])){
-			return NULL;
-			}
-		return $cats[$alias];
-		}
-	/**
-	 * Using this in admin panel
-	 *
-	 * @return array array of softmodules objects
-	 */
-	public function getsoftmodules($alias){
-		$list=array();
-		$s='getsoftmodules_'.$alias;
-		$res=$this->$s();
-		if(is_array($res)){
-			$list=array_merge($list,$res);
-			}
-		elseif(is_object($res)){
-			$list[]=$res;
-			}
-		else{
-			return false;
-			}
-		return $list;
-		}
-	/**
-	 *
-	 */
-	public function addadminmenu(){
-		$rules=array(
-			(object)array(
-				'com' => 'admin',
-				'position' => 'adminmenu',
-				'segments' => array('view'=>'adminmenu')
-				),
-			(object)array(
-				'com' => 'admin',
-				'position' => 'userpanel',
-				'segments' => array('view'=>'userpanel','uid')
-				),
-			);
-		$this->rules=array_merge($this->rules,$rules);
-		}
-	/**
-	 * Generate URL for help
-	 */
-	public function softmodulesget($alias){
-		bimport('softmodules.general');
-		$bsoftmodules=BSoftmodules::getInstance();
-		$this->soft_rules=$bsoftmodules->get($alias);
-		$this->rules=array_merge($this->rules,$this->soft_rules);
-		}
-	/**
 	 *
 	 */
 	public function getmainurl($lang){
 		$URL_main=BHOSTNAME.'/';
-		if($lang!='ua'){
+		if($lang!=$this->deflang){
 			$URL_main.=$lang.'/';
 			}
 		return $URL_main;
@@ -421,14 +75,14 @@ class BRouter extends BRouterBase{
 	/**
 	 *
 	 */
-	public function generate_newsurl($lang,$segments){
-		$url_news=$this->getmainurl($lang).'news/';
+	public function generate_contenturl($lang,$segments){
+		$url_content=$this->getmainurl($lang).'content/';
 		$view=isset($segments['view'])?$segments['view']:'';
 		switch($view){
 			case 'article':
-				BLog::addtolog('[Router]: generating news article URL...');
+				BLog::addtolog('[Router]: generating content article URL...');
 				$artid=(int)$segments['id'];
-				bimport('news.articles');
+				bimport('content.articles');
 				$bnart=BNewsArticles::getInstance();
 				$article=$bnart->item_get($artid);
 				if(empty($article)){
@@ -439,13 +93,13 @@ class BRouter extends BRouterBase{
 					BLog::addtolog('[Router]: The article category is empty!',LL_ERROR);
 					return '';
 					}
-				$url=$this->generate_newsurl($lang,array('view'=>'blog','category'=>$article->category));
+				$url=$this->generate_contenturl($lang,array('view'=>'blog','category'=>$article->category));
 				$url.=$article->getalias($lang).'-'.$article->id;
 				return $url;
 			case 'blog':
-				BLog::addtolog('[Router]: generating news blog URL...');
-				$url=$url_news;
-				bimport('news.categories');
+				BLog::addtolog('[Router]: generating content blog URL...');
+				$url=$url_content;
+				bimport('content.categories');
 				$categoryid=isset($segments['category'])?$segments['category']:0;
 				if(empty($categoryid)){
 					return '';
@@ -459,492 +113,11 @@ class BRouter extends BRouterBase{
 				if((isset($list[1]))&&($list[1]->id==1)){
 					unset($list[1]);
 					}
-				$url=$url_news;
+				$url=$url_content;
 				foreach($list as $f){
 					$url.=$f->getalias($lang).'/';
 					}
 				return $url;
-			case 'archives':
-				$url=$this->getmainurl($lang).'news/archive/';
-				if(!empty($segments['year'])){
-					$now=new DateTime();
-					$year_now=(int)$now->format('Y');
-					if($segments['year']<$year_now){
-						$url.='year-'.$segments['year'];
-					}
-				}
-				return $url;
-			case 'archive_date':
-				$url=$this->getmainurl($lang).'news/archive/';
-
-				$iyear=(int)$segments['year'];
-				$imonth=(int)$segments['month'];
-				$iday=(int)$segments['day'];
-				//
-				if((empty($iyear))||(empty($iday))||(empty($imonth))){
-					return '';
-				}
-				$ddate=new DateTime($iyear.'-'.$imonth.'-'.$iday);
-				$url.='date-'.$ddate->format('Y-m-d');
-				return $url;
-			case 'photo':
-				return $url_news.'photo/';
-			case 'mod_photo_content':
-				return $url_news.'mod_photo.json/';
-			case 'mod_bycategory_content':
-				return $url_news.'mod_bycategory.json/';
-			case 'mod_bytag_content':
-				return $url_news.'mod_bytag.json/';
-			case 'video':
-				return $url_news.'video/';
-			case 'search':
-				return $url_news.'search/';
-			case 'pr_content':
-				return $url_news.'pr/pr_content.json';
-			}
-		return '';
-		}
-	/**
-	 *
-	 */
-	public function generate_blogsurl($lang,$segments){
-		$url_blogs=$this->getmainurl($lang).'blogs/';
-		$view=isset($segments['view'])?$segments['view']:'';
-
-		if($view=='home'){
-			return $this->getmainurl($lang).'blogs/';
-			}
-		if($view=='home_content'){
-			return $this->getmainurl($lang).'blogs/more.json';
-			}
-		if($view=='authors'){
-			return $this->getmainurl($lang).'blogs/authors/';
-			}
-		if($view=='authors_more'){
-			return $this->getmainurl($lang).'blogs/authors_more.json/';
-			}
-		if($view=='author'){
-			bimport('blogs.authors');
-			$bba=BBlogsAuthors::getInstance();
-			BLog::addtolog('[Router]: blogs - looking for author with ID='.$segments['id']);
-			$author=$bba->item_get($segments['id']);
-			if(empty($author)){
-				BLog::addtolog('Router: Could not get blog author with such id!',LL_ERROR);
-				return false;
-				}
-			$URL=$url_blogs.'authors/'.$author->getalias($lang).'-'.$author->id;
-			return $URL;
-			}
-		if($view=='author_details'){
-			bimport('blogs.authors');
-			$bba=BBlogsAuthors::getInstance();
-			BLog::addtolog('[Router]: blogs - looking for author with ID='.$segments['id']);
-			$author=$bba->item_get($segments['id']);
-			if(empty($author)){
-				BLog::addtolog('Router: Could not get blog author with such id!',LL_ERROR);
-				return false;
-			}
-			$URL=$url_blogs.'authors/'.$author->getalias($lang).'-'.$author->id.'/details';
-			return $URL;
-			}
-		if($view=='archives'){
-			$url=$this->getmainurl($lang).'blogs/archive/';
-			if(!empty($segments['year'])){
-				$now=new DateTime();
-				$year_now=(int)$now->format('Y');
-				if($segments['year']<$year_now){
-					$url.='year-'.$segments['year'];
-					}
-				}
-			return $url;
-			}
-		if($view=='archive_date'){
-			$url=$this->getmainurl($lang).'blogs/archive/';
-
-			$iyear=(int)$segments['year'];
-			$imonth=(int)$segments['month'];
-			$iday=(int)$segments['day'];
-			//
-			if((empty($iyear))||(empty($iday))||(empty($imonth))){
-				return '';
-				}
-			$ddate=new DateTime($iyear.'-'.$imonth.'-'.$iday);
-			$url.='date-'.$ddate->format('Y-m-d');
-			return $url;
-			}
-		if($view=='article'){
-			BLog::addtolog('[Router]: generating blogs article URL...');
-			$artid=(int)$segments['id'];
-			bimport('blogs.articles');
-			$bgart=BBlogsArticles::getInstance();
-			$article=$bgart->item_get($artid);
-			if(empty($article)){
-				BLog::addtolog('[Router]: Could not get article with id='.$artid,LL_ERROR);
-				return '';
-				}
-			if(empty($article->category)){
-				BLog::addtolog('[Router]: The blog article category is empty!',LL_ERROR);
-				return '';
-				}
-			$url=$this->generate_blogsurl($lang,array('view'=>'category','id'=>$article->category));
-			$url.=$article->getalias($lang).'-'.$article->id;
-			return $url;
-			}
-		if($view=='categories'){
-			$url=$url_blogs.'topics/';
-			return $url;
-			}
-		if($view=='category'){
-			BLog::addtolog('[Router]: generating blogs category URL...');
-			$url=$url_blogs;
-			bimport('blogs.categories');
-			$categoryid=isset($segments['id'])?$segments['id']:0;
-			if(empty($categoryid)){
-				return '';
-				}
-			$bbcats=BBlogsCategories::getInstance();
-			$category=$bbcats->item_get($categoryid);
-			if(empty($category)){
-				return '';
-				}
-			$list=$category->getparentchain();
-			if((isset($list[1]))&&($list[1]->id==1)){
-				unset($list[1]);
-				}
-			$url=$url_blogs;
-			foreach($list as $f){
-				$url.=$f->getalias($lang).'/';
-				}
-			return $url;
-			}
-		if($view=='mod_latest_content'){
-			$url=$url_blogs.'mod_latest_content.json';
-			return $url;
-			}
-		}
-	/**
-	 *
-	 * @param $lang
-	 * @param $segments
-	 * @return string
-	 */
-	public function generate_quizzesurl($lang,$segments){
-		$url_quizzes=$this->getmainurl($lang).'quizzes/';
-		$view=isset($segments['view'])?$segments['view']:'';
-		switch($view){
-			case 'home':
-				return $url_quizzes;
-			case 'quiz':
-				BLog::addtolog('[Router]: generating quizzes quiz URL...');
-				$quizid=(int)$segments['id'];
-				bimport('quizzes.quizzes');
-				$bquiz=BQuizzesQuizzes::getInstance();
-				$quiz=$bquiz->item_get($quizid);
-				if(empty($quiz)){
-					BLog::addtolog('[Router]: Could not get quiz with id='.$quiz,LL_ERROR);
-					return '';
-					}
-				$url=$url_quizzes;
-				$url.=$quiz->getalias($lang).'-'.$quiz->id.'/';
-				return $url;
-			case 'finish':
-				$url=$this->generate_quizzesurl($lang,array('view'=>'quiz','id'=>$segments['id']));
-				$url.='finish/';
-				return $url;
-			case 'phone_sent':
-				$url=$this->generate_quizzesurl($lang,array('view'=>'quiz','id'=>$segments['id']));
-				$url.='phone_sent/';
-				return $url;
-			case 'result';
-				bimport('quizzes.participants');
-				$bp=BQuizzesParticipants::getInstance();
-				$pid=$segments['pid'];
-				$participant=$bp->item_get((int)$segments['pid']);
-				if(!$participant){
-					return false;
-					}
-				$url=$this->generate_quizzesurl($lang,array('view'=>'quiz','id'=>$segments['quiz']));
-				$url.='result-'.$pid.'/';
-				return $url;
-			case 'question':
-				bimport('quizzes.quizzes');
-				$bques=BQuizzesQuizzes::getInstance();
-				$questionid=$segments['question'];
-				$quiz=$bques->item_get((int)$segments['quiz']);
-				if(empty($quiz)){
-					return false;
-					}
-				if(!$quiz->question_exist($questionid)){
-					return false;
-					}
-				$url=$this->generate_quizzesurl($lang,array('view'=>'quiz','id'=>$segments['quiz']));
-				$url.='question-'.$questionid.'/';
-				return $url;
-			case 'timeout';
-				$url=$this->generate_quizzesurl($lang,array('view'=>'quiz','id'=>$segments['id']));
-				$url.='timeout/';
-				return $url;
-			case 'rules':
-				return $url_quizzes.'rules/';
-				}
-		return '';
-		}
-	/**
-	 * Generate contests URLs
-	 *
-	 * @param $lang
-	 * @param $segments
-	 * @return string
-	 */
-	public function generate_contestsurl($lang,$segments){
-		$url_contests=$this->getmainurl($lang).'contests/';
-		$view=isset($segments['view'])?$segments['view']:'';
-		switch($view){
-			case 'home':
-				return $url_contests;
-			case 'contest':
-				return $url_contests.$segments['id'].'/';
-			case 'rules':
-				return $url_contests.'rules/';
-			case 'imgupload_json':
-				return $url_contests.'imgupload.json';
-			case 'submitanswer_json':
-				return $url_contests.'submitanswer.json';
-			case 'answer':
-				bimport('contests.answers');
-				$bca=BContestsAnswers::GetInstance();
-				$answer=$bca->item_get($segments['id']);
-				if(empty($answer)){
-					return '';
-					}
-				$contest=$answer->getcontest();
-				if(empty($contest)){
-					return '';
-					}
-				return $url_contests.$contest->id.'/answer-'.$answer->id;
-				}
-		return '';
-		}
-	/**
-	 *
-	 */
-	public function generate_tagsurl($lang,$segments){
-		$url_tags=$this->getmainurl($lang).'tags/';
-		$view=isset($segments['view'])?$segments['view']:'';
-
-		if($view=='home'){
-			return $url_tags;
-			}
-		if($view=='tag'){
-			bimport('tags.tags');
-			$btags=BTagsTags::getInstance();
-			BLog::addtolog('[Router]: tags - looking for tag with ID='.$segments['id']);
-			$tag=$btags->item_get($segments['id']);
-			if(empty($tag)){
-				BLog::addtolog('Router: Could not get tag with such id!',LL_ERROR);
-				return '';
-				}
-			$URL=$url_tags.$tag->getalias($lang).'-'.$tag->id;
-			return $URL;
-			}
-		return '';
-		}
-	/**
-	 *
-	 */
-	public function generate_socialurl($lang,$segments){
-		$url_social=$this->getmainurl($lang).'social/';
-		$view=isset($segments['view'])?$segments['view']:'';
-
-		if($view=='auth'){
-			BLog::addtolog('[Router]: generating social auth URL...');
-			$network=isset($segments['network'])?$segments['network']:'';
-			$URL=$url_social.'auth/'.$network;
-			return $URL;
-			}
-		if($view=='complete'){
-			BLog::addtolog('[Router]: generating social complete URL...');
-			$network=isset($segments['network'])?$segments['network']:'';
-			$URL=$url_social.'complete/'.$network;
-			return $URL;
-			}
-
-		return '';
-		}
-
-	/**
-	 * 
-	 */
-	public function generate_usersurl($lang,$segments){
-		$URL_main=$this->getmainurl($lang);
-		return '';
-		}
-	/**
-	 * 
-	 */
-	public function generate_afficheurl($lang,$segments){
-		$URL_main=$this->getmainurl($lang);
-		$view=isset($segments['view'])?$segments['view']:'';
-		if($view=='home'){
-			$url=$this->getmainurl($lang).'affiche/';
-			if(!empty($segments['category'])){
-				BLog::addtolog('[Router]: generating affiche events category URL...');
-				bimport('affiche.categories');
-				$categoryid=isset($segments['category'])?$segments['category']:0;
-				if(empty($categoryid)){
-					return '';
-					}
-				$bacats=BAfficheCategories::getInstance();
-				$category=$bacats->item_get($categoryid);
-				if(empty($category)){
-					return '';
-					}
-				$list=$category->getparentchain();
-				if((isset($list[1]))&&($list[1]->id==1)){
-					unset($list[1]);
-					}
-				foreach($list as $f){
-					$url.=$f->getalias($lang).'/';
-					}
-				return $url;
-				}
-			return $url;
-			}
-		if($view=='event'){
-			BLog::addtolog('[Router]: generating affiche event URL...');
-			$eventid=(int)$segments['id'];
-			bimport('affiche.events');
-			$bapc=BAfficheEvents::getInstance();
-			$event=$bapc->item_get($eventid);
-			if(empty($event)){
-				BLog::addtolog('[Router]: Could not get event with id='.$artid,LL_ERROR);
-				return '';
-				}
-			if(empty($event->category)){
-				BLog::addtolog('[Router]: The event category is empty!',LL_ERROR);
-				return '';
-				}
-			$url=$this->generate_afficheurl($lang,array('view'=>'home','category'=>$event->category));
-			$url.=$event->getalias($lang).'-'.$event->id;
-			return $url;
-			}
-		if($view=='archive'){
-			$url=$this->getmainurl($lang).'affiche/archive/';
-			if(!empty($segments['year'])){
-				$now=new DateTime();
-				$year_now=(int)$now->format('Y');
-				if($segments['year']<$year_now){
-					$url.='year-'.$segments['year'];
-					}
-				}
-			return $url;
-			}
-		if($view=='places'){
-			$url=$this->getmainurl($lang).'affiche/places/';
-			if(!empty($segments['category'])){
-				BLog::addtolog('[Router]: generating affiche places category URL...');
-				bimport('affiche.placescategories');
-				$categoryid=isset($segments['category'])?$segments['category']:0;
-				if(empty($categoryid)){
-					return '';
-					}
-				$bapcats=BAffichePlacesCategories::getInstance();
-				$category=$bapcats->item_get($categoryid);
-
-				if(empty($category)){
-					return '';
-					}
-				$list=$category->getparentchain();
-				if((isset($list[1]))&&($list[1]->id==1)){
-					unset($list[1]);
-					}
-				foreach($list as $f){
-					$url.=$f->getalias($lang).'/';
-					}
-				return $url;
-				}
-			return $url;
-			}
-		if($view=='places_content'){
-			return $this->getmainurl($lang).'affiche/places/more.json';
-			}
-		if($view=='place'){
-			BLog::addtolog('[Router]: generating affiche place URL...');
-			$placeid=(int)$segments['id'];
-			bimport('affiche.places');
-			$bapc=BAffichePlaces::getInstance();
-			$place=$bapc->item_get($placeid);
-			if(empty($place)){
-				BLog::addtolog('[Router]: Could not get place with id='.$artid,LL_ERROR);
-				return '';
-				}
-			if(empty($place->category)){
-				BLog::addtolog('[Router]: The place category is empty!',LL_ERROR);
-				return '';
-				}
-			$url=$this->generate_afficheurl($lang,array('view'=>'places','category'=>$place->category));
-			$url.=$place->getalias($lang).'-'.$place->id;
-			return $url;
-			}
-		if($view=='archive_date'){
-			$url=$this->getmainurl($lang).'affiche/archive/';
-
-			$iyear=(int)$segments['year'];
-			$imonth=(int)$segments['month'];
-			$iday=(int)$segments['day'];
-			//
-			if((empty($iyear))||(empty($iday))||(empty($imonth))){
-				return '';
-				}
-			$ddate=new DateTime($iyear.'-'.$imonth.'-'.$iday);
-			$url.='date-'.$ddate->format('Y-m-d');
-			return $url;
-			}
-		if($view=='search'){
-			return $this->getmainurl($lang).'affiche/search/';
-		}
-		if('home_content'){
-			return $this->getmainurl($lang).'affiche/content.json';
-		}
-		return '';
-		}
-
-	/**
-	 * @param $lang
-	 * @param $segments
-	 * @return string
-	 */
-	public function generate_pollsurl($lang,$segments){
-		$URL_main=$this->getmainurl($lang);
-		$view=isset($segments['view'])?$segments['view']:'';
-		if($view=='home'){
-			return $this->getmainurl($lang).'polls/';
-			}
-		if($view=='voices_json'){
-			return $this->getmainurl($lang).'polls/voices.json';
-			}
-		return '';
-		}
-	/**
-	 *
-	 */
-	public function generate_otherurl($lang,$segments){
-		$URL_main=$this->getmainurl($lang);
-		$view=isset($segments['view'])?$segments['view']:'';
-		if($view=='home'){
-			return $this->getmainurl($lang).'other/';
-			}
-		if($view=='contacts'){
-			return $this->getmainurl($lang).'other/contacts';
-			}
-		if($view=='addticket'){
-			return $this->getmainurl($lang).'other/addticket.json';
-			}
-		if($view=='submitnews'){
-			return $this->getmainurl($lang).'other/submitnews.json';
-			}
-		if($view=='submitads'){
-			return $this->getmainurl($lang).'other/submitads.json';
 			}
 		return '';
 		}
@@ -966,45 +139,10 @@ class BRouter extends BRouterBase{
 		$URL='';
 		
 		switch($component){
-			case 'admin':
-				return $this->generate_adminurl($segments);
-			case 'news':
-				return $this->generate_newsurl($lang,$segments);
-			case 'blogs':
-				return $this->generate_blogsurl($lang,$segments);
-			case 'quizzes':
-				return $this->generate_quizzesurl($lang,$segments);
-			case 'contests':
-				return $this->generate_contestsurl($lang,$segments);
-			case 'users':
-				return $this->generate_usersurl($lang,$segments);
-			case 'affiche':
-				return $this->generate_afficheurl($lang,$segments);
-			case 'tags':
-				return $this->generate_tagsurl($lang,$segments);
-			case 'social':
-				return $this->generate_socialurl($lang,$segments);
-			case 'sitemap':
-				if ($segments['view']=='xml'){
-					return BHOSTNAME.'/sitemap.xml';					
-					}
-				break;
-			case 'switchmobileversion':
-				if ($segments['view']=='switch'){
-					return BHOSTNAME.'/switchmobile';					
-					}
-				break;
-			case 'polls':
-				return $this->generate_pollsurl($lang,$segments);
-			case 'other':
-				return $this->generate_otherurl($lang,$segments);
+			case 'content':
+				return $this->generate_contenturl($lang,$segments);
 			case 'mainpage':
-				$URL=BHOSTNAME.'/';
-				if($lang!='ua'){
-					$URL.=$lang.'/';
-					}
-				return $URL;
-				break;
+				return $this->getmainurl($lang);
 			}
 		}
 	/**
@@ -1022,13 +160,13 @@ class BRouter extends BRouterBase{
 		return $url;
 		}
 	/**
-	 * Parse /news/ branch.
+	 * Parse /content/ branch.
 	 * 
 	 * Language - $this->langcode
 	 */
-	public function parseurl_news($f_path){
+	public function parseurl_content($f_path){
 		if(ROUTER_DEBUG){
-			BLog::addtolog('[Router]: We are in news branch now!');
+			BLog::addtolog('[Router]: We are in content branch now!');
 			}
 		//Remove lateset empty chain.
 		if(end($f_path)==''){
@@ -1044,31 +182,31 @@ class BRouter extends BRouterBase{
 				array_pop($f_path);
 				}
 			}
-		//Новости - главная страница
+		//content - homepage
 		if(empty($f_path)){
 			$segments['view']='blog';
 			$segments['category']=1;
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('news:category:1');
+			$this->softmodulesget('content:category:1');
 			return true;
 			}
 		if((count($f_path)==1)&&($f_path[0]=='archive')){
 			$segments['view']='archives';
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 			);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
 			//$this->softmodulesget('blogs:authors');
-			$this->softmodulesget('news:home');
+			$this->softmodulesget('content:home');
 			return true;
 			}
 		//
@@ -1080,13 +218,13 @@ class BRouter extends BRouterBase{
 			$segments['view']='archives';
 			$segments['year']=$year;
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('news:archive');
+			$this->softmodulesget('content:archive');
 			return true;
 			}
 		//
@@ -1096,7 +234,7 @@ class BRouter extends BRouterBase{
 			$nyear=(int)$now->format('Y');
 			$nmonth=(int)$now->format('m');
 			$nday=(int)$now->format('d');
-			$url_dtnow=$this->generateURL('news',BLang::$langcode,array('view'=>'archive_date','year'=>$nyear,'month'=>$nmonth,'day'=>$nday));
+			$url_dtnow=$this->generateURL('content',BLang::$langcode,array('view'=>'archive_date','year'=>$nyear,'month'=>$nmonth,'day'=>$nday));
 			//Date of blogs start posting
 			//$syear=2015;
 			//$smonth=12;
@@ -1125,7 +263,7 @@ class BRouter extends BRouterBase{
 				return true;
 				}
 			//Canonical URL
-			$gen_url=$this->generateURL('news',BLang::$langcode,array('view'=>'archive_date','year'=>$iyear,'month'=>$imonth,'day'=>$iday));
+			$gen_url=$this->generateURL('content',BLang::$langcode,array('view'=>'archive_date','year'=>$iyear,'month'=>$imonth,'day'=>$iday));
 			$cur_url=$this->host.parse_url($this->url,PHP_URL_PATH);
 			if($cur_url!=$gen_url){
 				$this->ctype=CTYPE_REDIRECT301;
@@ -1138,33 +276,33 @@ class BRouter extends BRouterBase{
 			$segments['day']=$iday;
 			//
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('news:archive');
+			$this->softmodulesget('content:archive');
 			return true;
 			}
-		//Новости - новости с фото / новости с видео / поиск
+		//content with photo
 		if((count($f_path)==1)&&(($f_path[0]=='photo')||$f_path[0]=='video'||$f_path[0]=='search')){
 			$segments['view']=$f_path[0];
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('news:'.$f_path[0]);
+			$this->softmodulesget('content:'.$f_path[0]);
 			return true;
 			}
 		//
 		if((count($f_path)==1)&&($f_path[0]=='mod_photo.json')){
 			$segments['view']='mod_photo_content';
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
@@ -1176,7 +314,7 @@ class BRouter extends BRouterBase{
 		if((count($f_path)==1)&&($f_path[0]=='mod_bycategory.json')){
 			$segments['view']='mod_bycategory_content';
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
@@ -1189,59 +327,59 @@ class BRouter extends BRouterBase{
 
 			$segments['view']='mod_bytag_content';
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				$this->ctype=CTYPE_JSON,
 				'segments'=>$segments,
 			);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('news: home');
+			$this->softmodulesget('content: home');
 			return true;
 		}
 		//
 		$suffix=end(explode('-',end($f_path)));
 		//Article
 		if(is_numeric($suffix)){
-			BLog::addtolog('[Router]: found something like news article');
+			BLog::addtolog('[Router]: found something like content article');
 			$articleid=(int)$suffix;
 			$segments=array('view'=>'article','id'=>$articleid);
-			bimport('news.articles');
-			$bnewsarticles=BNewsArticles::getInstance();
-			$article=$bnewsarticles->item_get($articleid);
+			bimport('content.articles');
+			$bcontentarticles=BNewsArticles::getInstance();
+			$article=$bcontentarticles->item_get($articleid);
 			if(empty($article)){
 				BLog::addtolog('[Router]: Could not load article!',LL_ERROR);
 				return false;
 				}
-			$gen_url=$this->generateURL('news',BLang::$langcode,$segments);
+			$gen_url=$this->generateURL('content',BLang::$langcode,$segments);
 			$cur_url=$this->host.parse_url($this->url,PHP_URL_PATH);
 			if($cur_url!=$gen_url){
 				$this->ctype=CTYPE_REDIRECT301;
 				$this->redirectURL='//'.$gen_url;
 				return;
 				}
-			$this->newscat=$article->category;
+			$this->contentcat=$article->category;
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments,
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			//$this->softmodulesget('news:article:'.$article->id);
-			$this->softmodulesget('news:newscat:'.$article->category);
+			//$this->softmodulesget('content:article:'.$article->id);
+			$this->softmodulesget('content:contentcat:'.$article->category);
 			return true;
 			}
 		//Прес-релизы. Загрузка аяксом
 		if($f_path[count($f_path)-1]=='pr_content.json'){
-			BLog::addtolog('[Router]: found something like random news AJAX loader.');
+			BLog::addtolog('[Router]: found something like random content AJAX loader.');
 			//
-			bimport('news.categories');
-			$bnewscat=BNewsCategories::getInstance();
+			bimport('content.categories');
+			$bcontentcat=BNewsCategories::getInstance();
 			unset($f_path[count($f_path)-1]);
-			$category=$bnewscat->getitembyaliaschain($f_path,BLang::$langcode);
+			$category=$bcontentcat->getitembyaliaschain($f_path,BLang::$langcode);
 			if(empty($category)){
-				BLog::addtolog('[Router]: Could not load news category!',LL_ERROR);
+				BLog::addtolog('[Router]: Could not load content category!',LL_ERROR);
 				return false;
 				}
 			//
@@ -1254,7 +392,7 @@ class BRouter extends BRouterBase{
 			$segments['category']=BRequest::GetInt('category');
 			$segments['limit']=BRequest::GetInt('limit');
 			$this->maincom=(object)array(
-				'com'=>'news',
+				'com'=>'content',
 				'position'=>'content',
 				'segments'=>$segments
 				);
@@ -1263,20 +401,20 @@ class BRouter extends BRouterBase{
 			return true;
 			}
 		//
-		BLog::addtolog('[Router]: found something like news category');
-		bimport('news.categories');
-		$bnewscat=BNewsCategories::getInstance();
+		BLog::addtolog('[Router]: found something like content category');
+		bimport('content.categories');
+		$bcontentcat=BNewsCategories::getInstance();
 		if(end($f_path)==''){
 			array_pop($f_path);
 			}
 		//
-		$category=$bnewscat->getitembyaliaschain($f_path,BLang::$langcode);
+		$category=$bcontentcat->getitembyaliaschain($f_path,BLang::$langcode);
 		if(empty($category)){
-			BLog::addtolog('[Router]: Could not load news category!',LL_ERROR);
+			BLog::addtolog('[Router]: Could not load content category!',LL_ERROR);
 			return false;
 			}
 		//
-		$this->newscategory=$category->id;
+		$this->contentcategory=$category->id;
 		$segments['view']='blog';
 		$segments['category']=$category->id;
 
@@ -1285,13 +423,13 @@ class BRouter extends BRouterBase{
 			}
 		//
 		$this->maincom=(object)array(
-			'com'=>'news',
+			'com'=>'content',
 			'position'=>'content',
 			'segments'=>$segments
 			);
 		$this->addfixedrules();
 		$this->rules[]=$this->maincom;
-		$this->softmodulesget('news:category:'.$category->id);
+		$this->softmodulesget('content:category:'.$category->id);
 		return true;
 		}
 	/**
@@ -1556,7 +694,7 @@ class BRouter extends BRouterBase{
 				$this->redirectURL='//'.$gen_url;
 				return;
 				}
-			$this->newscat=$article->category;
+			$this->contentcat=$article->category;
 			$this->maincom=(object)array(
 				'com'=>'blogs',
 				'position'=>'content',
@@ -1581,7 +719,7 @@ class BRouter extends BRouterBase{
 			return false;
 			}
 		//
-		$this->newscategory=$category->id;
+		$this->contentcategory=$category->id;
 		$segments['view']='category';
 		$segments['id']=$category->id;
 		//
@@ -1662,7 +800,7 @@ class BRouter extends BRouterBase{
 				$this->redirectURL='//'.$gen_url;
 				return;
 				}
-			//$this->newscat=$article->category;
+			//$this->contentcat=$article->category;
 			$this->maincom=(object)array(
 				'com'=>'affiche',
 				'position'=>'content',
@@ -1689,7 +827,7 @@ class BRouter extends BRouterBase{
 			return false;
 			}
 		//
-		//$this->newscategory=$category->id;
+		//$this->contentcategory=$category->id;
 		$segments['view']='places';
 		$segments['category']=$category->id;
 		//
@@ -1888,7 +1026,7 @@ class BRouter extends BRouterBase{
 				$this->redirectURL='//'.$gen_url;
 				return;
 				}
-			//$this->newscat=$article->category;
+			//$this->contentcat=$article->category;
 			$this->maincom=(object)array(
 				'com'=>'affiche',
 				'position'=>'content',
@@ -1913,7 +1051,7 @@ class BRouter extends BRouterBase{
 			return false;
 			}
 		//
-		//$this->newscategory=$category->id;
+		//$this->contentcategory=$category->id;
 		$segments['view']='home';
 		$segments['category']=$category->id;
 		//
@@ -2397,8 +1535,6 @@ class BRouter extends BRouterBase{
 		}
 	/**
 	 * Parse URL and returns segments, if all is ok.
-	 *
-	 *
 	 */
 	public function parseurl($URL,$host){
 		$u=parse_url($URL);
@@ -2423,16 +1559,17 @@ class BRouter extends BRouterBase{
 			return $this->parse_adminurl($f_path);
 			}
 		//Detect language
-		if($f_path[0]==='ru'){
+		/*if($f_path[0]==='ru'){
 			$this->langcode='ru';
 			array_shift($f_path);
 			}else{
 			$this->langcode='ua';
 			}
-		$lang=$this->langcode;
 		if(ROUTER_DEBUG){
 			BLog::addtolog('Router lang='.$lang);
-			}
+			}*/
+		$this->langcode='en';
+		$lang=$this->langcode;
 		bimport('cms.language');
 		BLang::init($this->langcode);
 
@@ -2445,58 +1582,21 @@ class BRouter extends BRouterBase{
 			$this->rules[]=$this->maincom;
 			return true;
 			}
-		elseif($f_path[0]=='news'){
+		elseif($f_path[0]=='content'){
 			array_shift($f_path);
-			return $this->parseurl_news($f_path);
-			}
-		elseif($f_path[0]=='blogs'){
-			array_shift($f_path);
-			return $this->parseurl_blogs($f_path);
-			}
-		elseif($f_path[0]=='affiche'){
-			array_shift($f_path);
-			return $this->parseurl_affiche($f_path);
-			}
-		elseif($f_path[0]=='quizzes'){
-			array_shift($f_path);
-			return $this->parseurl_quizzes($f_path);
-			}
-		elseif($f_path[0]=='contests'){
-			array_shift($f_path);
-			return $this->parseurl_contests($f_path);
-			}
-		elseif($f_path['0']=='polls'){
-			array_shift($f_path);
-			return $this->parseurl_polls($f_path);
-			}
-		elseif($f_path[0]=='tags'){
-			array_shift($f_path);
-			return $this->parseurl_tags($f_path);
-			}
-		elseif($f_path[0]=='social'){
-			array_shift($f_path);
-			return $this->parseurl_social($f_path);
-			}
-		elseif($f_path[0]=='users'){
-			array_shift($f_path);
-			return $this->parseurl_users($f_path);
-			}
-		elseif($f_path[0]=='other'){
-			array_shift($f_path);
-			return $this->parseurl_other($f_path);
+			return $this->parseurl_content($f_path);
 			}
 		elseif(count($f_path)==0||(count($f_path)==1&&$f_path[0]=='')){
 			$this->maincom=(object)array(
-				'com'=>'mainpage',
+				'com'=>'content',
 				'position'=>'content',
-				'segments'=>array('view'=>'mainpage',)
+				'segments'=>array('view'=>'category','id'=>1)
 				);
 			$this->addfixedrules();
 			$this->rules[]=$this->maincom;
-			$this->softmodulesget('mainpage');
+			$this->softmodulesget('content:category:1');
 			return true;
 			}
-
 		return false;
 		}//end of ParseURL
 	}

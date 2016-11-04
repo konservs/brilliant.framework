@@ -18,7 +18,6 @@ class BConfigSystems extends BConfigCategory{
 		$this->addgroup_news();
 		$this->addgroup_media();
 		$this->addgroup_mainpage();
-		$this->addgroup_deskoffers();
 		$this->addgroup_other();
 		}
 	/**
@@ -238,22 +237,6 @@ class BConfigSystems extends BConfigCategory{
 			new BConfigFieldString(
 				'COM_MAINPAGE_METAKEYW_UA',
 				BLang::_('ADMIN_CONFIG_SYSTEMS_MAINPAGE_METAKEYWUA'),
-				''),
-			));
-		}
-	/**
-	 * DeskOffers contacts.
-	 */
-	protected function addgroup_deskoffers(){
-		$this->registerGroup('Стол заказов','deskoffers',array(
-			new BConfigFieldString(
-				'TABLE_PRICE_AUTO',
-				'Цена рубрики "Авто"',
-				''),
-			//
-			new BConfigFieldString(
-				'TABLE_PRICE_DOM',
-				'Цена рубрики "Недвижимость"',
 				''),
 			));
 		}

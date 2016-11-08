@@ -8,6 +8,7 @@
  * @author Andrii Biriev
  */
 namespace Brilliant\cms;
+use Brilliant\log\BLog;
 
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);

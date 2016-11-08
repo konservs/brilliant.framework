@@ -7,6 +7,8 @@
  * 
  * @author Andrii Biriev
  */
+namespace Brilliant\cms;
+
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);
 define('CTYPE_JSON',2);
@@ -15,15 +17,13 @@ define('CTYPE_PLAINHTML',4);//FOR HTML BLOCKS WITHOUT TEMPLATE!
 define('CTYPE_DOCX',5);
 define('CTYPE_CSV',6);
 define('CTYPE_PDF',7);
-
 define('CTYPE_REDIRECT301',10);
 define('CTYPE_REDIRECT302',11);
 
 if(!defined(DEBUG_PAGES_CACHE)){
 	define(DEBUG_PAGES_CACHE,1);
 	}
-
-bimport('log.general');
+//bimport('log.general');
 
 //Router Class
 class BRouterBase{

@@ -4,6 +4,10 @@
  *
  * @author Andrii Biriev, a@konservs.com, www.konservs.com
  */
+namespace Brilliant\log;
+use BLogger;
+use types;
+
 bimport('log.types');
 bimport('log.logger');
 

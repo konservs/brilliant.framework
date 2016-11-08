@@ -1,5 +1,6 @@
 <?php
-bimport('log.types');
+namespace Brilliant\log;
+use types;
 
 class BLogger{
 	/**

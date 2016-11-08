@@ -1,4 +1,6 @@
 <?php
+namespace Brilliant\log;
+
 define('LL_GENERAL',1);
 define('LL_DEBUG',2);
 define('LL_INFO',4);

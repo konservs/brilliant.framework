@@ -1,4 +1,6 @@
 <?php
+namespace Brilliant\sql;
+
 //============================================================
 // Sets of functions and classes to work with MySQL database
 //

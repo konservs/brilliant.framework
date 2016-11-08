@@ -9,6 +9,7 @@
  */
 namespace Brilliant\cms;
 use Brilliant\log\BLog;
+use Brilliant\cache\BCache;
 
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);
@@ -1019,11 +1020,11 @@ class BRouterBase{
 		$debug_pages_cache=defined('DEBUG_PAGES_CACHE')?DEBUG_PAGES_CACHE:1;
 		if((CACHE_TYPE)&&($debug_pages_cache)){
 			//if set CACHE_TYPE, trying to load blocks from cache
-			bimport('cache.general');
+			//bimport('cache.general');
 			$bcache=BCache::getInstance();
 			//Accumulating keys...
 			$keys=array();
-			bimport('http.useragent');
+			//bimport('http.useragent');
 			$suffix=BBrowserUseragent::getDeviceSuffix();
 			foreach($this->rules as &$c){
 				$c->key=$this->getUrlCahceKey($c->com,$this->langcode,$suffix,$c->segments);

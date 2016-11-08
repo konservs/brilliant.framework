@@ -8,9 +8,6 @@ namespace Brilliant\log;
 use BLogger;
 use types;
 
-bimport('log.types');
-bimport('log.logger');
-
 class BLog{
 	protected static $loggers=array();
 	/**

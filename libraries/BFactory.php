@@ -6,8 +6,8 @@
  * 
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
-
-bimport('log.general');
+namespace Brilliant;
+use Brilliant\log\BLog;
 
 class BFactory{
 	protected static $db=NULL;

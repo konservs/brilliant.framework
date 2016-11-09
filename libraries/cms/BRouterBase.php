@@ -11,7 +11,9 @@ namespace Brilliant\cms;
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 use Brilliant\cache\BCache;
+use Brilliant\sql\BMySQL;
 use Brilliant\http\BBrowserUseragent;
+use Brilliant\html\BHTML;
 
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);
@@ -1020,13 +1022,10 @@ class BRouterBase{
 	 */
 	public function render_positions(){
 		$debug_pages_cache=defined('DEBUG_PAGES_CACHE')?DEBUG_PAGES_CACHE:1;
-		if((CACHE_TYPE)&&($debug_pages_cache)){
-			//if set CACHE_TYPE, trying to load blocks from cache
-			//bimport('cache.general');
-			$bcache=BCache::getInstance();
+		$bcache=BFactory::getCache();
+		if(($bcache)&&($debug_pages_cache)){
 			//Accumulating keys...
 			$keys=array();
-			//bimport('http.useragent');
 			$suffix=BBrowserUseragent::getDeviceSuffix();
 			foreach($this->rules as &$c){
 				$c->key=$this->getUrlCahceKey($c->com,$this->langcode,$suffix,$c->segments);
@@ -1034,9 +1033,6 @@ class BRouterBase{
 				}
 			//Multi-get from cache
 			$list=$bcache->mget($keys);
-			//if(DEBUG_MODE){
-			//    BLog::addtolog('memcached result:'.var_export($list,true));
-			//    }
 			foreach($this->rules as &$c){
 				if(($list[$c->key]!==false)&&($list[$c->key]!==NULL)){
 					$c->status=$list[$c->key]->status;//200 | 403 | 404
@@ -1087,8 +1083,7 @@ class BRouterBase{
 				$c->locationtime=$controller->locationtime;
 				$c->rendered=true;
 				//Caching the result, if necessary.
-				if((CACHE_TYPE)&&($debug_pages_cache)&&($c->cachecontrol)){
-					
+				if(($bcache)&&($debug_pages_cache)&&($c->cachecontrol)){
 					$bcache->set($c->key,$c,$c->cachetime);
 					}
 				//Convert to object.
@@ -1100,7 +1095,6 @@ class BRouterBase{
 	 * Generate final HTML.
 	 */
 	public function generatepage_html(){
-		bimport('html.general');
 		$bhtml=BHTML::getInstance();
 		$status=200;
 		//Forming page from blocks...
@@ -1199,7 +1193,6 @@ class BRouterBase{
 			$this->templatename='default';
 			}
 		//Detect device...
-		bimport('http.useragent');
 		$device=BBrowserUseragent::detectDevice();
 		if($device==DEVICE_TYPE_MPHONE){
 			$suffix='.m';
@@ -1249,8 +1242,6 @@ class BRouterBase{
 			}
 		//Output debug information, if necessary.
 		if(DEBUG_MODE){
-			bimport('sql.mysql');
-			bimport('cache.general');
 			BLog::addtolog('[Router]: Generation time: '.sprintf('%7.7f',self::page_time()));
 			BLog::addtolog('[Router]: MySQL queries:'.BMySQL::getQueriesCount());
 			$qc=BCache::getQueriesCount();

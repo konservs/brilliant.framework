@@ -1,12 +1,12 @@
 <?php
-namespace Brilliant\sql;
-
 //============================================================
 // Sets of functions and classes to work with MySQL database
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-bimport('log.general');
+
+namespace Brilliant\sql;
+use Brilliant\log\BLog;
 
 class BMySQL{
 	protected $db_connected;

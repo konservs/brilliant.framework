@@ -8,6 +8,8 @@
  * @author Andrii Biriev
  */
 namespace Brilliant\cms;
+
+use Application\BRouter;
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 use Brilliant\cache\BCache;
@@ -88,18 +90,6 @@ class BRouterBase{
 			$list=array_merge($list,$clist);
 			}
 		return $list;
-		}
-	/**
-	 * Returns the global Router object, only creating it if it doesn't
-	 * already exist.
-	 * 
-	 * @return null|\BRouterBase Description
-	 */
-	public static function getInstance(){
-		if(!is_object(self::$instance)){
-			self::$instance=new BRouter();
-			}
-		return self::$instance;
 		}
 	/**
 	 * Very useful function, often usings it in URLs parsing...

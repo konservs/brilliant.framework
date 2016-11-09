@@ -51,19 +51,14 @@ class BRouterBase{
 	protected $langcode='';
 	protected $redirectURL;
 	/**
-	 * Constructor - store current microtime, fill some default values
+	 * Init microtime, fill some default values
 	 */
-	public function __construct(){
+	protected function init(){
 		//time of construct...
 		$starttime = explode(' ', microtime());
 		self::$starttime = $starttime[1] + $starttime[0];
 		//
 		$this->router=array();
-
-		$fn_rules=dirname(__FILE__).DIRECTORY_SEPARATOR.'router.rules.php';
-		if(file_exists($fn_rules)){
-			include($fn_rules);
-			}
 		}
 	/**
 	 * Get current page generation time. Using this for profiling.

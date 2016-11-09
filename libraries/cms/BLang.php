@@ -15,7 +15,6 @@ class BLang{
 	public static $strings;
 	public static $langcode;
 	public static $langcode_web;
-	public static $instance;
 	public static $suffix;
 	public static $translitconverter=array(
 		'а'=>'a', 'б'=>'b', 'в'=>'v', 'г'=>'g', 'д'=>'d', 'е'=>'e',

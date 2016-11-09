@@ -1,4 +1,6 @@
 <?php
+namespace Brilliant\cms;
+
 trait BSingleton{
 	protected static $instance;
 	/**
@@ -31,14 +33,3 @@ trait BSingleton{
 	final private function __clone(){
 		}
 	}
-
-
-/*class A  {
-    use Singleton;
-
-    protected function init() {
-        $this->foo = 1;
-        echo "Hi!\n";
-    }
-}
-*/

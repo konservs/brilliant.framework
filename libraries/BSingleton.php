@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\cms;
+namespace Brilliant;
 
 trait BSingleton{
 	protected static $instance;

@@ -6,13 +6,14 @@
  *
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
+namespace Brilliant\html;
+
 define('DOCTYPE_UNKNOWN',0);
 define('DOCTYPE_HTML4_TRANSITIONAL',1);
 //
 define('JS_PRIORITY_FRAMEWORK',-1);
 define('JS_PRIORITY_FRAMEWORK2',0); //for frameworks 
 define('JS_PRIORITY_NORMAL',1);
-bimport('log.general');
 
 class BHTML{
 	protected static $instance=NULL;

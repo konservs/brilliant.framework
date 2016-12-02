@@ -4,10 +4,10 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
+namespace Brilliant\cache;
+use Brilliant\log\BLog;
+
 define('DEBUG_CACHE',0);
-
-bimport('log.general');
-
 class BCache{
 	protected static $instance=NULL;
 	public $queries_set_count=0;

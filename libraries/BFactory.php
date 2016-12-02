@@ -6,8 +6,10 @@
  * 
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
-
-bimport('log.general');
+namespace Brilliant;
+use Brilliant\log\BLog;
+use Brilliant\sql\BMySQL;
+use Brilliant\cache\BCache;
 
 class BFactory{
 	protected static $db=NULL;
@@ -19,7 +21,6 @@ class BFactory{
 			return self::$db;
 			}
 		BLog::addtolog('[BFactory] Connecting to the database "'.MYSQL_DB_HOST.'"...');
-		bimport('sql.mysql');
 		self::$db=BMySQL::getInstanceAndConnect();
 		if(empty(self::$db)){
 			BLog::addtolog('[BFactory] Could not connect to the MySQL database!',LL_ERROR);
@@ -32,7 +33,6 @@ class BFactory{
 	 */
 	public static function getCache(){
 		if(CACHE_TYPE){
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			return $bcache;
 			}

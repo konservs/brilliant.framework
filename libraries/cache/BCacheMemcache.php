@@ -5,7 +5,10 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-bimport('log.general');
+namespace Brilliant\cache;
+
+use Brilliant\log\BLog;
+
 class BCacheMemcache extends BCache{
 	protected $memcache=NULL;
 	protected $memcache_ver='';

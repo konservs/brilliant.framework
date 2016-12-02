@@ -6,13 +6,14 @@
  * 
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
+namespace Brilliant\cache;
+
+use Brilliant\log\BLog;
+use BCache;
 
 if(!defined('PATH_CACHE')){
 	define('PATH_CACHE',BROOTPATH.DIRECTORY_SEPARATOR.'filecache'.DIRECTORY_SEPARATOR);
 	}
-
-bimport('cache.general');
-bimport('log.general');
 
 class BCacheFiles extends BCache{
 	protected $cachedir='';

@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Brilliant migration maker
+ */
+echo "-----------------------------------------------------\r\n";
+echo "           Brilliant migration maker\r\n";
+echo "-----------------------------------------------------\r\n";
+
+$qr='show tables';
+$q=$db->query($qr);
+foreach($l=$db->fetch($q)){
+	$tblname=reset($l);
+	$qr2='show fields in `'.$tblname.'`';
+	$q2=$db->query($qr);
+	foreach($l2=$db->fetch($q2)){
+		$l2['Field'];
+		$l2['Type'];
+		$l2['Null'];
+		$l2['Key'];
+		$l2['Default'];
+		$l2['Extra'];
+		}
+	}

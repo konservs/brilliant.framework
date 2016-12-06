@@ -65,6 +65,10 @@ foreach($tables as $tblname){
 	$result.='$table';
 	foreach($fields as $fld){
 		$fldparams=array();
+		if($fld->null=='YES'){
+			$fldparams['null']='\'null\'=>true';
+			}
+		//
 		switch($fld->type_name){
 			case 'tinyint':
 				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_TINY';
@@ -108,7 +112,7 @@ foreach($tables as $tblname){
 				$result.=')'.PHP_EOL;
 				break;
 			case 'enum':
-				$fldparams['values']=$fld->type_length;
+				$fldparams['values']='\'values\'=>['.$fld->type_length.']';
 				$result.='->addColumn(\''.$fld->name.'\', \'enum\'';
 				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
@@ -126,7 +130,7 @@ foreach($tables as $tblname){
 					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
 					}
 				$result.='->addColumn(\''.$fld->name.'\', \'char\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'binary':
@@ -135,17 +139,17 @@ foreach($tables as $tblname){
 					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
 					}
 				$result.='->addColumn(\''.$fld->name.'\', \'binary\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'datetime':
 				$result.='->addColumn(\''.$fld->name.'\', \'datetime\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'timestamp':
 				$result.='->addColumn(\''.$fld->name.'\', \'timestamp\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'longtext':
@@ -160,7 +164,7 @@ foreach($tables as $tblname){
 			case 'text':
 			type_text:
 				$result.='->addColumn(\''.$fld->name.'\', \'text\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'longblob':
@@ -175,7 +179,7 @@ foreach($tables as $tblname){
 			case 'blob':
 			type_blob:
 				$result.='->addColumn(\''.$fld->name.'\', \'blob\'';
-				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			default:

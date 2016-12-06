@@ -7,10 +7,6 @@ include(__DIR__.DIRECTORY_SEPARATOR.'autoload.php');
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 
-define('MYSQL_DB_HOST','127.0.0.1');
-define('MYSQL_DB_USERNAME','root');
-define('MYSQL_DB_PASSWORD','');
-define('MYSQL_DB_NAME','brilliant');
 
 echo "-----------------------------------------------------\r\n";
 echo "           Brilliant migration maker\r\n";
@@ -32,23 +28,170 @@ foreach($tables as $tblname){
 	$fieldnames=array();
 	$qr='show fields in `'.$tblname.'`';
 	$q=$db->query($qr);
+
+	$primarykeys=array();
+
 	while($l = $db->fetch($q)){
-		$fieldnames[]=$l['Field'];
+		//
+		$fldname=$l['Field'];
+		$fieldnames[]=$fldname;
+		//
 		$xfield=new stdClass();
-		$xfield->name=$l['Field'];
+		$xfield->name=$fldname;
 		$xfield->type=$l['Type'];
-		$fields[]=$xfield;
-
-		/*$l2['Field'];
-		$l2['Type'];
-		$l2['Null'];
-		$l2['Key'];
-		$l2['Default'];
-		$l2['Extra'];
-
-		echo($l2['Field'].' ');*/
-
+		$xfield->null=$l['Null'];
+		$xfield->key=$l['Key'];
+		$xfield->default=$l['Default'];
+		$xfield->extra=$l['Extra'];
+		$xtype=explode(' ',$xfield->type);
+		$unsigned=(count($xtype)==2)&&($xtype[1]=='unsigned');
+		$type2=$xtype[0];
+		$xtype2=explode('(',$type2);
+		$xfield->type_length=isset($xtype2[1])?substr($xtype2[1],0,-1):'';
+		$xfield->type_name=$xtype2[0];
+		$xfield->type_unsigned=$unsigned;
+		$fields[$fldname]=$xfield;
+		if($xfield->key=='PRI'){
+			$primarykeys[]='\''.$fldname.'\'';
+			}
 		}
 	BLog::addtolog(' - Table fields: '.implode(', ',$fieldnames));
+	//
+	$result='$table = $this->table(\''.$tblname.'\', [\'id\' => false, \'primary_key\' => ['.implode(',',$primarykeys).']]);'.PHP_EOL;
+	//Add fields...
+	$result.='$table';
+	foreach($fields as $fld){
+		$fldparams=array();
+		switch($fld->type_name){
+			case 'tinyint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_TINY';
+				goto type_int;
+			case 'smallint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_SMALL';
+				goto type_int;
+			case 'mediumint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_MEDIUM';
+				goto type_int;
+			case 'bigint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_BIG';
+				goto type_int;
+			case 'int':
+			type_int:
+				if(!empty($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				if($fld->type_unsigned){
+					$fldparams['signed']='\'signed\'=>false';
+					}
 
+				$result.='->addColumn(\''.$fld->name.'\', \'integer\'';
+				$result.=(empty($fldparams)?'':(', ['.implode(', ', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'double':
+			case 'float':
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'float\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'decimal':
+				$xlen=explode(',',$fld->type_length);
+				$fldparams['precision']='\'precision\'=>'.$xlen[0].'';
+				$fldparams['scale']='\'scale\'=>'.$xlen[1].'';
+				$result.='->addColumn(\''.$fld->name.'\', \'decimal\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'enum':
+				$fldparams['values']=$fld->type_length;
+
+				$result.='->addColumn(\''.$fld->name.'\', \'enum\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'varchar':
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'string\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'char':
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'char\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'binary':
+			case 'varbinary':
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'binary\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'datetime':
+				$result.='->addColumn(\''.$fld->name.'\', \'datetime\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'timestamp':
+				$result.='->addColumn(\''.$fld->name.'\', \'timestamp\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'longtext':
+				$fldparams['size']='MysqlAdapter::TEXT_LONG';
+				goto type_text;
+			case 'mediumtext':
+				$fldparams['size']='MysqlAdapter::TEXT_MEDIUM';
+				goto type_text;
+			case 'tinytext':
+				$fldparams['size']='MysqlAdapter::TEXT_TINY';
+				goto type_text;
+			case 'text':
+			type_text:
+				$result.='->addColumn(\''.$fld->name.'\', \'text\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'longblob':
+				$fldparams['size']='MysqlAdapter::BLOB_LONG';
+				goto type_blob;
+			case 'mediumblob':
+				$fldparams['size']='MysqlAdapter::BLOB_MEDIUM';
+				goto type_blob;
+			case 'tinyblob':
+				$fldparams['size']='MysqlAdapter::BLOB_TINY';
+				goto type_blob;
+			case 'blob':
+			type_blob:
+				$result.='->addColumn(\''.$fld->name.'\', \'blob\'';
+				$result.=(empty($fldparams)?'':(',[\'' . implode('\',\'', $fldparams) . '\']'));
+				$result.=')'.PHP_EOL;
+				break;
+			default:
+				var_dump($fld); die();
+			}
+		
+		}
+	$result.='->create();'.PHP_EOL.PHP_EOL;
+	//
+	file_put_contents('migration.php',$result,FILE_APPEND);
 	}
+
+
+// create the table acymailing_action
+/* $table = $this->table('acymailing_action', ['id' => 'action_id', 'signed' => false]);
+$table->addColumn('name', 'string')
+	->addColumn('frequency', 'integer', ['signed' => false])
+	->addColumn('nextdate', 'integer', ['signed' => false])
+	->create();
+*/

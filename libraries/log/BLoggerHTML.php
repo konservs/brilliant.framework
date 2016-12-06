@@ -5,8 +5,9 @@
  * @author Andrii Biriev, a@konservs.com, www.konservs.com
  */
 
-bimport('log.types');
-bimport('log.logger');
+namespace Brilliant\log;
+use Brilliant\log\BLogger;
+use Brilliant\log\BLog;
 
 class BLoggerHTML extends BLogger{
 	public static $memprof=true;

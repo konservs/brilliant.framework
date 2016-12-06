@@ -3,24 +3,52 @@
 /**
  * Brilliant migration maker
  */
+include(__DIR__.DIRECTORY_SEPARATOR.'autoload.php');
+use Brilliant\BFactory;
+use Brilliant\log\BLog;
+
+define('MYSQL_DB_HOST','127.0.0.1');
+define('MYSQL_DB_USERNAME','root');
+define('MYSQL_DB_PASSWORD','');
+define('MYSQL_DB_NAME','brilliant');
+
 echo "-----------------------------------------------------\r\n";
 echo "           Brilliant migration maker\r\n";
 echo "-----------------------------------------------------\r\n";
 
-$db=BFactory::getDBO();
+$db=Brilliant\BFactory::getDBO();
 
 $qr='show tables';
 $q=$db->query($qr);
+$tables=array();
 while($l = $db->fetch($q)){
 	$tblname=reset($l);
-	$qr2='show fields in `'.$tblname.'`';
-	$q2=$db->query($qr);
-	while($l2 = $db->fetch($q2)){
-		$l2['Field'];
+	$tables[]=$tblname;
+	}
+
+foreach($tables as $tblname){
+	BLog::addtolog(' - Dumping "'.$tblname.'"...');
+	$fields=array();
+	$fieldnames=array();
+	$qr='show fields in `'.$tblname.'`';
+	$q=$db->query($qr);
+	while($l = $db->fetch($q)){
+		$fieldnames[]=$l['Field'];
+		$xfield=new stdClass();
+		$xfield->name=$l['Field'];
+		$xfield->type=$l['Type'];
+		$fields[]=$xfield;
+
+		/*$l2['Field'];
 		$l2['Type'];
 		$l2['Null'];
 		$l2['Key'];
 		$l2['Default'];
 		$l2['Extra'];
+
+		echo($l2['Field'].' ');*/
+
 		}
+	BLog::addtolog(' - Table fields: '.implode(', ',$fieldnames));
+
 	}

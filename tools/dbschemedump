@@ -7,7 +7,6 @@ include(__DIR__.DIRECTORY_SEPARATOR.'autoload.php');
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 
-
 echo "-----------------------------------------------------\r\n";
 echo "           Brilliant migration maker\r\n";
 echo "-----------------------------------------------------\r\n";
@@ -57,7 +56,11 @@ foreach($tables as $tblname){
 		}
 	BLog::addtolog(' - Table fields: '.implode(', ',$fieldnames));
 	//
-	$result='$table = $this->table(\''.$tblname.'\', [\'id\' => false, \'primary_key\' => ['.implode(',',$primarykeys).']]);'.PHP_EOL;
+	$result='$table = $this->table(\''.$tblname.'\', [\'id\' => false';
+	if(!empty($primarykeys)){
+		$result.=', \'primary_key\' => ['.implode(',',$primarykeys).']';
+		}
+	$result.=']);'.PHP_EOL;
 	//Add fields...
 	$result.='$table';
 	foreach($fields as $fld){
@@ -83,7 +86,6 @@ foreach($tables as $tblname){
 				if($fld->type_unsigned){
 					$fldparams['signed']='\'signed\'=>false';
 					}
-
 				$result.='->addColumn(\''.$fld->name.'\', \'integer\'';
 				$result.=(empty($fldparams)?'':(', ['.implode(', ', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
@@ -107,7 +109,6 @@ foreach($tables as $tblname){
 				break;
 			case 'enum':
 				$fldparams['values']=$fld->type_length;
-
 				$result.='->addColumn(\''.$fld->name.'\', \'enum\'';
 				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;

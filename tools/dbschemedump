@@ -7,6 +7,7 @@ include(__DIR__.DIRECTORY_SEPARATOR.'autoload.php');
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 
+
 echo "-----------------------------------------------------\r\n";
 echo "           Brilliant migration maker\r\n";
 echo "-----------------------------------------------------\r\n";
@@ -68,6 +69,19 @@ foreach($tables as $tblname){
 		if($fld->null=='YES'){
 			$fldparams['null']='\'null\'=>true';
 			}
+		//process extra
+		if($fld->extra=='auto_increment'){
+			$fldparams['identity']='\'identity\'=>true';
+			}
+		elseif($fld->extra=='on update CURRENT_TIMESTAMP'){
+			$fldparams['update']='\'update\'=>CURRENT_TIMESTAMP';
+			}
+		elseif($fld->extra==''){
+			}
+		else{
+			var_dump($fld);
+			die();
+			}
 		//
 		switch($fld->type_name){
 			case 'tinyint':
@@ -84,7 +98,7 @@ foreach($tables as $tblname){
 				goto type_int;
 			case 'int':
 			type_int:
-				if(!empty($fld->default)){
+				if(isset($fld->default)){
 					$fldparams['default']='\'default\'=>'.$fld->default.'';
 					}
 				if($fld->type_unsigned){
@@ -96,6 +110,9 @@ foreach($tables as $tblname){
 				break;
 			case 'double':
 			case 'float':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
 				if(!empty($fld->type_length)){
 					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
 					}
@@ -104,6 +121,9 @@ foreach($tables as $tblname){
 				$result.=')'.PHP_EOL;
 				break;
 			case 'decimal':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
 				$xlen=explode(',',$fld->type_length);
 				$fldparams['precision']='\'precision\'=>'.$xlen[0].'';
 				$fldparams['scale']='\'scale\'=>'.$xlen[1].'';
@@ -118,6 +138,9 @@ foreach($tables as $tblname){
 				$result.=')'.PHP_EOL;
 				break;
 			case 'varchar':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>\''.$fld->default.'\'';
+					}
 				if(!empty($fld->type_length)){
 					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
 					}
@@ -126,6 +149,9 @@ foreach($tables as $tblname){
 				$result.=')'.PHP_EOL;
 				break;
 			case 'char':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>\''.$fld->default.'\'';
+					}
 				if(!empty($fld->type_length)){
 					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
 					}
@@ -153,31 +179,37 @@ foreach($tables as $tblname){
 				$result.=')'.PHP_EOL;
 				break;
 			case 'longtext':
-				$fldparams['size']='MysqlAdapter::TEXT_LONG';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_LONG';
 				goto type_text;
 			case 'mediumtext':
-				$fldparams['size']='MysqlAdapter::TEXT_MEDIUM';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_MEDIUM';
 				goto type_text;
 			case 'tinytext':
-				$fldparams['size']='MysqlAdapter::TEXT_TINY';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_TINY';
 				goto type_text;
 			case 'text':
 			type_text:
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
 				$result.='->addColumn(\''.$fld->name.'\', \'text\'';
 				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;
 				break;
 			case 'longblob':
-				$fldparams['size']='MysqlAdapter::BLOB_LONG';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_LONG';
 				goto type_blob;
 			case 'mediumblob':
-				$fldparams['size']='MysqlAdapter::BLOB_MEDIUM';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_MEDIUM';
 				goto type_blob;
 			case 'tinyblob':
-				$fldparams['size']='MysqlAdapter::BLOB_TINY';
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_TINY';
 				goto type_blob;
 			case 'blob':
 			type_blob:
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
 				$result.='->addColumn(\''.$fld->name.'\', \'blob\'';
 				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
 				$result.=')'.PHP_EOL;

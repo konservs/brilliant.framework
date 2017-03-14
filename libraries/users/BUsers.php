@@ -9,6 +9,7 @@
  */
 namespace Brilliant\users;
 
+use Brilliant\BFactory;
 use Brilliant\log\BLog;
 use Brilliant\cms\BDateTime;
 use Brilliant\users\BUser;
@@ -209,8 +210,7 @@ class BUsers{
 			$user->load($userfc);
 			return $user;
 			}
-		bimport('sql.mysql');
-		$db=BMySQL::getInstanceAndConnect();
+		$db=BFactory::getDBO();
 		if(empty($db)){
 			return NULL;
 			}

@@ -114,6 +114,26 @@ class BHTML{
 		$this->style[]=$style;
 		}
 	/**
+	 * Load CSS file into head
+	 * 
+	 * @param string $file filename
+	 * @param int $priority priority of the loaded file. The files
+	 * with less priority will be loaded before
+	 * @return boolean true if ok
+	 */
+	public function load_css($file,$priority=100){
+		if(!file_exists($file)){
+			BLog::addtolog('[HTML]: Could not load css file, because it does not exists!',LL_ERROR);
+			return false;
+			}
+		$src=file_get_contents($file);
+		if(!empty($src)){
+			$this->add_css_declaration($src);
+			}
+		return true;
+		}
+
+	/**
 	 * 
 	 * @param type $name
 	 * @param type $media

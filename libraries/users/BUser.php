@@ -2,6 +2,8 @@
 //============================================================
 // Basic class for user
 //============================================================
+namespace Brilliant\users;
+
 use Brilliant\log\BLog;
 use Brilliant\cms\BDateTime;
 use Brilliant\users\BUser;

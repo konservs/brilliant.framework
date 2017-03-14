@@ -4,7 +4,9 @@
  *
  * @author: Andrii Biriev
  */
-bimport('users.social.auther');
+namespace Brilliant\users\social;
+
+use \Brilliant\users\social\BSocialAuther;
 
 class BSocialFabric{
 	/**

@@ -1,4 +1,5 @@
 <?php
+namespace Brilliant\mvc;
 //============================================================
 // Basic model class
 //

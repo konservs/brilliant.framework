@@ -4,7 +4,8 @@
  *
  * Author: Andrii Biriev
  */
-bimport('log.general');
+namespace Brilliant\mvc;
+use Brilliant\log\BLog;
 
 class BView{
 	public $paths;

@@ -11,7 +11,10 @@ namespace Brilliant\cms;
 use Brilliant\BFactory;
 use Brilliant\log\BLog;
 use Brilliant\cache\BCache;
+use Brilliant\sql\BMySQL;
 use Brilliant\http\BBrowserUseragent;
+use Brilliant\html\BHTML;
+
 
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);
@@ -86,18 +89,6 @@ class BRouterBase{
 			$list=array_merge($list,$clist);
 			}
 		return $list;
-		}
-	/**
-	 * Returns the global Router object, only creating it if it doesn't
-	 * already exist.
-	 * 
-	 * @return null|\BRouterBase Description
-	 */
-	public static function getInstance(){
-		if(!is_object(self::$instance)){
-			self::$instance=new BRouter();
-			}
-		return self::$instance;
 		}
 	/**
 	 * Very useful function, often usings it in URLs parsing...
@@ -1020,10 +1011,8 @@ class BRouterBase{
 	 */
 	public function render_positions(){
 		$debug_pages_cache=defined('DEBUG_PAGES_CACHE')?DEBUG_PAGES_CACHE:1;
-		if((CACHE_TYPE)&&($debug_pages_cache)){
-			//if set CACHE_TYPE, trying to load blocks from cache
-			//bimport('cache.general');
-			$bcache=BCache::getInstance();
+		$bCache = BFactory::getCache();
+		if(($bCache)&&($debug_pages_cache)){
 			//Accumulating keys...
 			$keys=array();
 			//bimport('http.useragent');
@@ -1100,7 +1089,6 @@ class BRouterBase{
 	 * Generate final HTML.
 	 */
 	public function generatepage_html(){
-		bimport('html.general');
 		$bhtml=BHTML::getInstance();
 		$status=200;
 		//Forming page from blocks...
@@ -1199,7 +1187,6 @@ class BRouterBase{
 			$this->templatename='default';
 			}
 		//Detect device...
-		bimport('http.useragent');
 		$device=BBrowserUseragent::detectDevice();
 		if($device==DEVICE_TYPE_MPHONE){
 			$suffix='.m';
@@ -1249,8 +1236,6 @@ class BRouterBase{
 			}
 		//Output debug information, if necessary.
 		if(DEBUG_MODE){
-			bimport('sql.mysql');
-			bimport('cache.general');
 			BLog::addtolog('[Router]: Generation time: '.sprintf('%7.7f',self::page_time()));
 			BLog::addtolog('[Router]: MySQL queries:'.BMySQL::getQueriesCount());
 			$qc=BCache::getQueriesCount();

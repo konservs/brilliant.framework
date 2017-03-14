@@ -1,4 +1,5 @@
 <?php
+namespace Brilliant\cms;
 trait BSingleton{
 	protected static $instance;
 	/**
@@ -12,7 +13,7 @@ trait BSingleton{
 	/**
 	 *
 	 */
-	final private function __construct() {
+	final public function __construct() {
 		$this->init();
 		}
 	/**

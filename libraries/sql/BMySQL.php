@@ -6,7 +6,7 @@ namespace Brilliant\sql;
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-bimport('log.general');
+use Brilliant\log\BLog;
 
 class BMySQL{
 	protected $db_connected;

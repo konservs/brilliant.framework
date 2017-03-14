@@ -1,4 +1,5 @@
 <?php
+namespace Brilliant\cms;
 /**
  * Sets of functions and classes to work with breadcrumbs
  * 
@@ -51,35 +52,5 @@ class BBreadcrumbs{
 			return '';
 			}
 		include($fn);
-		}
-	}
-
-/**
- * General class for inter-component breadcrumbs.
- *
- * @author Andrii Biriev
- */
-class BGeneralBreadcrumbs extends BBreadcrumbs{
-	public static $instance=NULL;
-	/**
-	 * Return breadcrumbs class
-	 *
-	 * @return \BGeneralBreadcrumbs|NULL breadcrumbs object or NULL
-	 */
-	public static function getInstance(){
-		if(!is_object(self::$instance)){
-			self::$instance=new BGeneralBreadcrumbs();
-			}
-		return self::$instance;
-		}
-	/**
-	 *
-	 * @return string HTML
-	 */
-	public static function staticdraw(){
-		if(!is_object(self::$instance)){
-			return '';
-			}
-		self::$instance->draw();
 		}
 	}

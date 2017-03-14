@@ -7,13 +7,13 @@
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
 namespace Brilliant\html;
+use Brilliant\log\BLog;
 define('DOCTYPE_UNKNOWN',0);
 define('DOCTYPE_HTML4_TRANSITIONAL',1);
 //
 define('JS_PRIORITY_FRAMEWORK',-1);
 define('JS_PRIORITY_FRAMEWORK2',0); //for frameworks 
 define('JS_PRIORITY_NORMAL',1);
-use Brilliant\log\BLog;
 
 class BHTML{
 	protected static $instance=NULL;

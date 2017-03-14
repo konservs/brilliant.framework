@@ -1,11 +1,10 @@
 <?php
-namespace Brilliant\sql;
-
 //============================================================
 // Sets of functions and classes to work with MySQL database
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
+namespace Brilliant\sql;
 use Brilliant\log\BLog;
 
 class BMySQL{
@@ -68,7 +67,7 @@ class BMySQL{
 			BLog::addtolog($this->logsuffix.': MySQLi class not found',LL_ERROR);
 			return FALSE;
 			}
-		$this->mysqli=@new mysqli($this->db_host, $this->db_username, $this->db_password, $this->db_name, $this->db_port);
+		$this->mysqli=new \mysqli($this->db_host, $this->db_username, $this->db_password, $this->db_name, $this->db_port);
 		if((empty($this->mysqli))||(mysqli_connect_errno())){
 			BLog::addtolog($this->logsuffix.': '.mysqli_connect_error(),LL_ERROR);
 			return FALSE;
@@ -94,13 +93,17 @@ class BMySQL{
 	/**
 	 * SQL query
 	 */
-	public function Query($sql){
+	public function query($sql){
 		BLog::addtolog($this->logsuffix.' Query: '.$sql);
+		if(empty($this->mysqli)){
+			BLog::addtolog($this->logsuffix.'$this->mysqli is empty!',LL_ERROR);
+			return false;
+			}
 
 		$this->queries_count++;
 		$r=$this->mysqli->query($sql);
-		if((DEBUG_MODE)&&(empty($r))){
-			BLog::addtolog($this->logsuffix.' query failed!',LL_ERROR);
+		if(empty($r)){
+			BLog::addtolog($this->logsuffix.' query failed ('.var_export($r).')!',LL_ERROR);
 			BLog::addtolog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
 			BLog::addtolog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
 			}

@@ -7,6 +7,7 @@
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
 namespace Brilliant;
+
 use Brilliant\log\BLog;
 use Brilliant\sql\BMySQL;
 use Brilliant\cache\BCache;

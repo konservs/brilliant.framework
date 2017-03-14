@@ -6,18 +6,18 @@ namespace Brilliant\cms;
 // Author: Andrii Biriev
 //============================================================
 define('DEBUG_BLANG',0);
-
 use Brilliant\cms\BSingleton;
 use Brilliant\log\BLog;
+use Brilliant\BSingleton;
 
 //============================================================
 // Main class for language.
 //============================================================
 class BLang{
+	use BSingleton;
 	public static $strings;
 	public static $langcode;
 	public static $langcode_web;
-	public static $instance;
 	public static $suffix;
 	public static $translitconverter=array(
 		'а'=>'a', 'б'=>'b', 'в'=>'v', 'г'=>'g', 'д'=>'d', 'е'=>'e',
@@ -40,16 +40,6 @@ class BLang{
 		'п'=>21,'р'=>22,'с'=>23,'т'=>24,'у'=>25,'ф'=>26,'х'=>27,'ц'=>28,'ч'=>29,'ш'=>30,
 		'щ'=>31,'ь'=>32,'ы'=>33,'ъ'=>34,'э'=>35,'ю'=>36,'я'=>37, 
        		);
-
-	/**
-	 * @return BLang
-	 */
-	public static function getInstance(){
-		if(!is_object(self::$instance)){
-			self::$instance=new BLang();
-		}
-		return self::$instance;
-	}
 	//=====================================================
 	// Init the language
 	//=====================================================

@@ -1,0 +1,234 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Brilliant migration maker
+ */
+include(__DIR__.DIRECTORY_SEPARATOR.'autoload.php');
+use Brilliant\BFactory;
+use Brilliant\log\BLog;
+
+
+echo "-----------------------------------------------------\r\n";
+echo "           Brilliant migration maker\r\n";
+echo "-----------------------------------------------------\r\n";
+
+$db=Brilliant\BFactory::getDBO();
+
+$qr='show tables';
+$q=$db->query($qr);
+$tables=array();
+while($l = $db->fetch($q)){
+	$tblname=reset($l);
+	$tables[]=$tblname;
+	}
+
+foreach($tables as $tblname){
+	BLog::addtolog(' - Dumping "'.$tblname.'"...');
+	$fields=array();
+	$fieldnames=array();
+	$qr='show fields in `'.$tblname.'`';
+	$q=$db->query($qr);
+
+	$primarykeys=array();
+
+	while($l = $db->fetch($q)){
+		//
+		$fldname=$l['Field'];
+		$fieldnames[]=$fldname;
+		//
+		$xfield=new stdClass();
+		$xfield->name=$fldname;
+		$xfield->type=$l['Type'];
+		$xfield->null=$l['Null'];
+		$xfield->key=$l['Key'];
+		$xfield->default=$l['Default'];
+		$xfield->extra=$l['Extra'];
+		$xtype=explode(' ',$xfield->type);
+		$unsigned=(count($xtype)==2)&&($xtype[1]=='unsigned');
+		$type2=$xtype[0];
+		$xtype2=explode('(',$type2);
+		$xfield->type_length=isset($xtype2[1])?substr($xtype2[1],0,-1):'';
+		$xfield->type_name=$xtype2[0];
+		$xfield->type_unsigned=$unsigned;
+		$fields[$fldname]=$xfield;
+		if($xfield->key=='PRI'){
+			$primarykeys[]='\''.$fldname.'\'';
+			}
+		}
+	BLog::addtolog(' - Table fields: '.implode(', ',$fieldnames));
+	//
+	$result='$table = $this->table(\''.$tblname.'\', [\'id\' => false';
+	if(!empty($primarykeys)){
+		$result.=', \'primary_key\' => ['.implode(',',$primarykeys).']';
+		}
+	$result.=']);'.PHP_EOL;
+	//Add fields...
+	$result.='$table';
+	foreach($fields as $fld){
+		$fldparams=array();
+		if($fld->null=='YES'){
+			$fldparams['null']='\'null\'=>true';
+			}
+		//process extra
+		if($fld->extra=='auto_increment'){
+			$fldparams['identity']='\'identity\'=>true';
+			}
+		elseif($fld->extra=='on update CURRENT_TIMESTAMP'){
+			$fldparams['update']='\'update\'=>CURRENT_TIMESTAMP';
+			}
+		elseif($fld->extra==''){
+			}
+		else{
+			var_dump($fld);
+			die();
+			}
+		//
+		switch($fld->type_name){
+			case 'tinyint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_TINY';
+				goto type_int;
+			case 'smallint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_SMALL';
+				goto type_int;
+			case 'mediumint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_MEDIUM';
+				goto type_int;
+			case 'bigint':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::INT_BIG';
+				goto type_int;
+			case 'int':
+			type_int:
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				if($fld->type_unsigned){
+					$fldparams['signed']='\'signed\'=>false';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'integer\'';
+				$result.=(empty($fldparams)?'':(', ['.implode(', ', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'double':
+			case 'float':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'float\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'decimal':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				$xlen=explode(',',$fld->type_length);
+				$fldparams['precision']='\'precision\'=>'.$xlen[0].'';
+				$fldparams['scale']='\'scale\'=>'.$xlen[1].'';
+				$result.='->addColumn(\''.$fld->name.'\', \'decimal\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'enum':
+				$fldparams['values']='\'values\'=>['.$fld->type_length.']';
+				$result.='->addColumn(\''.$fld->name.'\', \'enum\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'varchar':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>\''.$fld->default.'\'';
+					}
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'string\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'char':
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>\''.$fld->default.'\'';
+					}
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'char\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'binary':
+			case 'varbinary':
+				if(!empty($fld->type_length)){
+					$fldparams['limit']='\'limit\'=>'.$fld->type_length.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'binary\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'datetime':
+				$result.='->addColumn(\''.$fld->name.'\', \'datetime\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'timestamp':
+				$result.='->addColumn(\''.$fld->name.'\', \'timestamp\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'longtext':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_LONG';
+				goto type_text;
+			case 'mediumtext':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_MEDIUM';
+				goto type_text;
+			case 'tinytext':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::TEXT_TINY';
+				goto type_text;
+			case 'text':
+			type_text:
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'text\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			case 'longblob':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_LONG';
+				goto type_blob;
+			case 'mediumblob':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_MEDIUM';
+				goto type_blob;
+			case 'tinyblob':
+				$fldparams['limit']='\'limit\' => MysqlAdapter::BLOB_TINY';
+				goto type_blob;
+			case 'blob':
+			type_blob:
+				if(isset($fld->default)){
+					$fldparams['default']='\'default\'=>'.$fld->default.'';
+					}
+				$result.='->addColumn(\''.$fld->name.'\', \'blob\'';
+				$result.=(empty($fldparams)?'':(',[' . implode(',', $fldparams) . ']'));
+				$result.=')'.PHP_EOL;
+				break;
+			default:
+				var_dump($fld); die();
+			}
+		
+		}
+	$result.='->create();'.PHP_EOL.PHP_EOL;
+	//
+	file_put_contents('migration.php',$result,FILE_APPEND);
+	}
+
+
+// create the table acymailing_action
+/* $table = $this->table('acymailing_action', ['id' => 'action_id', 'signed' => false]);
+$table->addColumn('name', 'string')
+	->addColumn('frequency', 'integer', ['signed' => false])
+	->addColumn('nextdate', 'integer', ['signed' => false])
+	->create();
+*/

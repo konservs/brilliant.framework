@@ -1,1 +1,1 @@
-Библиотеки для работы с HTTP
+Libraries to work with HTTP

@@ -3,7 +3,6 @@
  * Sets of functions and classes to work with tree item.
  *
  * @author Andrii Biriev
- *
  */
 bimport('items.item');
 
@@ -12,18 +11,11 @@ abstract class BItemsItemTree extends BItemsItem{
 	protected $leftkeyname='lft';
 	protected $rightkeyname='rgt';
 	protected $levelkeyname='level';
-
-	//public $parentid=0;
-	//public $oldparentid=0;
 	/**
 	 * Constructor - init fields...
 	 */
 	function __construct() {
 		parent::__construct();
-		//$this->fieldAddRaw($this->parentkeyname,'item',array('class'=>get_class($this)));
-		//$this->fieldAddRaw($this->leftkeyname,'int');
-		//$this->fieldAddRaw($this->rightkeyname,'int');
-		//$this->fieldAddRaw($this->levelkeyname,'int');
 		}
 
 	/**
@@ -44,7 +36,8 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain(){
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		$fchain=$bitems->items_filter(array('parentchain'=>$this->id));
+		//$fchain=$bitems->items_filter(array('parentchain'=>$this->id));
+		$fchain=$bitems->items_filter(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $fchain;
 		}
 	/**
@@ -53,7 +46,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain_ids(){
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		$chain=$bitems->items_filter_ids(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname}));
+		$chain=$bitems->items_filter_ids(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $chain;
 		}
 	/**
@@ -87,8 +80,12 @@ abstract class BItemsItemTree extends BItemsItem{
 			}
 		return NULL;
 		}
+
 	/**
-	 *
+	 * Get fields values
+	 * @param $qr_fields
+	 * @param $qr_values
+	 * @return bool
 	 */
 	protected function getfieldsvalues(&$qr_fields,&$qr_values){
 		$qr_fields=array();
@@ -96,7 +93,8 @@ abstract class BItemsItemTree extends BItemsItem{
 		parent::getfieldsvalues($qr_fields,$qr_values);
 		$parent=$this->getparent();
 		if(empty($parent)){
-			$collection=new $this->collectionname();
+			$collectionname=$this->collectionname;
+			$collection=$collectionname::getInstance();
 			$parent=$collection->item_get(1);
 			$this->{$this->parentkeyname}=1;
 			}
@@ -145,7 +143,9 @@ abstract class BItemsItemTree extends BItemsItem{
 			}
 		//Forming query...
 		$this->modified=new DateTime();
-		$this->created=new DateTime();
+		if(empty($this->created)){
+			$this->created=new DateTime();
+			}
 		$qr=$this->dbinsertquery();
 
 

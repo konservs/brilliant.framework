@@ -1,11 +1,17 @@
 <?php
+bimport('items.general');
+
 abstract class BItemsTree extends BItems{
 	protected $leftkey='lft';
 	protected $rightkey='rgt';
 	protected $levelkey='level';
 	protected $parentkey='parent';
+
 	/**
+	 * Filters items and return array of IDs
 	 *
+	 * @param $params
+	 * @return array|null
 	 */
 	public function items_filter_ids($params){
 		if(empty($params['orderby'])){
@@ -13,12 +19,16 @@ abstract class BItemsTree extends BItems{
 			}
 		return parent::items_filter_ids($params);
 		}
+
 	/**
+	 * Get filter for SQL query.
 	 *
+	 * @param $params
+	 * @param $wh
+	 * @param $jn
+	 * @return bool
 	 */
 	public function items_filter_sql($params,&$wh,&$jn){
-		//
-		$db=BFactory::getDBO();
 		//Call parent method.
 		parent::items_filter_sql($params,$wh,$jn);
 
@@ -30,6 +40,10 @@ abstract class BItemsTree extends BItems{
 		if(isset($params['parent'])){
 			$wh[]='(`'.$this->parentkey.'`='.(int)$params['parent'].')';
 			}
+		//Select categories only with parentid=NULL
+		if(!empty($params['parentisnull'])){
+			$wh[]='(`'.$this->parentkey.'` is NULL)';
+		}
 		//Entire parents tree. 
 		if(isset($params['parenttree'])){
 			$itemid=(int)$params['parenttree'];
@@ -341,6 +355,9 @@ abstract class BItemsTree extends BItems{
 	 */
 	public function getsimpletree_recursive($fields=array(),$transfields=array(),$lang='',$wh=array()){
 		$list=$this->getsimpletree($fields,$transfields,$lang,$wh);
+		if(!is_array($list)){
+			return array();
+			}
 		$tree=array();
 		foreach($list as $li){
 			$id=(int)$li->{$this->primarykey};

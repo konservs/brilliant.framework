@@ -13,6 +13,14 @@ abstract class BItemsItem{
 	protected $primarykey='id';
 	protected $fields=array();
 	/**
+	 * @var DateTime
+	 */
+	public $created;
+	/**
+	 * @var DateTime
+	 */
+	public $modified;
+	/**
 	 * Simple constructor.
 	 */
 	public function __construct() {
@@ -42,6 +50,12 @@ abstract class BItemsItem{
 		$this->fields[$name]=$fldobj;
 		}
 	/**
+	 *
+	 */
+	public function getPrimaryKey(){
+		return $this->{$this->primarykey};
+		}
+	/**
 	 * Get RAW field value from DB.
 	 *
 	 * @param $value
@@ -53,6 +67,8 @@ abstract class BItemsItem{
 			case 'int':
 			case 'integer':
 				return (int)$value;
+			case 'float':
+				return (float)$value;
 			case 'itm':
 			case 'item':
 				return (int)$value;
@@ -62,6 +78,8 @@ abstract class BItemsItem{
 			case 'str':
 			case 'string':
 				return $value;
+			case 'binary':
+				return bin2hex($value);
 			case 'enum':
 				return $value;
 			case 'dt':
@@ -110,6 +128,12 @@ abstract class BItemsItem{
 					return 'NULL';
 					}
 				return $value;
+			case 'float':
+				$value=(float)$this->{$fldname};
+				if(($emptynull)&&(empty($value))){
+					return 'NULL';
+					}
+				return $value;
 			case 'itm':
 			case 'item':
 				$itemid=(int)$this->{$fldname};
@@ -119,9 +143,18 @@ abstract class BItemsItem{
 				return (int)$this->{$fldname};
 			case 'str':
 			case 'string':
+				$value=$this->{$fldname};
+				if(($emptynull)&&(empty($value))){
+					return 'NULL';
+					}
 				return $db->escape_string($this->{$fldname});
+			case 'binary':
+				$value=$this->{$fldname};
+				if(($emptynull)&&(empty($value))){
+					return 'NULL';
+					}
+				return 'UNHEX('.$db->escape_string($this->{$fldname}).')';
 			case 'enum':
-				//???
 				return $db->escape_string($this->{$fldname});
 			case 'dt':
 				$obj=$this->{$fldname};
@@ -275,8 +308,17 @@ abstract class BItemsItem{
 					}
 				$this->{$varname}=(int)$value;
 				return true;
+			case 'float':
+				if((empty($value))&&($required)){
+					return false;
+					}
+				$this->{$varname}=(float)$value;
+				return true;
 			case 'itm':
 			case 'item':
+				if((empty($value))&&($required)){
+					return false;
+					}
 				$this->{$varname}=(int)$value;
 				return true;
 			case 'bool':
@@ -298,6 +340,9 @@ abstract class BItemsItem{
 					return false;
 					}
 				$this->{$varname}=$value2;
+				return true;
+			case 'binary':
+				$this->{$varname}=$value;
 				return true;
 			case 'enum':
 				//Check enum
@@ -352,6 +397,9 @@ abstract class BItemsItem{
 			case 'integer':
 				$this->{$varname.'_'.$lang}=(int)$value;
 				return true;
+			case 'float':
+				$this->{$varname.'_'.$lang}=(float)$value;
+				return true;
 			case 'itm':
 			case 'item':
 				$this->{$varname}=(int)$value;
@@ -376,9 +424,10 @@ abstract class BItemsItem{
 					}
 				$this->{$varname.'_'.$lang}=$value2;
 				return true;
+			case 'binary':
+				$this->{$varname.'_'.$lang}=$value;
+				return true;
 			case 'enum':
-				//Check enum
-				//return $value;
 				$this->{$varname.'_'.$lang}=$value;
 				return true;
 			case 'dt':
@@ -479,6 +528,7 @@ abstract class BItemsItem{
 		$cachekey='';
 		if(is_array($this->primarykey)){
 			foreach($this->primarykey as $pk){
+				$pkk=$this->{$pk};
 				$cachekey.=(empty($cachekey)?'':':').$this->{$pk};
 				}
 			}else{
@@ -494,13 +544,16 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbinsert(){
-		BLog::addtolog('[Items.Item]: Inserting data...');
+		BLog::addtolog('[Items.Item.'.$this->tablename.']: Inserting data...');
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
 		//Forming query...
 		$this->modified=new DateTime();
-		$this->created=new DateTime();
+		//For import we need ability to set `created`
+		if(empty($this->created)){
+			$this->created=new DateTime();
+			}
 		$qr=$this->dbinsertquery();
 		//Running query...
 		$q=$db->query($qr);
@@ -520,7 +573,7 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbupdate(){
-		BLog::addtolog('[Items.Item]: Updating data...');
+		BLog::addtolog('[Items.Item.'.$this->tablename.']: Updating data...');
 		if(empty($this->id)){
 			return false;
 			}
@@ -541,12 +594,26 @@ abstract class BItemsItem{
 		//Return result
 		return true;
 		}
-	//====================================================
-	// Check is and run insert or update query, reload
-	// cache.
-	//====================================================
+	/**
+	 *
+	 */
+	public function savetodb_times($limit=5){
+		$i=0;
+		$result=false;
+		while((!$result)&&($i<$limit)){
+			BLog::addtolog('[Items.Item.'.$this->tablename.']: savetodb_times('.$i.' / '.$limit.')');
+			$result=$this->savetodb();
+			$i++;
+			}
+		return $result;
+		}
+
+	/**
+	 * Check is and run insert or update query, reload cache.
+	 * @return bool
+	 */
 	public function savetodb(){
-		BLog::addtolog('[Items.Item]: savetodb()');
+		BLog::addtolog('[Items.Item.'.$this->tablename.']: savetodb()');
 		if($this->isnew){
 			return $this->dbinsert();
 			}else{

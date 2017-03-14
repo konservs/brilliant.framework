@@ -13,12 +13,15 @@ abstract class BItems{
 	protected $itemclassname='';
 	protected $primarykey='id';
 	protected $orderingkey='ordering';
+	protected $hitskey='';
+	protected $hits_daily_table='';
 	protected $linkedtables=array();
 	protected $cache_items=array();
+	protected $cachetime=3600;
 	/**
 	 * Detect necessary language, if $lang is not set.
 	 * If the $lang is set - return it;
-	 * 
+	 *
 	 * @param string $lang
 	 * @return string detected language
 	 */
@@ -38,11 +41,20 @@ abstract class BItems{
 		//bimport('search.sphinx.sphinxql');
 		}
 	/**
+	 *
+	 */
+	public function setSearchTableName($tbl){
+		$this->searchtablename=$tbl;
+		}
+	/**
 	 * Load data from db/cache array.
 	 */
 	public function items_get($ids){
 		if(!is_array($ids)){
 			return array();
+			}
+		if(DEBUG_LOG_BITEMS){
+			BLog::addtolog('[BItems.'.$this->tablename.'] items_get('.implode(',',$ids).')');
 			}
 		$items=array();
 		//-------------------------------------------------
@@ -183,34 +195,54 @@ abstract class BItems{
 		// Cache storing, if necessary.
 		//-------------------------------------------------
 		if(CACHE_TYPE&&count($tocache)!=0){
-			$cache->mset($tocache,3600);//1 hour
+			$cache->mset($tocache,$this->cachetime);//1 hour
 			}
 		return $items;
 		}
 	/**
 	 * Get single item
+	 *
+	 * @param $id
+	 * @return BItemsItem
 	 */
 	public function item_get($id){
 		$list=$this->items_get(array($id));
 		$item=reset($list);
 		return $item;
 		}
+
 	/**
+	 * Get Items by params
 	 *
+	 * @param $params array
+	 * @return BItemsItem[]
 	 */
 	public function items_filter($params){
+		if(DEBUG_LOG_BITEMS){
+			BLog::addtolog('[BItems.'.$this->tablename.'] items_filter('.var_export($params,true).')');
+			}
 		$ids=$this->items_filter_ids($params);
+		if(DEBUG_LOG_BITEMS){
+			BLog::addtolog('[BItems.'.$this->tablename.'] items_filter got IDs: '.var_export($ids,true));
+			}
 		return $this->items_get($ids);
 		}
 	/**
+	 * Get all items
 	 *
+	 * @return BItemsItem[]
 	 */
 	public function items_get_all(){
 		$params=array();
 		return $this->items_filter($params);
 		}
+
 	/**
-	 *
+	 * Get items filter
+	 * @param $params
+	 * @param $wh
+	 * @param $jn
+	 * @return bool
 	 */
 	public function items_filter_sql($params,&$wh,&$jn){
 		$wh=array();
@@ -220,20 +252,53 @@ abstract class BItems{
 			}
 		return true;
 		}
+
 	/**
 	 * Items list cache hash.
+	 *
+	 * @param $params array
+	 * @return string
 	 */
 	public function items_filter_hash($params){
 		$itemshash=$this->tablename.':list';
 		if(isset($params['exclude'])&&(is_array($params['exclude']))){
 			$itemshash.=':exclude-'.implode('-',$params['exclude']);
 			}
+		if(isset($params['orderby'])&&(is_array($params['orderby']))){
+			$orderdir=isset($params['orderdir'])?'-'.$params['orderdir']:'';
+			$itemshash.=':orderby-'.$params['orderby'].$orderdir;
+			}
+		if(!empty($params['limit'])){
+			$limit=(int)$params['limit'];
+			$offset=(int)$params['offset'];
+			$itemshash.=':limit-'.$limit;
+			if($offset){
+				$itemshash.=':offset-'.$offset;
+				}
+			}
 		return $itemshash;
 		}
+
 	/**
+	 * Get IDS filter
 	 *
+	 * @param $params
+	 * @return array|null
 	 */
 	public function items_filter_ids($params){
+		//
+		$cacheenabled=(!empty($params['cacheenabled']));
+		if($cacheenabled){
+			$bcache=BFactory::GetCache();
+			}
+		if($bcache){
+			$hash=$this->items_filter_hash($params);
+			$ids=$bcache->get($hash);
+			if(($ids!==false)&&($ids!==NULL)){
+				return $ids;
+				}
+			}
+		//
 		if(!$db=$this->getDBO()){
 			return false;
 			}
@@ -257,10 +322,9 @@ abstract class BItems{
 			$orderasc=isset($params['orderdir'])?' '.$params['orderdir']:'';
 			if($params['orderby']=="RAND()"){
 				$qr.=' ORDER BY '.$params['orderby'].''.$orderasc;
-			}else{
+				}else{
 				$qr.=' ORDER BY `'.$params['orderby'].'`'.$orderasc;
-			}
-			
+				}
 			}
 		//Limit & offset
 		if(!empty($params['limit'])){
@@ -288,6 +352,11 @@ abstract class BItems{
 				}
 			$ids[]=$id;
 			}
+		//
+		if($bcache){
+			$bcache->set($hash,$ids,$this->cachetime);
+			}
+		//
 		return $ids;
 		}
 
@@ -435,7 +504,7 @@ abstract class BItems{
 	public function search($params){
 		$itemsids=$this->search_ids($params);
 		$items=$this->items_get($itemsids);
-		return $items;		
+		return $items;
 		}
 	/**
 	 *
@@ -451,18 +520,17 @@ abstract class BItems{
 		if(!empty($wh)){
 			$qr.=' where ('.implode('AND',$wh).')';
 			}
-		//$orderasc=isset($params['orderdir'])?' '.$params['orderdir']:'';
-		//$qr.=' ORDER BY '.(empty($params['orderby'])?'':$params['orderby'].$orderasc);
-		//$qr.=' LIMIT '.(empty($params['limit'])?10:(int)$params['limit']).', OFFSET '.(!isset($params['offset'])?0:$params['offset']);	//var_dump($qr);die();
+		//ordering
+		if(!empty($params['orderby'])) {
+			$orderasc = isset($params['orderdir']) ? ' ' . $params['orderdir'] : '';
+			$qr .= ' ORDER BY ' . (empty($params['orderby']) ? '' : $params['orderby'] . $orderasc);
+			}
 		//Limit & offset
 		if(!empty($params['limit'])){
 			$limit=(int)$params['limit'];
 			$offset=(int)$params['offset'];
-			$qr.=' LIMIT '.$limit;
-			if($offset){
-				$qr.=' OFFSET '.$offset;
+			$qr.=' LIMIT '.(empty($offset)?0:$offset).','.(!isset($limit)?10:(int)$limit);
 			}
-		}
 		$q=$spx->Query($qr);
 		if(empty($q)){
 			return false;
@@ -473,6 +541,24 @@ abstract class BItems{
 			$itemsids[$id]=$id;
 			}
 		return $itemsids;
+		}
+	/**
+	 * Hit the item.
+	 */
+	public function hititem($id){
+		if(empty($this->hitskey)){
+			return false;
+			}
+		$db=BFactory::getDBO();
+		if(empty($db)){
+			return false;
+			}
+		$qr='UPDATE `'.$this->tablename.'` SET hits=hits+1 WHERE (`'.$this->primarykey.'`='.$id.')';
+		$q=$db->Query($qr);
+		if(empty($q)){
+			return false;
+			}
+		return true;
 		}
 	/**
 	 *

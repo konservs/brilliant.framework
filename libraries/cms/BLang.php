@@ -1,10 +1,13 @@
 <?php
+namespace Brilliant\cms;
 //============================================================
 // Sets of functions and classes to work with language.
 //
 // Author: Andrii Biriev
 //============================================================
 define('DEBUG_BLANG',0);
+use Brilliant\cms\BSingleton;
+use Brilliant\log\BLog;
 use Brilliant\BSingleton;
 
 //============================================================

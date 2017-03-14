@@ -22,9 +22,7 @@ class BFactory{
 			return self::$db;
 			}
 		BLog::addtolog('[BFactory] Connecting to the database "'.MYSQL_DB_HOST.'"...');
-echo('c');
 		self::$db=BMySQL::getInstanceAndConnect();
-echo('d');
 		if(empty(self::$db)){
 			BLog::addtolog('[BFactory] Could not connect to the MySQL database!',LL_ERROR);
 			return NULL;

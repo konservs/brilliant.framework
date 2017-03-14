@@ -1007,8 +1007,8 @@ class BRouterBase{
 	 */
 	public function render_positions(){
 		$debug_pages_cache=defined('DEBUG_PAGES_CACHE')?DEBUG_PAGES_CACHE:1;
-		$bcache=BFactory::getCache();
-		if(($bcache)&&($debug_pages_cache)){
+		$bCache = BFactory::getCache();
+		if(($bCache)&&($debug_pages_cache)){
 			//Accumulating keys...
 			$keys=array();
 			$suffix=BBrowserUseragent::getDeviceSuffix();

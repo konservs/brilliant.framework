@@ -8,7 +8,7 @@
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
 function bimport($libraryname){
-	$fn=BLIBRARIESPATH.str_replace('.',DIRECTORY_SEPARATOR,$libraryname).'.php';
+	$fn=BLIBRARIESFRAMEWORKPATH.str_replace('.',DIRECTORY_SEPARATOR,$libraryname).'.php';
 	if(!file_exists($fn)){
 		die('Could not load "'.htmlspecialchars($libraryname).'" library ('.$fn.')!');
 		}
@@ -20,10 +20,6 @@ function definepaths(){
 		die('Could not load config file! Please, copy config.default.php as config.php in config folder.');
 		}
 	include($fn_config);
-	define('BCOMPONENTSPATH', BROOTPATH.'components'.DIRECTORY_SEPARATOR);
-	define('BTEMPLATESPATH', BROOTPATH.'templates'.DIRECTORY_SEPARATOR);
-	define('BLANGUAGESPATH', BROOTPATH.'language'.DIRECTORY_SEPARATOR);
-	define('BMEDIAPATH', BROOTPATH.'htdocs'.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR);
 	date_default_timezone_set('Europe/Kiev');
 	}
 function binit(){

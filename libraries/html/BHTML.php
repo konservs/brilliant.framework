@@ -22,7 +22,6 @@ class BHTML{
 	protected $style=array();
 	protected $css=array();
 	protected $js=array();
-	protected $frameworks=array();
 	protected $locationurl;
 	public $doctype=DOCTYPE_HTML4_TRANSITIONAL;
 	public $title='';
@@ -183,71 +182,9 @@ class BHTML{
 	//
 	//====================================================
 	public function use_framework($alias=''){
-		$this->frameworks[$alias]=$alias;
-		if($alias=='jquery-ui'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='polls-desktop'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='bajaxslider'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='the-modal'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='brilliant-mobile'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='isotope'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='brillcalendar'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='datetimepicker'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='simplemodal'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='bxslider'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='masonry'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='mselect'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='sortablelist'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='jquery-sortable'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='nestable'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='summernote'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='jquery-file-upload'){
-			$this->frameworks['jquery']='jquery';
-			$this->frameworks['javascript-templates']='javascript-templates';
-			}
-		if($alias=='jquery-imgareaselect'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='owl-carousel'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='fotorama'){
-			$this->frameworks['jquery']='jquery';
-			}
-		if($alias=='slick'){
-			$this->frameworks['jquery']='jquery';
-			}
+		require_once(BLIBRARIESAPPLICATIONPATH.'Frameworks.php');
+		$applicationFrameworks = \Application\Frameworks::getInstance();
+		$applicationFrameworks->use_framework($alias);
 		}
 	//====================================================
 	//
@@ -302,129 +239,9 @@ class BHTML{
 	 * Pre-processing the JS/CSS frameworks ...
 	 */
 	public function frameworks_process(){
-		foreach($this->frameworks as $framework){
-			switch($framework){
-				case 'jquery': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery/2.1.1/jquery.min.js','',JS_PRIORITY_FRAMEWORK);
-					break;
-				case 'jquery-ui': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/jquery-ui.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'jquery-ui-datepicker-ru': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.ui/datepicker-ru.js','',JS_PRIORITY_FRAMEWORK+2);
-					break;
-				case 'jquery-ui-datepicker-uk': 
-				case 'jquery-ui-datepicker-ua': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.ui/datepicker-uk.js','',JS_PRIORITY_FRAMEWORK+2);
-					break;
-				case 'brilliant': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/main.js?v=1.0.3','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'brilliant-mobile':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/main-mobile.js?v=1.0.2','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'select2': 
-					bimport('cms.language');
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/select2/select2.min.js');
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/select2/select2_locale_'.BLang::$langcode.'.js');
-					break;					
-				case 'polls-desktop': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/polls.d.js?v=1.0.1','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'bajaxslider':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/bajaxslider.d.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'the-modal':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/the-modal.d.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'brillcalendar': 
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/brillcalendar/brillcalendar.js?v=1.0.1','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'datetimepicker':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/datetimepicker/jquery.datetimepicker.js','',JS_PRIORITY_FRAMEWORK+1);
-					$this->add_css('//'.BHOSTNAME_STATIC.'/libs/datetimepicker/jquery.datetimepicker.css');
-					break;
-				case 'sortablelist':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/sortablelist/sortablelist.js','',JS_PRIORITY_FRAMEWORK+1);
-					//$this->add_css('//'.BHOSTNAME_STATIC.'/libs/sortablelist/sortablelist.js');
-					break;
-				case 'jquery-sortable':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery-sortable/jquery-sortable-min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'nestable':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/nestable/jquery.nestable.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'recaptcha2':
-					$this->add_js('//www.google.com/recaptcha/api.js','',JS_PRIORITY_FRAMEWORK);
-					break;
-				case 'simplemodal':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.simplemodal/jquery.simplemodal.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'bxslider':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.bxslider/jquery.bxslider.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'masonry':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.masonry/jquery.masonry.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'mselect':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.mselect/mselect.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'worktimeedit':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.worktimeedit/worktimeedit.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'summernote':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/summernote-master/dist/summernote.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'tooltip':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/js/opentip-jquery-excanvas.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'tooltipster':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.tooltipster/js/jquery.tooltipster.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'isotope':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery.isotope/jquery.isotope.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'javascript-templates':
-					//<!-- The Templates plugin is included to render the upload/download listings -->
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/javascript-templates/js/tmpl.min.js','',JS_PRIORITY_FRAMEWORK+1);
-
-					break;
-				case 'jquery-file-upload':
-					//<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/vendor/jquery.ui.widget.js','',JS_PRIORITY_FRAMEWORK+1);
-					//<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/vendor/load-image.all.min.js','',JS_PRIORITY_FRAMEWORK+1);
-
-
-					//
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.iframe-transport.js','',JS_PRIORITY_FRAMEWORK+1);
-
-
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.fileupload.js','',JS_PRIORITY_FRAMEWORK+2);
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.fileupload-process.js','',JS_PRIORITY_FRAMEWORK+3);
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.fileupload-image.js','',JS_PRIORITY_FRAMEWORK+3);
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.fileupload-validate.js','',JS_PRIORITY_FRAMEWORK+3);
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/jquery.fileupload-ui.js','',JS_PRIORITY_FRAMEWORK+3);
-
-					$this->add_js('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/js/main.js','',JS_PRIORITY_FRAMEWORK+4);
-
-
-					$this->add_css('//'.BHOSTNAME_STATIC.'/admin/jquery-file-upload/css/jquery.fileupload.css');
-					break;
-				case 'jquery-imgareaselect':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/jquery-imgareaselect/scripts/jquery.imgareaselect.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'owl-carousel':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/owl.carousel/owl.carousel.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'fotorama':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/fotorama/fotorama.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				case 'slick':
-					$this->add_js('//'.BHOSTNAME_STATIC.'/libs/slick/slick/slick.min.js','',JS_PRIORITY_FRAMEWORK+1);
-					break;
-				}
-			}
+		require_once(BLIBRARIESAPPLICATIONPATH.'Frameworks.php');
+		$applicationFrameworks = \Application\Frameworks::getInstance();
+		$applicationFrameworks->frameworksProcess($this);
 		return true;
 		}
 	/**
@@ -526,7 +343,7 @@ class BHTML{
 			'	}else{'.PHP_EOL.
 			'	window.onload=lazy_initall;'.PHP_EOL.
 			'	}'.PHP_EOL;
-		$this->add_js('',$js);
+		$html->add_js('',$js);
 		}
 	/**
 	 * Output the head of the document

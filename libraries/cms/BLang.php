@@ -81,24 +81,6 @@ class BLang{
 			$res=self::$strings[$short];
 			}else{
 			$res=$short;
-			/*if(DEBUG_MODE){
-				if(self::$suffix=='admin'){
-					$file =BLANGUAGESPATH.'ruadmin.php';
-					@file_put_contents($file, '//\''.$short.'\' =>\''.$short.'\','.PHP_EOL, FILE_APPEND);
-					}else{
-					bimport('sql.mysql');
-					$db=BMySQL::getInstanceAndConnect();
-					if(empty($db)){
-						return NULL;
-						}
-					$qr='insert into  `languages` (const,ru,ua) values ('.$db->escape_string($short).',
-												'.$db->escape_string($short).',
-											    '.$db->escape_string($short).')';
-					$q=$db->Query($qr);
-					$blang=BLang::getInstance();
-					$blang->regeneratecache();
-					}
-				}*/
 			}
 		if(DEBUG_BLANG){
 			BLog::addtolog('[BLang]: Get language text "'.$short.'"=>"'.$res.'"');

@@ -7,6 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
+use \Brilliant\users\BUsers;
 use \Brilliant\users\BUsersSession;
 
 class Model_users_userpanel extends \Brilliant\mvc\BModel{
@@ -16,7 +17,6 @@ class Model_users_userpanel extends \Brilliant\mvc\BModel{
 		if(!empty($session)){
 			$data->logged=true;
 			$data->lastmod=$session->start;
-			bimport('users.general');
 			$busers=BUsers::getInstance();
 			$data->user=$busers->get_single_user($session->userid);
 			}

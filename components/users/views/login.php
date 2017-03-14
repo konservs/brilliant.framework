@@ -7,6 +7,8 @@
  */
 defined('BEXEC') or die('No direct access!');
 
+use \Brilliant\cms\BLang;
+
 class View_users_login extends \Brilliant\mvc\BView{
 	public function generate($data){
 		$this->do=$data->do;

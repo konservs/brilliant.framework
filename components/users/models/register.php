@@ -6,6 +6,8 @@
  * @copyright © Andrii Biriev, a@konservs.com, www.konservs.com
  */
 defined('BEXEC') or die('No direct access!');
+use \Brilliant\users\BUsers;
+use \Brilliant\users\BSocial;
 
 class Model_users_register extends \Brilliant\mvc\BModel{
 	public function get_data($segments){

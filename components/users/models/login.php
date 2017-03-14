@@ -7,12 +7,17 @@
  */
 defined('BEXEC') or die('No direct access!');
 
+use \Brilliant\users\BUsers;
+use \Brilliant\users\BUsersSession;
+
 class Model_users_login extends \Brilliant\mvc\BModel{
+	/**
+	 *
+	 */
 	public function get_data($segments){
 		$data=new stdClass;
 		$data->error=false;
 		$data->logged=false;
-		bimport('users.session');
 		$session=BUsersSession::getInstanceAndStart();
 		if(!empty($session)){
 			$data->logged=true;
@@ -24,14 +29,9 @@ class Model_users_login extends \Brilliant\mvc\BModel{
 
 		if($data->do=='login'){
 			//Try to login
-			bimport('users.general');
 			$busers=BUsers::getInstance();
 			$user=$busers->login($data->email,$data->password,$data->save_me);
 			if(empty($user)){
-				if(DEBUG_MODE){
-					bimport('debug.general');
-					BDebug::error('Could not login!');
-					}
 				$data->error=true;
 				}else{
 				$data->logged=true;

@@ -7,6 +7,10 @@
  */
 defined('BEXEC') or die('No direct access!');
 
+use \Brilliant\cms\BLang;
+use \Brilliant\users\social\BSocialFabric;
+use \Application\BRouter;
+
 class View_users_register extends \Brilliant\mvc\BView{
 	public function generate($data){
 		if($data->result){

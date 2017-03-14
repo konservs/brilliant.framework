@@ -2,9 +2,9 @@
 //============================================================
 // Basic class for user
 //============================================================
-bimport('cms.datetime');
-bimport('cms.phone');
-bimport('log.general');
+use Brilliant\log\BLog;
+use Brilliant\cms\BDateTime;
+use Brilliant\users\BUser;
 
 class BUser{
 	public $id;

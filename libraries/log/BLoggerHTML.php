@@ -8,6 +8,7 @@
 namespace Brilliant\log;
 use Brilliant\log\BLogger;
 use Brilliant\log\BLog;
+use Application\BRouter;
 
 class BLoggerHTML extends BLogger{
 	public static $memprof=true;

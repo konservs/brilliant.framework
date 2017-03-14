@@ -7,9 +7,12 @@
  *
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
-bimport('users.single');
-bimport('cms.datetime');
-bimport('log.general');
+namespace Brilliant\users;
+
+use Brilliant\log\BLog;
+use Brilliant\cms\BDateTime;
+use Brilliant\users\BUser;
+use Brilliant\users\BUsersSession;
 
 
 //============================================================
@@ -121,10 +124,8 @@ class BUsers{
 		//-------------------------------------------------
 		$user_obj=array();//cache objects...
 		$ids_q='';
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$cache=BCache::getInstance();
-			if(empty($cache))return $users;
+		$cache = BFactory::getCache();
+		if($cache){
 			$ids_m=array();
 			$users_c=$cache->mget($ids_k);
 			foreach($ids_c as $id){
@@ -149,8 +150,7 @@ class BUsers{
 		//-------------------------------------------------
 		// Trying to get left users from database
 		//-------------------------------------------------
-		bimport('sql.mysql');
-		$db=BMySQL::getInstanceAndConnect();
+		$db=BFactory::getDBO();
 		if(empty($db)){
 			return $users;
 			}
@@ -200,12 +200,8 @@ class BUsers{
 				return $user;
 				}
 			}
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$cache=BCache::getInstance();
-			if(empty($cache)){
-				return NULL;
-				}
+		$cache=BFactory::getCache();
+		if($cache){
 			$userfc=$cache->get('users:useremail:'.$email);
 			}
 		if($userfc!=false){
@@ -448,7 +444,6 @@ class BUsers{
 	 * @return BUser|null
 	 */
 	public function getLoggedUser(){
-		bimport('users.session');
 		$session=BUsersSession::getInstanceAndStart();
 		if(empty($session)){
 			return NULL;

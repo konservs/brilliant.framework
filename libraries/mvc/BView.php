@@ -6,6 +6,7 @@
  */
 namespace Brilliant\mvc;
 use Brilliant\log\BLog;
+use Brilliant\http\BBrowserUseragent;
 
 class BView{
 	public $paths;
@@ -529,7 +530,6 @@ class BView{
 	 */
 	public function template_load($subname='',$absolute=false){
 		$this->addpathes();
-		bimport('http.useragent');
 		$suffix=BBrowserUseragent::getDeviceSuffix();
 		//
 		if($absolute){
@@ -585,7 +585,7 @@ class BView{
 	 * Abstract function. Should be overloaded in all
 	 * children
 	 */
-	public function generate($data = null){
+	public function generate($data){
 		var_dump($data);
 		}
 	}

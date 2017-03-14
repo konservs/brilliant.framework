@@ -3,7 +3,9 @@
 // Basic class to control users, to list users, to login or 
 // logout
 //============================================================
-bimport('log.general');
+namespace Brilliant\users;
+
+use Brilliant\log\BLog;
 
 class BUsersSession{
 	protected $triedresult=false;

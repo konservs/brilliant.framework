@@ -856,7 +856,6 @@ class BRouterBase{
 	// Show error page
 	//====================================================
 	public function errorpage($page){
-		bimport('http.useragent');
 		$device=BBrowserUseragent::detectDevice();
 		if($device==DEVICE_TYPE_MPHONE){
 			$suffix='.m';
@@ -961,7 +960,7 @@ class BRouterBase{
 	 */
 	public function component_load($cname){
 		//Trying to include component controller file...
-		$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
+		$fn=BCOMPONENTSFRAMEWORKPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
 		if(!file_exists($fn)){
 			$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
 			}

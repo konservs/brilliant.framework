@@ -1,4 +1,5 @@
 <?php
+namespace Brilliant\mvc;
 /**
  * Basic component class. Allow to control models / views and some lists - 
  * additional fields & software modules. Very useful class.
@@ -41,11 +42,13 @@ class BController{
 	 */
 	public function field_get($type,$com=''){
 		if(empty($com)){
-			$fn=BLIBRARIESPATH.'mvc'.DIRECTORY_SEPARATOR.'field'.DIRECTORY_SEPARATOR.$type.'.php';
+			$fn=BLIBRARIESFRAMEWORKPATH.'mvc'.DIRECTORY_SEPARATOR.'field'.DIRECTORY_SEPARATOR.$type.'.php';
 			$class='BControllerField_'.$type;
-			}
-		else{
-			$fn=BCOMPONENTSPATH.$com.DIRECTORY_SEPARATOR.'fields'.DIRECTORY_SEPARATOR.$type.'.php';
+			} else {
+			$fn=BCOMPONENTSAPPLICATIONPATH.$com.DIRECTORY_SEPARATOR.'fields'.DIRECTORY_SEPARATOR.$type.'.php';
+			if(!file_exists($fn)){
+				$fn=BCOMPONENTSFRAMEWORKPATH.$com.DIRECTORY_SEPARATOR.'fields'.DIRECTORY_SEPARATOR.$type.'.php';
+				}
 			$class='BControllerField_'.$com.'_'.$type;
 			}
 		if(!file_exists($fn)){
@@ -110,7 +113,10 @@ class BController{
 			bimport('mvc.model');
 			return new BModel();
 			}
-		$fn=BCOMPONENTSPATH.$this->componentname.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
+		$fn=BCOMPONENTSAPPLICATIONPATH.$this->componentname.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
+		if(!file_exists($fn)){
+			$fn=BCOMPONENTSFRAMEWORKPATH.$this->componentname.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
+			}
 		$class='Model_'.$this->componentname.'_'.$mdlname;
 		if(!file_exists($fn)){
 			echo('File "'.$fn.'" does not exist!');
@@ -128,7 +134,10 @@ class BController{
 	 * @return null|\BView
 	 */
 	public function LoadView($viewname){
-		$fn=BCOMPONENTSPATH.$this->componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
+		$fn=BCOMPONENTSAPPLICATIONPATH.$this->componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
+		if(!file_exists($fn)){
+			$fn=BCOMPONENTSFRAMEWORKPATH.$this->componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
+			}
 		$class='View_'.$this->componentname.'_'.$viewname;
 		if(!file_exists($fn)){
 			return NULL;
@@ -140,7 +149,6 @@ class BController{
 		$view->templatename=$this->templatename;
 		$view->viewname=$viewname;
 		$view->init();
-		//$view->AddPath(BCOMPONENTSPATH.$componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.DIRECTORY_SEPARATOR);
 		return $view;
 		}
 	}

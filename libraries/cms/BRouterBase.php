@@ -961,7 +961,10 @@ class BRouterBase{
 	 */
 	public function component_load($cname){
 		//Trying to include component controller file...
-		$fn=BCOMPONENTSPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
+		$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
+		if(!file_exists($fn)){
+			$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
+			}
 		if(!file_exists($fn)){
 			BLog::addtolog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);
 			return NULL;

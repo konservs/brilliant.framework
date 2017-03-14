@@ -82,8 +82,8 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 			//BLog::addtolog('[FilesCache]: set('.$key.','.var_export($value,true).')');
 			BLog::addtolog('[FilesCache]: set('.$key.',...)');
 			}
-		$dt_exp=new DateTime();
-		$dt_exp->add(new DateInterval('PT'.$expired.'S'));
+		$dt_exp=new \DateTime();
+		$dt_exp->add(new \DateInterval('PT'.$expired.'S'));
 
 		$fn=$this->cachedir.sha1($key).'.dat';
 		$f=@fopen($fn,'w');

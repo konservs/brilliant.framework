@@ -8,7 +8,7 @@
 namespace Brilliant\cache;
 use Brilliant\log\BLog;
 
-class BCacheMemcached extends BCache{
+class BCacheMemcached extends \Brilliant\cache\BCache{
 	protected $memcached=NULL;
 	protected $memcached_ver='';
 	//================================================================================

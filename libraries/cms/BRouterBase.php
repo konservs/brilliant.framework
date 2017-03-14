@@ -1017,7 +1017,7 @@ class BRouterBase{
 				$keys[]=$c->key;
 				}
 			//Multi-get from cache
-			$list=$bcache->mget($keys);
+			$list=$bCache->mget($keys);
 			foreach($this->rules as &$c){
 				if(($list[$c->key]!==false)&&($list[$c->key]!==NULL)){
 					$c->status=$list[$c->key]->status;//200 | 403 | 404
@@ -1068,8 +1068,8 @@ class BRouterBase{
 				$c->locationtime=$controller->locationtime;
 				$c->rendered=true;
 				//Caching the result, if necessary.
-				if(($bcache)&&($debug_pages_cache)&&($c->cachecontrol)){
-					$bcache->set($c->key,$c,$c->cachetime);
+				if(($bCache)&&($debug_pages_cache)&&($c->cachecontrol)){
+					$bCache->set($c->key,$c,$c->cachetime);
 					}
 				//Convert to object.
 				$c->modified=$controller->modified;

@@ -27,16 +27,15 @@ class BCache{
 				}
 			switch(CACHE_TYPE){
 				case 'files':
-					bimport('cache.files');
-					self::$instance=new BCacheFiles();
+					self::$instance=new \Brilliant\cache\BCacheFiles();
 					break;
 				case 'memcache':
 					bimport('cache.memcache');
-					self::$instance=new BCacheMemcache();
+					self::$instance=new \Brilliant\cache\BCacheMemcache();
 					break;
 				case 'memcached':
 					bimport('cache.memcached');
-					self::$instance=new BCacheMemcached();
+					self::$instance=new \Brilliant\cache\BCacheMemcached();
 					break;
 				default:
 					self::$instance=NULL;

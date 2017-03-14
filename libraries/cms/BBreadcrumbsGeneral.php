@@ -1,7 +1,6 @@
 <?php
 namespace Brilliant\cms;
 use Brilliant\cms\BBreadcrumbs;
-use Brilliant\cms\BSingleton;
 
 /**
  * General class for inter-component breadcrumbs.
@@ -9,7 +8,7 @@ use Brilliant\cms\BSingleton;
  * @author Andrii Biriev
  */
 class BBreadcrumbsGeneral extends BBreadcrumbs{
-	use BSingleton;
+	use \Brilliant\BSingleton;
 	/**
 	 *
 	 * @return string HTML

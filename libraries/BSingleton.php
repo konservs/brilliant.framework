@@ -14,7 +14,7 @@ trait BSingleton{
 	/**
 	 *
 	 */
-	final private function __construct() {
+	final public function __construct() {
 		$this->init();
 		}
 	/**

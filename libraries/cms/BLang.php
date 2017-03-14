@@ -1,20 +1,20 @@
 <?php
 namespace Brilliant\cms;
+use Brilliant\BSingleton;
+use Brilliant\log\BLog;
+
 //============================================================
 // Sets of functions and classes to work with language.
 //
 // Author: Andrii Biriev
 //============================================================
 define('DEBUG_BLANG',0);
-use Brilliant\cms\BSingleton;
-use Brilliant\log\BLog;
-use Brilliant\BSingleton;
 
 //============================================================
 // Main class for language.
 //============================================================
 class BLang{
-	use BSingleton;
+	use \Brilliant\BSingleton;
 	public static $strings;
 	public static $langcode;
 	public static $langcode_web;

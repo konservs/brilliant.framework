@@ -5,11 +5,13 @@
 //
 // Author: Andrii Birev
 //============================================================
+namespace Brilliant\cms;
+
+use Brilliant\http\BRequest;
+
 //Some defines...
 define('PGTYPE_GET',0);
 define('PGTYPE_POST',1);
-//Some imports...
-bimport('http.request');
 //============================================================
 // Class for pagination
 //============================================================

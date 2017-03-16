@@ -5,10 +5,9 @@
  * @author Andrii Biriev
  */
 
-//define('BDATE_FORMAT_',1);
-//define('BDATE_FORMAT_',2);
+namespace Brilliant;
 
-class BDateTime extends DateTime{
+class BDateTime extends \DateTime{
 	public static $dtnow=NULL;
 	/**
 	 *

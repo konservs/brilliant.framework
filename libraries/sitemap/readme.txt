@@ -1,1 +1,1 @@
-–азличные библиотеки дл€ работы с картой сайта
+Libraries to work with sitemap

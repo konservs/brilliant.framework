@@ -1,1 +1,1 @@
-Библиотеки для работы с SQL базами данных
+Libraries to work with databases

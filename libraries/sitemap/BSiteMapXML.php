@@ -1,7 +1,7 @@
 <?php
 bimport('router');
 
-class BXMLSiteMap{
+class BSiteMapXML{
 	protected static $instance=NULL;
 	public $smsuffix='</urlset>';
 	public $filenames=array();
@@ -13,7 +13,7 @@ class BXMLSiteMap{
 
 	public static function getInstance(){
 		if (!is_object(self::$instance))
-			self::$instance=new BXMLSiteMap();
+			self::$instance=new BSiteMapXML();
 		return self::$instance;
 		}
 	

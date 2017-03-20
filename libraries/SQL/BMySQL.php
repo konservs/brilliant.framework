@@ -103,7 +103,6 @@ class BMySQL{
 		$this->queries_count++;
 		$r=$this->mysqli->query($sql);
 		if(empty($r)){
-			BLog::addtolog($this->logsuffix.' query failed ('.var_export($r).')!',LL_ERROR);
 			BLog::addtolog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
 			BLog::addtolog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
 			}

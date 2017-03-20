@@ -7,13 +7,13 @@
  *
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
-namespace Brilliant\users;
+namespace Brilliant\Users;
 
 use Brilliant\BFactory;
-use Brilliant\log\BLog;
-use Brilliant\cms\BDateTime;
-use Brilliant\users\BUser;
-use Brilliant\users\BUsersSession;
+use Brilliant\Log\BLog;
+use Brilliant\BDateTime;
+use Brilliant\Users\BUser;
+use Brilliant\Users\BUsersSession;
 
 
 //============================================================
@@ -35,6 +35,7 @@ define('USERS_ERROR_NOSUCHEMAIL',10);
 define('USERS_ERROR_DBERROR',11);
 define('USERS_ERROR_CODEWRONG',12);
 define('USERS_ERROR_COULDNOTDELETE',13);
+define('USERS_ERROR_PASS',14);
 define('ERROR_SPIVPADAYUT','is_user');
 define('USERS_ERROR_OK_OK','ok');
 define('USERS_ERROR_NOTUSER','notuser');
@@ -166,17 +167,6 @@ class BUsers{
 			$id=(int)$l['id'];
 			$user_obj[$id]=$l;
 			}
-		/*$qr='SELECT * from `users_phones` WHERE (user in ('.$ids_q.'))';
-		$q=$db->Query($qr);
-		if(empty($q)){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: users_get(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
-				}
-			return $users;
-			}
-		while($l=$db->fetch($q)){
-			$user_obj[$l['user']]['tels'][]=$l;
-			}*/
 		foreach($user_obj as $k=>$l){
 			$users[$k]=new BUser();
 			$users[$k]->load($l);
@@ -195,7 +185,7 @@ class BUsers{
 	//====================================================
 	// Get user class by email
 	//====================================================
-	public function get_user_byemail($email){
+	public function getUserByEmail($email){
 		foreach($this->users_cache as $user){
 			if($user->email==$email){
 				return $user;
@@ -228,16 +218,6 @@ class BUsers{
 		$id=(int)$l['id'];
 		$user_obj=$l;
 		BLog::addtolog('[Users] found user: '.$id);
-
-
-		$qr='SELECT * from `users_phones` WHERE (user = '.$id.')';
-		$q=$db->Query($qr);
-		if(empty($q)){
-			return NULL;
-			}
-		while($l=$db->fetch($q)){
-			$user_obj['tels'][]=$l;
-			}
 		//Process users...
 		$tocache=array();
 		$res=new BUser();
@@ -459,7 +439,7 @@ class BUsers{
 	 * @return BUser|int|null
 	 */
 	public function login($email,$password,$longsession=false){
-		$user=$this->get_user_byemail($email);
+		$user=$this->getUserByEmail($email);
 		if($user==false){
 			BLog::addtolog('[Users]: login() wrong email!',LL_ERROR);
 			return USERS_ERROR_NOSUCHEMAIL;
@@ -482,7 +462,7 @@ class BUsers{
 			'updatestep'=>60,
 			);
 		$sess=BUsersSession::getInstance();
-		$sess->NewSession($user->id,$options);
+		$sess->newSession($user->id,$options);
 		return USERS_ERROR_OK;
 		}
 
@@ -981,7 +961,7 @@ class BUsers{
 			'updatestep'=>60,
 			);
 		$sess=BUsersSession::getInstance();
-		$sess->NewSession($user->id,$options);
+		$sess->newSession($user->id,$options);
 		return true;
 		}
 
@@ -1004,7 +984,7 @@ class BUsers{
 				'updatestep'=>60,
 				);
 			$sess=BUsersSession::getInstance();
-			$sess->NewSession($uid,$options);
+			$sess->newSession($uid,$options);
 			return true;
 			}
 		else return false;

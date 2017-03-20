@@ -3,9 +3,10 @@
 // Basic class to control users, to list users, to login or 
 // logout
 //============================================================
-namespace Brilliant\users;
+namespace Brilliant\Users;
 
-use Brilliant\log\BLog;
+use Brilliant\Log\BLog;
+use Brilliant\BFactory;
 
 class BUsersSession{
 	protected $triedresult=false;
@@ -45,26 +46,21 @@ class BUsersSession{
 			}
 		$this->triedresult=false;
 		$this->triedstart=true;
-		$secret=explode(':',$_COOKIE['vidsecret']);
+		$secret=explode(':',$_COOKIE['brillsecret']);
 		if(count($secret)<2){
 			$this->triedresult=false;
 			return false;
 			}
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$cache=BCache::getInstance();
-			if(empty($cache)){
-				return false;
-				}
-			$sess=$cache->get('session:'.$secret[1]);
+		$bCache=BFactory::getCache();
+		if(!empty($bCache)){
+			$sess=$bCache->get('session:'.$secret[1]);
 			if(($sess!==false)&&($sess!==NULL)){
 				$this->load($sess);
 				$this->triedresult=true;
 				return true;
 				}
 			}
-		bimport('sql.mysql');
-		$db=BMySQL::getInstanceAndConnect();
+		$db=BFactory::getDBO();
 		if(empty($db)){
 			return false;
 			}
@@ -78,16 +74,11 @@ class BUsersSession{
 			}
 		$l=$db->fetch($q);
 		if(empty($l)){
-			setcookie('vidsecret','',time(),'/',BHOSTNAME);
+			setcookie('brillsecret','',time(),'/',BHOSTNAME);
 			return false;
 			}
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$bcache=BCache::getInstance();
-			if(empty($bcache)){
-				return false;
-				}
-			$bcache->set('session:'.$l['sessionid'],$l,600);
+		if(!empty($bCache)){
+			$bCache->set('session:'.$l['sessionid'],$l,600);
 			}
 		$this->load($l,true);
 		$this->triedstart=true;
@@ -97,21 +88,15 @@ class BUsersSession{
 	//====================================================
 	// New session
 	//====================================================
-	public function NewSession($uid,$options=array()){
-		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: SessionStart()');
-			}
+	public function newSession($uid,$options=array()){
+		BLog::addtolog('[Users.Session]: SessionStart()');
 		//Checking options...
 		if(!isset($options['interval'])){
 			$options['interval']=10800;
 			}
 		//Conncting to the database
-		bimport('sql.mysql');
-		$db=BMySQL::getInstanceAndConnect();
+		$db=BFactory::getDBO();
 		if(empty($db)){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users.Session]: SessionStart(): Could not connect to the database!',LL_ERROR);
-				}
 			return false;
 			}
 		//-------------------------------------------
@@ -126,13 +111,13 @@ class BUsersSession{
 		$DTI_GENERAL-=$DTI_M*60;
 		$DTI_S=$DTI_GENERAL;
 		$DTI_STRING='P0Y0M'.$DTI_D.'DT'.$DTI_H.'H'.$DTI_M.'M'.$DTI_S.'S';
-		$DTI=new DateInterval($DTI_STRING);
+		$DTI=new \DateInterval($DTI_STRING);
 		//-------------------------------------------
 		// Variables
 		//-------------------------------------------
 		$sessid=sha1(uniqid(rand(),1));
-		$nowdate=new DateTime();
-		$enddate=new DateTime();
+		$nowdate=new \DateTime();
+		$enddate=new \DateTime();
 		$enddate->add($DTI);
 
 		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -194,20 +179,15 @@ class BUsersSession{
 		if(empty($q)){
 			return false;
 			}
-		bimport('users.general');
 		$busers=BUsers::getInstance();
 		$me=$busers->get_single_user($obj['userid']);
 		$me->updatecache();
 		//-------------------------------------------
 		// Set cache...
 		//-------------------------------------------
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$bcache=BCache::getInstance();
-			if(empty($bcache)){
-				return false;
-				}
-			$bcache->set('session:'.$obj['sessionid'],$obj,600);
+		$bCache=BFactory::getCache();
+		if($bCache){
+			$bCache->set('session:'.$obj['sessionid'],$obj,600);
 			}
 		//Set cookie
 		$expire=time()+$options['interval']+3600;//+1 hour
@@ -219,7 +199,7 @@ class BUsersSession{
 			BLog::addtolog('[Users.Session]: Set cookie. Expire='.$expire);
 			}
 		//BDebug::print_html();die('SetCookie!');
-		setcookie('vidsecret',$uid.':'.$sessid,$expire,'/',BHOSTNAME);
+		setcookie('brillsecret',$uid.':'.$sessid,$expire,'/',BHOSTNAME);
 		return true;
 		}
 	//====================================================
@@ -230,9 +210,9 @@ class BUsersSession{
 			BLog::addtolog('[Users.Session]: Load()');
 			}
 		
-		$enddate=new DateTime($obj['end']);
-		$nowdate=new DateTime();
-		$lacdate=new DateTime($obj['lastaction']);
+		$enddate=new \DateTime($obj['end']);
+		$nowdate=new \DateTime();
+		$lacdate=new \DateTime($obj['lastaction']);
 		if(DEBUG_MODE){
 			BLog::addtolog('[Users.Session]: Load() enddate='.$enddate->format('Y-m-d H:i:s'));
 			BLog::addtolog('[Users.Session]: Load() nowdate='.$nowdate->format('Y-m-d H:i:s'));
@@ -272,12 +252,12 @@ class BUsersSession{
 			$me=$busers->get_single_user($obj['userid']);
 			$me->updatecache();
 			$lacdate=$nowdate;
-			$enddate->add(new DateInterval('PT'.$obj['interval'].'S'));
+			$enddate->add(new \DateInterval('PT'.$obj['interval'].'S'));
 			$cacheupd=true;
 			}
 		$this->sessionid=$obj['sessionid'];
 		$this->ipv4=$obj['ipv4'];
-		$this->start=new DateTime($obj['start']);
+		$this->start=new \DateTime($obj['start']);
 		$this->end=$enddate;
 		$this->lastaction=$lacdate;//->format("Y-m-d H:i:s");
 		$this->userid=$obj['userid'];
@@ -287,9 +267,8 @@ class BUsersSession{
 		if(CACHE_TYPE&&$cacheupd){
 			$obj['end']=$this->end->format("Y-m-d H:i:s");;
 			$obj['lastaction']=$this->lastaction->format("Y-m-d H:i:s");;
-			bimport('cache.general');
-			$bcache=BCache::getInstance();
-			$bcache->set('session:'.$obj['sessionid'],$obj,600);
+			$bCache=BFactory::getCache();
+			$bCache->set('session:'.$obj['sessionid'],$obj,600);
 			}
 		return true;
 		}
@@ -300,17 +279,16 @@ class BUsersSession{
 		if(DEBUG_MODE){
 			BLog::addtolog('[Users.Session]: close()');
 			}
-		setcookie('vidsecret','',time()-3600,'/',BHOSTNAME);
+		setcookie('brillsecret','',time()-3600,'/',BHOSTNAME);
 		if(DEBUG_MODE){
 			BLog::addtolog('[Users.Session] close session');
 			}
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
-		if(CACHE_TYPE){
-			bimport('cache.general');
-			$cache=BCache::getInstance();
-			$cache->delete('session:'.$this->sessionid);
+		$bCache=BFactory::getCache();
+		if($bCache){
+			$bCache->delete('session:'.$this->sessionid);
 			}
 		$q=$db->Query('delete from sessions where sessionid='.$db->escape_string($this->sessionid));
 		if(empty($q)){

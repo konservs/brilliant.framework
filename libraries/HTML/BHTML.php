@@ -71,13 +71,13 @@ class BHTML{
 		}
 	/**
 	 * 
-	 * @param DateTime $dt
+	 * @param \DateTime $dt
 	 */
 	public function setLastModified($dt){
-		if($dt instanceof DateTime){
+		if($dt instanceof \DateTime){
 			$last_modified=$dt;
 			}else{
-			$last_modified=new DateTime($dt);
+			$last_modified=new \DateTime($dt);
 			}
 		if ((!empty($this->last_modified))){
 			$interval=date_diff($this->last_modified,$last_modified);

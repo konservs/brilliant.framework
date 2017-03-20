@@ -29,7 +29,7 @@ class View_users_login extends \Brilliant\MVC\BView{
 				//ToDO: BRouter
 				$this->redirectto='/cpanel/';
 				}
-			$this->setLocation($this->redirectto,0);
+			//$this->setLocation($this->redirectto,0);
 			return 'Redirecting to <a href="'.$this->redirectto.'">'.$this->redirectto.'</a>...';
 			//return $this->template_load('done');
 			}else{

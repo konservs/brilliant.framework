@@ -2,11 +2,12 @@
 //============================================================
 // Basic class for user
 //============================================================
-namespace Brilliant\users;
+namespace Brilliant\Users;
 
-use Brilliant\log\BLog;
-use Brilliant\cms\BDateTime;
-use Brilliant\users\BUser;
+use Brilliant\BFactory;
+use Brilliant\BDateTime;
+use Brilliant\Log\BLog;
+use Brilliant\Users\BUser;
 
 class BUser{
 	public $id;
@@ -162,10 +163,9 @@ class BUser{
 	 *
 	 */
 	public function updatecache(){
-		bimport('cache.general');
-		$bcache=BCache::getInstance();
-		$bcache->delete('users:userid:'.$this->id);
-		$bcache->delete('users:useremail:'.$this->email);
+		$bCache=BFactory::getCache();
+		$bCache->delete('users:userid:'.$this->id);
+		$bCache->delete('users:useremail:'.$this->email);
 		}
 	/**
 	 *
@@ -205,8 +205,7 @@ class BUser{
 	 *
 	 */
 	public function validate(){
-		bimport('sql.mysql');
-		$db=BMySQL::getInstanceAndConnect();
+		$db=BFactory::getDBO();
 		$err=array();
 		if(empty($this->name)){
 			$err['name']=1;
@@ -259,70 +258,6 @@ class BUser{
 	/**
 	 *
 	 */
-	public function getpublicationscount($rubric_id){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_PUBLICATIONS,$rubric_id);
-		$acc2=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_PUBLICATIONS_FREE,$rubric_id);
-		return $acc->getbalance()+$acc2->getbalance();
-		}
-	/**
-	 *
-	 */
-	public function getpublicationscount_free($rubric_id){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_PUBLICATIONS_FREE,$rubric_id);
-		return $acc->getbalance();
-		}
-	/**
-	 *
-	 */
-	public function getpublicationscount_paid($rubric_id){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_PUBLICATIONS,$rubric_id);
-		return $acc->getbalance();
-		}
-
-	/**
-	 *
-	 */
-	public function gettopscount($rubric_id){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_TOP,$rubric_id);
-		return $acc->getbalance();
-		}
-	/**
-	 *
-	 */
-	public function getgrncount(){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_GRN);
-		return $acc->getbalance();
-		}
-	/**
-	 *
-	 */
-	public function getfirmscount(){
-		bimport('firms.general');
-		$bf=BFirms::getInstance();
-		return $bf->firms_count(array('director'=>$this->id));
-		}
-	/**
-	 *
-	 */
-	public function getchipscount(){
-		bimport('finances.general');
-		$bfinances=BFinances::getInstance();
-		$acc=$bfinances->account_get($this->id,NULL,FINANCES_ACCOUNT_CHIPS);
-		return $acc->getbalance();
-		}
-	/**
-	 *
-	 */
 	public function setemail($email){
 		if(empty($email)){
 			return false;
@@ -343,91 +278,6 @@ class BUser{
 		$l=$db->fetch($q);
 		if($l['id']!=$this->id){
 			return false;
-			}
-		return true;
-		}
-	/**
-	 * saving tels into db and getting ids for objects
-	 */
-	public function savephones(){
-		if(!is_array($this->phones)){
-			return false;
-			}
-		if(empty($this->phones))return true;
-		if(!$db=BFactory::getDBO()){
-			return false;
-			}
-		
-		foreach($this->phones as &$ph){
-			if(!empty($ph->id)){
-				$qr='update `users_phones` set 
-					call_from='.$db->escape_string($ph->call_from).',
-					call_to='.$db->escape_string($ph->call_to).',
-					call_name='.$db->escape_string($ph->call_name).' 
-					where id='.$ph->id;
-				$q=$db->Query($qr);
-				if(empty($q)){
-					return false;
-					}
-				}
-			else{
-				$qr='insert into users_phones (user,op_code,tel,call_from,call_to,call_name)values(';
-				$qr.=(int)$this->id;
-				$qr.=',380';
-				$qr.=','.(int)$ph->tel;
-				$qr.=','.$db->escape_string($ph->call_from);
-				$qr.=','.$db->escape_string($ph->call_to);
-				$qr.=','.$db->escape_string($ph->call_name);
-				$qr.=')';
-				$q=$db->Query($qr);
-				if(empty($q)){
-					return false;
-					}
-				$ph->id=$db->insert_id();
-				}
-			}
-		return true;
-		}
-	/**
-	 *
-	 */
-	public function savetels(){
-		if(empty($this->tels)){
-			return true;	
-			}
-		if(!is_array($this->tels))
-			return true;
-		if(!$db=BFactory::getDBO()){
-			return false;
-			}
-		foreach($this->tels as &$tel){
-			if(empty($tel['tel'])&&!empty($tel['id'])){	
-				$qr='delete from users_phones where id='.$tel['id'];
-				$q=$db->Query($qr);
-				continue;
-				}
-			elseif(empty($tel['tel'])){
-				continue;
-				}
-			if(empty($tel['id'])){
-				$qr='insert into `users_phones` (user,op_code,tel,call_from,call_to,call_name) values (';
-				$qr.=$this->id.',380,';
-				$qr.=$tel['tel'].','.$db->escape_string($tel['call_from']).','.$db->escape_string($tel['call_to']);
-				$qr.=','.$db->escape_string($tel['call_name']);			
-				$qr.=')';
-				$q=$db->Query($qr);
-				if(empty($q)){
-					return false;
-					}
-				$tel['id']=$db->insert_id();
-				}else{
-				$db->Query('update `users_phones` set tel='.$tel['tel'].',
-					call_from='.$db->escape_string($tel['call_from']).',
-					call_to='.$db->escape_string($tel['call_to']).',
-					call_name='.$db->escape_string($tel['call_name']).'
-					where user='.$this->id.'&&id='.$tel['id']);
-				}
-	
 			}
 		return true;
 		}
@@ -474,10 +324,6 @@ class BUser{
 		$qr.=' where id='.(int)$this->id;
 		$db->Query($qr);
 		$qr='';
-		//if(!$this->savephones()){
-		//	$db->rollback();
-		//	return false;
-		//	}
 		if(!$this->savechanged_fields()){
 			//$db->rollback();
 			return false;
@@ -617,146 +463,12 @@ class BUser{
 		if($this->city_id!=$id)
 			$this->changed_fields[]=array('field'=>'city','prevval'=>$this->city_id,'nextval'=>$id);
 		$this->city_id=$id;
-		return true;
-		
-		}
-	/**
-	 *
-	 */
-	public function getfirms_autosalon(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_autosalon';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id,FIRM_TYPE_AUTOSALON);
-		}
-	/**
-	 *
-	 */
-	public function getfirms_estateagency(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_estateagency';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id,FIRM_TYPE_ESTATEAGENCY);
-		}
-	/**
-	 * Get newbuildings list of current user
-	 */
-	public function getfirms_newbuilding(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_newbuilding';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id,FIRM_TYPE_NEWBUILDING);
-		
-		}
-	/**
-	 * Get shops list of current user
-	 */
-	public function getfirms_shop(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_shop';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id,FIRM_TYPE_SHOP);
-		}
-	/**
-	 *
-	 */
-	public function getfirms_businesscard(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_businesscard';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id,FIRM_TYPE_BUSINESSCARD);
-		}
-	/**
-	 * Get all firms list of current user
-	 */
-	public function getfirms_all(){
-		if(DEBUG_MODE){
-			debug_print_backtrace();
-			echo __FILE__.PHP_EOL;
-			echo 'getfirms_all';
-			die('depreacted_method');
-			}
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getfirms_user($this->id);
-		}
-	/**
-	 * Get all firms, where user is dealer.
-	 */
-	public function getdealer_all(){
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		return $bfirms->getdealer_user($this->id);
-		}
-	/**
-	 *
-	 */
-	public function getdealer_type($type){
-		$res=array();
-		$firms=$this->getdealer_all();
-		if(empty($firms)){
-			return $res;
-			}
-		foreach($firms as $f){
-			if($f->type==$type){
-				$res[$f->id]=$f;
-				}
-			}
-		return $res;
-		}
-	/**
-	 * Get firms, where I'm autodealer.
-	 */
-	public function getdealer_auto(){
-		return $this->getdealer_type(FIRM_TYPE_AUTOSALON);
-		}
-	/**
-	 * Get firms, where I'm estate dealer.
-	 */
-	public function getdealer_estateagency(){
-		return $this->getdealer_type(FIRM_TYPE_ESTATEAGENCY);
-		}
-	/**
-	 * Get firms, where I'm dealer of newbuilding.
-	 */
-	public function getdealer_newbuilding(){
-		return $this->getdealer_type(FIRM_TYPE_NEWBUILDING);
-		}
-	/**
-	 * Get firms, where I'm dealer of newbuilding.
-	 */
-	public function getdealer_shop(){
-		return $this->getdealer_type(FIRM_TYPE_SHOP);
+		return true;		
 		}
 	/**
 	 * Get user name
 	 */
-	public function getname($charslimit=0){
+	public function getName($charslimit=0){
 		$username=$this->name;
 		if(($charslimit)&&(mb_strlen($username,'UTF-8')>$charslimit)){
 			$username=mb_substr($username,0,$charslimit,'UTF-8').'...';
@@ -765,37 +477,10 @@ class BUser{
 		return $username;
 		}
 	/**
-	 * Get user pib
-	 */	
-	public function getpib(){
-		return $this->name;//TODO
-		}
-	/**
 	 * Get user email
 	 */
-	public function getemail(){
+	public function getEmail(){
 		return $this->email;
-		}
-	/**
-	 * If the user is director of firm or coworker.
-	 */
-	public function canpostfromfirm($fid){
-		bimport('firms.general');
-		$bfirms=BFirms::getInstance();
-		$firm=$bfirms->get_single_firm($fid);
-		if(empty($firm)){
-			return false;
-			}
-		if($firm->getdirector()->id==$this->id){
-			return true;
-			}
-		$users=$firm->getCoworkers();
-		foreach($users as $user){
-			if($user->id==$this->id){
-				return true;
-				}
-			}
-		return false;
 		}
 	/**
 	 *
@@ -816,14 +501,7 @@ class BUser{
 		$this->updatecache();
 		$qr='update users set email="",active=3 where (id='.$this->id.')';
 		$q=$db->Query($qr);
-		$qr='update classified_ads set published=0 where uid='.$this->id;
-		$q=$db->Query($qr);
-		$qr='update firms set published=0 where director='.$this->id;
-		$q=$db->Query($qr);
-		$qr='update classified_comments set status=0 where uid='.$this->id;
-		$q=$db->Query($qr);
 		$this->updatecache();
-		//TODO unpublish work firms?
 		}
 	/**
 	 *

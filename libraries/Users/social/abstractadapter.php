@@ -320,7 +320,7 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 		//Session.
 		$options=array('interval'=>2592000,'updatestep'=>60);
 		$sess=BUsersSession::getInstance();
-		$r=$sess->NewSession($user->id,$options);
+		$r=$sess->newSession($user->id,$options);
 		if(empty($r)){
 			return false;
 			}

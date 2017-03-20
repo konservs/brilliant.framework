@@ -461,28 +461,20 @@ class BUsers{
 	public function login($email,$password,$longsession=false){
 		$user=$this->get_user_byemail($email);
 		if($user==false){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: login() wrong email!',LL_ERROR);
-				}
+			BLog::addtolog('[Users]: login() wrong email!',LL_ERROR);
 			return USERS_ERROR_NOSUCHEMAIL;
 			}
 		if($user->active==USER_STATUS_NOTACTIVATED){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: Not Activated',LL_ERROR);
-				}
+			BLog::addtolog('[Users]: Not Activated',LL_ERROR);
 			return USERS_ERROR_NOACTIVATED;
 			}
 		if($user->active==USER_STATUS_BANNED){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: Banned user',LL_ERROR);
-				}
+			BLog::addtolog('[Users]: Banned user',LL_ERROR);
 			return USERS_ERROR_BANNED;
 			}			
 		$hash=$this->makepass($email,$password);
 		if($user->password!=$hash){
-			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: password hashes not equal! user hash='.$user->password.'; post hash='.$hash,LL_ERROR);
-				}
+			BLog::addtolog('[Users]: password hashes not equal! user hash='.$user->password.'; post hash='.$hash,LL_ERROR);
 			return USERS_ERROR_PASS;
 			}
 		$options=array(
@@ -491,7 +483,7 @@ class BUsers{
 			);
 		$sess=BUsersSession::getInstance();
 		$sess->NewSession($user->id,$options);
-		return $user;
+		return USERS_ERROR_OK;
 		}
 
 	/**

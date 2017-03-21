@@ -32,10 +32,9 @@ class BBreadcrumbs{
 	 * Draw breadcrumbs HTML
 	 */
 	public function draw(){
-		$brouter=BRouter::getInstance();
-		$template=$brouter->templatename;
-		bimport('http.useragent');
-		$suffix=BBrowserUseragent::getDeviceSuffix();
+		$bRouter=\Application\BRouter::getInstance();
+		$template=$bRouter->templatename;
+		$suffix=\Brilliant\HTTP\BBrowserUseragent::getDeviceSuffix();
 
 		$fn=BTEMPLATESPATH.$template.DIRECTORY_SEPARATOR.'breadcrumbs'.$suffix.'.php';
 		if(!file_exists($fn)){

@@ -27,7 +27,8 @@ class View_users_login extends \Brilliant\MVC\BView{
 			$this->redirectto=$data->redirectto;
 			if(empty($this->redirectto)){
 				//ToDO: BRouter
-				$this->redirectto='/cpanel/';
+				$bRouter=\Application\BRouter::getInstance();
+				$this->redirectto=$bRouter->generateUrl('users',array('view'=>'dashboard','lang'=>BLang::$langcode),array('usehostname'=>true));
 				}
 			//$this->setLocation($this->redirectto,0);
 			return 'Redirecting to <a href="'.$this->redirectto.'">'.$this->redirectto.'</a>...';

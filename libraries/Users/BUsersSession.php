@@ -5,8 +5,9 @@
 //============================================================
 namespace Brilliant\Users;
 
-use Brilliant\Log\BLog;
 use Brilliant\BFactory;
+use Brilliant\Log\BLog;
+use Brilliant\Users\BUsers;
 
 class BUsersSession{
 	protected $triedresult=false;
@@ -247,7 +248,6 @@ class BUsersSession{
 			
 			$qr='update users set last_action=NOW() where id='.$obj['userid'];
 			$q=$db->Query($qr);
-			bimport('users.general');
 			$busers=BUsers::getInstance();
 			$me=$busers->get_single_user($obj['userid']);
 			$me->updatecache();

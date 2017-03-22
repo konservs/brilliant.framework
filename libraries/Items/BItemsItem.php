@@ -1,14 +1,17 @@
 <?php
-//============================================================
-// Abstract class for collection item
-//
-// Author: Andrii Biriev
-//============================================================
+/**
+ * Abstract class for collection item
+ *
+ * @author Andrii Biriev
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
+ */
+namespace Brilliant\Items;
 
 abstract class BItemsItem{
 	public $id=0; //Necessary field
 	public $isnew=true;
-	protected $tablename='';
+	protected $tableName='';
 	protected $collectionname='';
 	protected $primarykey='id';
 	protected $fields=array();
@@ -85,16 +88,14 @@ abstract class BItemsItem{
 			case 'dt':
 				$obj=NULL;
 				if(!empty($value)){
-					bimport('cms.datetime');
-					$obj=new BDateTime($value);
+					$obj=new \Brilliant\BDateTime($value);
 					}
 				return $obj;
 			case 'image':
 				if(empty($value)){
 					return NULL;
 					}
-				bimport('images.single');
-				$img=new BImage();
+				$img=new \Brilliant\Images\BImage();
 				$img->url=$value;
 				return $img;
 			case 'json':
@@ -197,7 +198,7 @@ abstract class BItemsItem{
 		//
 		$this->isnew=false;
 		//Get languages list
-		$languages=BLang::langlist();
+		$languages=\Brilliant\CMS\BLang::langlist();
 		//Process additional fields
 		foreach($this->fields as $fld){
 			//Multi-language field + general field
@@ -228,13 +229,13 @@ abstract class BItemsItem{
 	 * @param $list
 	 * @return bool
 	 */
-	protected function loaditems(&$obj,$list){
+	protected function loadItems(&$obj,$list){
 		$arr=explode(',',$list);
 		if(!is_array($arr)){
 			return false;
 			}
 		foreach($arr as $itm){
-			$this->loaditem($obj,trim($itm));
+			$this->loadItem($obj,trim($itm));
 			}
 		}
 	/**
@@ -244,7 +245,7 @@ abstract class BItemsItem{
 	 * @param $item
 	 * @return bool
 	 */
-	protected function loaditem(&$obj,$item){
+	protected function loadItem(&$obj,$item){
 		switch($item){
 			case 'id':$this->id=(int)$obj['id']; return true;
 			case 'published': $this->published=$obj['published']; return true;
@@ -264,7 +265,7 @@ abstract class BItemsItem{
 	/**
 	 *
 	 */
-	protected function detectlang($lang){
+	protected function detectLanguage($lang){
 		if(empty($lang)){
 			bimport('cms.language');
 			$lang=BLang::$langcode;
@@ -354,8 +355,7 @@ abstract class BItemsItem{
 					return false;
 					}
 				if(!empty($value)){
-					bimport('cms.datetime');
-					$obj=new BDateTime($value);
+					$obj=new \Brilliant\BDateTime($value);
 					}
 				$this->{$varname}=$obj;
 				return true;
@@ -436,8 +436,7 @@ abstract class BItemsItem{
 					return false;
 					}
 				if(!empty($value)){
-					bimport('cms.datetime');
-					$obj=new BDateTime($value);
+					$obj=new \Brilliant\BDateTime($value);
 					}
 				$this->{$varname.'_'.$lang}=$obj;
 				return true;
@@ -497,7 +496,7 @@ abstract class BItemsItem{
 		$qr_fields=array();
 		$qr_values=array();
 		$this->getfieldsvalues($qr_fields,$qr_values);
-		$qr='INSERT INTO `'.$this->tablename.'` ('.implode(',',$qr_fields).') VALUES ('.implode(',',$qr_values).')';
+		$qr='INSERT INTO `'.$this->tableName.'` ('.implode(',',$qr_fields).') VALUES ('.implode(',',$qr_values).')';
 		return $qr;
 		}
 	/**
@@ -507,7 +506,7 @@ abstract class BItemsItem{
 		$qr_fields=array();
 		$qr_values=array();
 		$this->getfieldsvalues($qr_fields,$qr_values);
-		$qr='UPDATE `'.$this->tablename.'` SET ';
+		$qr='UPDATE `'.$this->tableName.'` SET ';
 		$first=true;
 		foreach($qr_fields as $i=>$field){
 			$qr.=($first?'':', ').$field.'='.$qr_values[$i];
@@ -534,7 +533,7 @@ abstract class BItemsItem{
 			}else{
 			$cachekey=$this->{$this->primarykey};
 			}
-		$cachekey=$this->tablename.':itemid:'.$cachekey;
+		$cachekey=$this->tableName.':itemid:'.$cachekey;
 		$bcache->delete($cachekey);
 		return true;
 		}
@@ -544,7 +543,7 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbinsert(){
-		BLog::addtolog('[Items.Item.'.$this->tablename.']: Inserting data...');
+		BLog::addtolog('[Items.Item.'.$this->tableName.']: Inserting data...');
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
@@ -573,7 +572,7 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbupdate(){
-		BLog::addtolog('[Items.Item.'.$this->tablename.']: Updating data...');
+		BLog::addtolog('[Items.Item.'.$this->tableName.']: Updating data...');
 		if(empty($this->id)){
 			return false;
 			}
@@ -597,11 +596,11 @@ abstract class BItemsItem{
 	/**
 	 *
 	 */
-	public function savetodb_times($limit=5){
+	public function saveToDBTimes($limit=5){
 		$i=0;
 		$result=false;
 		while((!$result)&&($i<$limit)){
-			BLog::addtolog('[Items.Item.'.$this->tablename.']: savetodb_times('.$i.' / '.$limit.')');
+			BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDBTimes('.$i.' / '.$limit.')');
 			$result=$this->savetodb();
 			$i++;
 			}
@@ -612,8 +611,8 @@ abstract class BItemsItem{
 	 * Check is and run insert or update query, reload cache.
 	 * @return bool
 	 */
-	public function savetodb(){
-		BLog::addtolog('[Items.Item.'.$this->tablename.']: savetodb()');
+	public function saveToDB(){
+		BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDB()');
 		if($this->isnew){
 			return $this->dbinsert();
 			}else{

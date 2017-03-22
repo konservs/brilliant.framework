@@ -573,8 +573,7 @@ class BView{
 		include $filename;
 		$html=ob_get_clean();
 		if(DEBUG_MODE){
-			bimport('http.request');
-			$tp=BRequest::GetInt('tp');
+			$tp=\Brilliant\HTTP\BRequest::GetInt('tp');
 			if($tp){
 				$html='<div style="font-size: 10px; color: #ccc;">'.$subfname.'</div>'.$html;
 				}

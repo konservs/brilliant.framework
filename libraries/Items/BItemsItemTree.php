@@ -36,8 +36,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain(){
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		//$fchain=$bitems->items_filter(array('parentchain'=>$this->id));
-		$fchain=$bitems->items_filter(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
+		$fchain=$bitems->itemsFilter(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $fchain;
 		}
 	/**
@@ -46,7 +45,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain_ids(){
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		$chain=$bitems->items_filter_ids(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
+		$chain=$bitems->itemsFilterIds(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $chain;
 		}
 	/**
@@ -59,7 +58,7 @@ abstract class BItemsItemTree extends BItemsItem{
 			}
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		$fparent=$bitems->item_get($parentid);
+		$fparent=$bitems->itemGet($parentid);
 		return $fparent;
 		}
 	/**
@@ -68,7 +67,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function children($lang='',$alias=''){
 		$collname=$this->collectionname;
 		$bitems=$collname::GetInstance();
-		$children=$bitems->items_filter(array('parent'=>$this->id));
+		$children=$bitems->itemsFilter(array('parent'=>$this->id));
 		if(empty($alias)){
 			return $children;
 			}
@@ -95,7 +94,7 @@ abstract class BItemsItemTree extends BItemsItem{
 		if(empty($parent)){
 			$collectionname=$this->collectionname;
 			$collection=$collectionname::getInstance();
-			$parent=$collection->item_get(1);
+			$parent=$collection->itemGet(1);
 			$this->{$this->parentkeyname}=1;
 			}
 		$qr_fields[]=$this->parentkeyname;
@@ -122,7 +121,7 @@ abstract class BItemsItemTree extends BItemsItem{
 		if(empty($parent)){
 			$collectionname=$this->collectionname;
 			$collection=$collectionname::getInstance();
-			$parent=$collection->item_get(1);
+			$parent=$collection->itemGet(1);
 			$this->{$this->parentkeyname}=1;
 			}
 		if(empty($parent)){
@@ -132,7 +131,7 @@ abstract class BItemsItemTree extends BItemsItem{
 		$this->{$this->leftkeyname}=$parent->{$this->rightkeyname};
 		$this->{$this->rightkeyname}=$parent->{$this->rightkeyname}+1;
 		$this->{$this->levelkeyname}=$parent->{$this->levelkeyname}+1;
-		$qr='UPDATE `'.$this->tablename.'` '.
+		$qr='UPDATE `'.$this->tableName.'` '.
 			'SET `'.$this->rightkeyname.'`=`'.$this->rightkeyname.'`+2, '.
 			'`'.$this->leftkeyname.'` = IF(`'.$this->leftkeyname.'` > '.$parent->{$this->rightkeyname}.', `'.$this->leftkeyname.'`+2, `'.$this->leftkeyname.'`)'.
 			' WHERE (`'.$this->rightkeyname.'`>='.$parent->{$this->rightkeyname}.')';

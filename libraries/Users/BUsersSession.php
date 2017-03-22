@@ -42,9 +42,7 @@ class BUsersSession{
 		if($this->triedstart){
 			return $this->triedresult;
 			}
-		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: Start()',LL_ERROR);
-			}
+		BLog::addtolog('[Users.Session]: Start()');
 		$this->triedresult=false;
 		$this->triedstart=true;
 		$secret=explode(':',$_COOKIE['brillsecret']);

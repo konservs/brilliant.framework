@@ -1,16 +1,20 @@
 <?php
-//============================================================
-// Abstract class for collections
-//
-// Author: Andrii Biriev
-//============================================================
-bimport('items.item');
-bimport('log.general');
+/**
+ * Abstract class for items collections
+ *
+ * @author Andrii Biriev
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
+ */
+namespace Brilliant\Items;
+
+use Brilliant\Log\BLog;
 
 abstract class BItems{
-	protected $tablename='';
+	protected $tableName='';
+	protected $itemClassName='';
+
 	protected $searchtablename='';
-	protected $itemclassname='';
 	protected $primarykey='id';
 	protected $orderingkey='ordering';
 	protected $hitskey='';
@@ -25,7 +29,7 @@ abstract class BItems{
 	 * @param string $lang
 	 * @return string detected language
 	 */
-	protected function detectlang($lang){
+	protected function detectLanguage($lang){
 		if(empty($lang)){
 			bimport('cms.language');
 			$lang=BLang::$langcode;
@@ -36,9 +40,8 @@ abstract class BItems{
 	 * Get sphinx / mysql database.
 	 */
 	public function getDBO(){
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		return $db;
-		//bimport('search.sphinx.sphinxql');
 		}
 	/**
 	 *
@@ -49,12 +52,12 @@ abstract class BItems{
 	/**
 	 * Load data from db/cache array.
 	 */
-	public function items_get($ids){
+	public function itemsGet($ids){
 		if(!is_array($ids)){
 			return array();
 			}
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tablename.'] items_get('.implode(',',$ids).')');
+			BLog::addtolog('[BItems.'.$this->tableName.'] itemsGet('.implode(',',$ids).')');
 			}
 		$items=array();
 		//-------------------------------------------------
@@ -70,7 +73,7 @@ abstract class BItems{
 				if(!empty($idd)){
 					$items[$idd]=NULL;
 					$ids_c[$idd]=$id;
-					$ids_k[$idd]=$this->tablename.':itemid:'.$idd;
+					$ids_k[$idd]=$this->tableName.':itemid:'.$idd;
 					}
 				}
 			}
@@ -81,16 +84,16 @@ abstract class BItems{
 		//-------------------------------------------------
 		//Trying to get left items from external cache
 		//-------------------------------------------------
-		$cache=BFactory::getCache();
+		$cache=\Brilliant\BFactory::getCache();
 		if(!empty($cache)){
 			$ids_m=array();
 			$ids_q=array();
 			$items_c=$cache->mget($ids_k);
 			foreach($ids_c as $id){
 				$idd=is_array($id)?implode(':',$id):$id;
-				$key=$this->tablename.':itemid:'.$idd;
+				$key=$this->tableName.':itemid:'.$idd;
 				if((isset($items_c[$key]))&&(!empty($items_c[$key]))){
-					$classname=$this->itemclassname;
+					$classname=$this->itemClassName;
 					$items[$idd]=new $classname();
 					$items[$idd]->load($items_c[$key]);
 					$this->cache_items[$idd]=$items[$idd];
@@ -109,7 +112,7 @@ abstract class BItems{
 		//-------------------------------------------------
 		// Trying to get left items from database
 		//-------------------------------------------------
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		if(empty($db)){
 			return $items;
 			}
@@ -123,13 +126,13 @@ abstract class BItems{
 				$whi[]='('.implode(' AND ',$s).')';
 				}
 			$wh=implode(' OR ',$whi);
-			$qr='SELECT * from `'.$this->tablename.'` WHERE ('.$wh.')';
+			$qr='SELECT * from `'.$this->tableName.'` WHERE ('.$wh.')';
 			}else{
-			$qr='SELECT * from `'.$this->tablename.'` WHERE (`'.$this->primarykey.'` in ('.implode(',',$ids_q).'))';
+			$qr='SELECT * from `'.$this->tableName.'` WHERE (`'.$this->primarykey.'` in ('.implode(',',$ids_q).'))';
 			}
 		$q=$db->Query($qr);
 		if(empty($q)){
-			BLog::addtolog('[items]: items_get(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+			BLog::addtolog('[items]: itemsGet(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 			return $items;
 			}
 		$tocache=array();
@@ -162,7 +165,7 @@ abstract class BItems{
 			$qrl='SELECT * from `'.$tbl['name'].'` WHERE ('.implode(' AND ',$wh).')';
 			$ql=$db->Query($qrl);
 			if(empty($ql)){
-				BLog::addtolog('[items]: items_get(): Could not execute external tables query! MySQL error: '.$db->lasterror(),LL_ERROR);
+				BLog::addtolog('[items]: itemsGet(): Could not execute external tables query! MySQL error: '.$db->lasterror(),LL_ERROR);
 				return false;
 				}
 			$datal=array();
@@ -175,7 +178,7 @@ abstract class BItems{
 		// Creating item object...
 		//-------------------------------------------------
 		foreach($item_obj as $k=>$l){
-			$classname=$this->itemclassname;
+			$classname=$this->itemClassName;
 			if(!class_exists($classname)){
 				$msg='Class "'.$classname.'" does not exist!';
 				BLog::addtolog($msg,LL_ERROR);
@@ -185,10 +188,10 @@ abstract class BItems{
 			$items[$k]->load($l);
 			$this->cache_items[$k]=$items[$k];
 			if(CACHE_TYPE){
-				$tocache[$this->tablename.':itemid:'.$k]=$l;
+				$tocache[$this->tableName.':itemid:'.$k]=$l;
 				}
 			}
-		//if($this->tablename=='news_articles'){
+		//if($this->tableName=='news_articles'){
 		//	var_dump($item_obj); die('k2');
 		//	}
 		//-------------------------------------------------
@@ -205,8 +208,8 @@ abstract class BItems{
 	 * @param $id
 	 * @return BItemsItem
 	 */
-	public function item_get($id){
-		$list=$this->items_get(array($id));
+	public function itemGet($id){
+		$list=$this->itemsGet(array($id));
 		$item=reset($list);
 		return $item;
 		}
@@ -217,24 +220,24 @@ abstract class BItems{
 	 * @param $params array
 	 * @return BItemsItem[]
 	 */
-	public function items_filter($params){
+	public function itemsFilter($params){
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tablename.'] items_filter('.var_export($params,true).')');
+			BLog::addtolog('[BItems.'.$this->tableName.'] itemsFilter('.var_export($params,true).')');
 			}
-		$ids=$this->items_filter_ids($params);
+		$ids=$this->itemsFilterIds($params);
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tablename.'] items_filter got IDs: '.var_export($ids,true));
+			BLog::addtolog('[BItems.'.$this->tableName.'] itemsFilter got IDs: '.var_export($ids,true));
 			}
-		return $this->items_get($ids);
+		return $this->itemsGet($ids);
 		}
 	/**
 	 * Get all items
 	 *
 	 * @return BItemsItem[]
 	 */
-	public function items_get_all(){
+	public function itemsGetAll(){
 		$params=array();
-		return $this->items_filter($params);
+		return $this->itemsFilter($params);
 		}
 
 	/**
@@ -244,7 +247,7 @@ abstract class BItems{
 	 * @param $jn
 	 * @return bool
 	 */
-	public function items_filter_sql($params,&$wh,&$jn){
+	public function itemsFilterSql($params,&$wh,&$jn){
 		$wh=array();
 		$jn=array();
 		if(isset($params['exclude'])&&(is_array($params['exclude']))){
@@ -259,8 +262,8 @@ abstract class BItems{
 	 * @param $params array
 	 * @return string
 	 */
-	public function items_filter_hash($params){
-		$itemshash=$this->tablename.':list';
+	public function itemsFilterHash($params){
+		$itemshash=$this->tableName.':list';
 		if(isset($params['exclude'])&&(is_array($params['exclude']))){
 			$itemshash.=':exclude-'.implode('-',$params['exclude']);
 			}
@@ -285,14 +288,14 @@ abstract class BItems{
 	 * @param $params
 	 * @return array|null
 	 */
-	public function items_filter_ids($params){
+	public function itemsFilterIds($params){
 		//
 		$cacheenabled=(!empty($params['cacheenabled']));
 		if($cacheenabled){
-			$bcache=BFactory::GetCache();
+			$bcache=\Brilliant\BFactory::GetCache();
 			}
 		if($bcache){
-			$hash=$this->items_filter_hash($params);
+			$hash=$this->itemsFilterHash($params);
 			$ids=$bcache->get($hash);
 			if(($ids!==false)&&($ids!==NULL)){
 				return $ids;
@@ -305,13 +308,13 @@ abstract class BItems{
 		if(is_array($this->primarykey)){
 			$flds=array();
 			foreach($this->primarykey as $pk){
-				$flds[]='`'.$this->tablename.'`.`'.$pk.'`';
+				$flds[]='`'.$this->tableName.'`.`'.$pk.'`';
 				}
-			$qr='select '.implode(',',$flds).' from `'.$this->tablename.'`';
+			$qr='select '.implode(',',$flds).' from `'.$this->tableName.'`';
 			}else{
-			$qr='select `'.$this->tablename.'`.`'.$this->primarykey.'` from `'.$this->tablename.'`';
+			$qr='select `'.$this->tableName.'`.`'.$this->primarykey.'` from `'.$this->tableName.'`';
 			}
-		$this->items_filter_sql($params,$wh,$jn);
+		$this->itemsFilterSql($params,$wh,$jn);
 		if(!empty($jn)){
 			$qr.=' '.implode(' ',$jn);
 			}
@@ -364,12 +367,12 @@ abstract class BItems{
 	 * @param $params
 	 * @return bool|int
 	 */
-	public function items_filter_count($params){
+	public function itemsFilterCount($params){
 		if(!$db=$this->getDBO()){
 			return false;
 			}
-		$qr='select count(*) as cnt from `'.$this->tablename.'`';
-		$this->items_filter_sql($params,$wh,$jn);
+		$qr='select count(*) as cnt from `'.$this->tableName.'`';
+		$this->itemsFilterSql($params,$wh,$jn);
 		if(!empty($jn)){
 			$qr.=' '.implode(' ',$jn);
 			}
@@ -439,12 +442,12 @@ abstract class BItems{
 	 * @param $ids
 	 * @return bool
 	 */
-	public function items_delete($ids){
-		$db=BFactory::getDBO();
+	public function itemsDelete($ids){
+		$db=\Brilliant\BFactory::getDBO();
 		if(empty($db)){
 			return false;
 			}
-		$qr='DELETE FROM `'.$this->tablename.'` WHERE (`'.$this->primarykey.'` in ('.implode(',', $ids).'))';
+		$qr='DELETE FROM `'.$this->tableName.'` WHERE (`'.$this->primarykey.'` in ('.implode(',', $ids).'))';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -457,8 +460,8 @@ abstract class BItems{
 	 * @param $order
 	 * @return bool
 	 */
-	public function items_update_ordering($ids,$order){
-		$db=BFactory::getDBO();
+	public function itemsUpdateOrdering($ids,$order){
+		$db=\Brilliant\BFactory::getDBO();
 		if(empty($db)){
 			return false;
 			}
@@ -466,7 +469,7 @@ abstract class BItems{
 		foreach($ids as $i=>$id){
 			$values[]='('.$id.','.$i.')';
 			}
-		$qr='INSERT INTO `'.$this->tablename.'` (`'.$this->primarykey.'`,`'.$this->orderingkey.'`)';
+		$qr='INSERT INTO `'.$this->tableName.'` (`'.$this->primarykey.'`,`'.$this->orderingkey.'`)';
 		$qr.=' VALUES '.implode(',',$values);
 		$qr.=' ON DUPLICATE KEY UPDATE '.$this->orderingkey.'=VALUES('.$this->orderingkey.')';
 		$q=$db->Query($qr);
@@ -478,7 +481,7 @@ abstract class BItems{
 	/**
 	 * Flush internal cache.
 	 */
-	public function flushinternalcache(){
+	public function flushInternalCache(){
 		foreach($this->cache_items as &$itm){
 			unset($itm);
 			}
@@ -502,14 +505,14 @@ abstract class BItems{
 	 *
 	 */
 	public function search($params){
-		$itemsids=$this->search_ids($params);
-		$items=$this->items_get($itemsids);
+		$itemsids=$this->searchIds($params);
+		$items=$this->itemsGet($itemsids);
 		return $items;
 		}
 	/**
 	 *
 	 */
-	public function search_ids($params){
+	public function searchIds($params){
 		bimport('search.sphinx.sphinxql');
 		$spx=BSearchSphinxQl::getInstanceAndConnect();
 		if(empty($spx)){
@@ -549,11 +552,11 @@ abstract class BItems{
 		if(empty($this->hitskey)){
 			return false;
 			}
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		if(empty($db)){
 			return false;
 			}
-		$qr='UPDATE `'.$this->tablename.'` SET hits=hits+1 WHERE (`'.$this->primarykey.'`='.$id.')';
+		$qr='UPDATE `'.$this->tableName.'` SET hits=hits+1 WHERE (`'.$this->primarykey.'`='.$id.')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;

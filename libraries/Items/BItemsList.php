@@ -1,8 +1,14 @@
 <?php
+/**
+ * Abstract class for lists of utems
+ *
+ * @author Andrii Biriev
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
+ */
+namespace Brilliant\Items;
 
-bimport('items.general');
-
-abstract class BItemsList extends BItems{
+abstract class BItemsList extends \Brilliant\Items\BItems{
 	/**
 	 *
 	 */
@@ -14,9 +20,9 @@ abstract class BItemsList extends BItems{
 	 * Get simple list.
 	 */
 	public function getSimpleList($fields=array(),$transfields=array(),$lang='',$wh=array(),$order=''){
-		$lang=$this->detectlang($lang);
+		$lang=$this->detectLanguage($lang);
 		//
-		$cachekey=$this->tablename.':simplelist:'.$lang;
+		$cachekey=$this->tableName.':simplelist:'.$lang;
 		if(!empty($wh)){
 			$cachekey.=':wh('.implode(';',$wh).')';
 			}
@@ -48,7 +54,7 @@ abstract class BItemsList extends BItems{
 		foreach($transfields as $fld){
 			$qr.=', `'.$fld.'_'.$lang.'` as `'.$fld.'`';
 			}
-		$qr.=' FROM `'.$this->tablename.'`';
+		$qr.=' FROM `'.$this->tableName.'`';
 		if(!empty($wh)){
 			$qr.=' WHERE ('.implode(' AND ',$wh).')';
 			}

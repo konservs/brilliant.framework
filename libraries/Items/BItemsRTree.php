@@ -27,7 +27,7 @@ abstract class BItemsRTree extends BItems {
 		$params = array();
 		$params['group'] = $groupId;
 		$params['parentisnull'] = true;
-		$list = $this->items_filter($params);
+		$list = $this->itemsFilter($params);
 		$item = reset($list);
 		return $item;
 	}
@@ -38,11 +38,11 @@ abstract class BItemsRTree extends BItems {
 	 * @param $params
 	 * @return array|null
 	 */
-	public function items_filter_ids($params) {
+	public function itemsFilterIds($params) {
 		if (empty($params['orderby'])) {
 			$params['orderby'] = $this->leftkey;
 		}
-		return parent::items_filter_ids($params);
+		return parent::itemsFilterIds($params);
 	}
 
 	/**
@@ -53,9 +53,9 @@ abstract class BItemsRTree extends BItems {
 	 * @param $jn
 	 * @return bool
 	 */
-	public function items_filter_sql($params, &$wh, &$jn) {
+	public function itemsFilterSql($params, &$wh, &$jn) {
 		//Call parent method.
-		parent::items_filter_sql($params, $wh, $jn);
+		parent::itemsFilterSql($params, $wh, $jn);
 
 		//Select items only with some group.
 		if (isset($params['group'])) {
@@ -76,7 +76,7 @@ abstract class BItemsRTree extends BItems {
 		//Entire parents tree. 
 		if (isset($params['parenttree'])) {
 			$itemid = (int)$params['parenttree'];
-			$item = $this->item_get($itemid);
+			$item = $this->itemGet($itemid);
 			if (empty($item)) {
 				return false;
 			}
@@ -96,7 +96,7 @@ abstract class BItemsRTree extends BItems {
 		//Entire parents chain. 
 		if (isset($params['parentchain'])) {
 			$itemid = (int)$params['parentchain'];
-			$item = $this->item_get($itemid);
+			$item = $this->itemGet($itemid);
 			if (empty($item)) {
 				return false;
 			}
@@ -117,8 +117,8 @@ abstract class BItemsRTree extends BItems {
 	 * @param $params
 	 * @return string
 	 */
-	public function items_filter_hash($params) {
-		$itemshash = parent::items_filter_hash($params);
+	public function itemsFilterHash($params) {
+		$itemshash = parent::itemsFilterHash($params);
 
 		//Select items only with some group
 		if (isset($params['group'])) {
@@ -139,7 +139,7 @@ abstract class BItemsRTree extends BItems {
 		//Entire parents tree. 
 		if (isset($params['parenttree'])) {
 			$itemid = (int)$params['parenttree'];
-			$item = $this->item_get($itemid);
+			$item = $this->itemGet($itemid);
 			if (empty($item)) {
 				return false;
 			}
@@ -157,7 +157,7 @@ abstract class BItemsRTree extends BItems {
 		//Entire parents chain. 
 		if (isset($params['parentchain'])) {
 			$itemid = (int)$params['parentchain'];
-			$item = $this->item_get($itemid);
+			$item = $this->itemGet($itemid);
 			if (empty($item)) {
 				return false;
 			}
@@ -180,7 +180,7 @@ abstract class BItemsRTree extends BItems {
 	 */
 	protected function rebuildtree_recursive($cat, &$lft, &$rgt) {
 		BLog::addtolog('[Items] Processing item [' . $cat->id . ']');
-		$ch = $this->items_filter(array('parent' => $cat->id));
+		$ch = $this->itemsFilter(array('parent' => $cat->id));
 		BLog::addtolog('[Items] Fill children array and sort them by "ordering". count=' . count($ch));
 		//
 		$children = array();
@@ -233,7 +233,7 @@ abstract class BItemsRTree extends BItems {
 		if (empty($db)) {
 			return false;
 			}
-		$r = $db->query('LOCK TABLES `'.$this->tablename.'` WRITE');
+		$r = $db->query('LOCK TABLES `'.$this->tableName.'` WRITE');
 		if(!$r){
 			BLog::addtolog('[Items] Could not lock table!',LL_ERROR);
 			}
@@ -246,10 +246,10 @@ abstract class BItemsRTree extends BItems {
 		//
 		BLog::addtolog('[Items] Get root cats...');
 		//
-		$catsCount = $this->items_filter_count(array());
+		$catsCount = $this->itemsFilterCount(array());
 		BLog::addtolog('[Items] Total categories count:' . $catsCount . '...');
 		//
-		$rootCatsCount = $this->items_filter_count(array('parentisnull'=>true));
+		$rootCatsCount = $this->itemsFilterCount(array('parentisnull'=>true));
 		BLog::addtolog('[Items] Root categories count:' . $rootCatsCount. '...');
 		//Go th
 		$rootCatsOffset = 0;
@@ -260,7 +260,7 @@ abstract class BItemsRTree extends BItems {
 			$paramsRoot['orderdir']='asc';
 			$paramsRoot['offset']=$rootCatsOffset;
 			$paramsRoot['limit']=1;
-			$rootcats = $this->items_filter($paramsRoot);
+			$rootcats = $this->itemsFilter($paramsRoot);
 			if(count($rootcats)!=1){
 				BLog::addtolog('[Items] Root Category error!',LL_ERROR);
 				}
@@ -273,7 +273,7 @@ abstract class BItemsRTree extends BItems {
 			$paramsAll['group']=$groupId;
 			//$paramsAll['parenttree_lft']
 			//$paramsAll['parenttree_rgt']
-			$catslist = $this->items_filter($paramsAll);
+			$catslist = $this->itemsFilter($paramsAll);
 
 
 			//Foreach by root categories...
@@ -285,7 +285,7 @@ abstract class BItemsRTree extends BItems {
 			$rcat->rgt = $rgt;
 			BLog::addtolog('[Items] Updating nested set...');
 			foreach ($catslist as $ct) {
-				$qr = 'UPDATE `' . $this->tablename . '` set `' . $this->leftkey . '`=' . $ct->lft . ', `' . $this->rightkey . '`=' . $ct->rgt . ', `' . $this->levelkey . '`=' . $ct->level . ' WHERE `' . $this->primarykey . '`=' . $ct->id;
+				$qr = 'UPDATE `' . $this->tableName . '` set `' . $this->leftkey . '`=' . $ct->lft . ', `' . $this->rightkey . '`=' . $ct->rgt . ', `' . $this->levelkey . '`=' . $ct->level . ' WHERE `' . $this->primarykey . '`=' . $ct->id;
 				$q = $db->query($qr);
 				if (empty($q)) {
 					return false;
@@ -317,9 +317,9 @@ abstract class BItemsRTree extends BItems {
 	 * @return array|null
 	 */
 	public function getsimpletree($fields = array(), $transfields = array(), $lang = '', $wh = array()) {
-		$lang = $this->detectlang($lang);
+		$lang = $this->detectLanguage($lang);
 		//
-		$cachekey = $this->tablename . ':simpletree:' . $lang;
+		$cachekey = $this->tableName . ':simpletree:' . $lang;
 		if (!empty($wh)) {
 			$cachekey .= ':wh(' . implode(';', $wh) . ')';
 		}
@@ -348,7 +348,7 @@ abstract class BItemsRTree extends BItems {
 		foreach ($transfields as $fld) {
 			$qr .= ', `' . $fld . '_' . $lang . '` as `' . $fld . '`';
 		}
-		$qr .= ' FROM `' . $this->tablename . '`';
+		$qr .= ' FROM `' . $this->tableName . '`';
 		if (!empty($wh)) {
 			$qr .= ' WHERE (' . implode(' AND ', $wh) . ')';
 		}
@@ -403,8 +403,8 @@ abstract class BItemsRTree extends BItems {
 	 * @param $ids
 	 * @return bool
 	 */
-	public function items_delete($ids) {
-		parent::items_delete($ids);
+	public function itemsDelete($ids) {
+		parent::itemsDelete($ids);
 		$this->rebuildtree();
 		return true;
 	}

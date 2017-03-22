@@ -13,11 +13,11 @@ abstract class BItemsTree extends BItems{
 	 * @param $params
 	 * @return array|null
 	 */
-	public function items_filter_ids($params){
+	public function itemsFilterIds($params){
 		if(empty($params['orderby'])){
 			$params['orderby']=$this->leftkey;
 			}
-		return parent::items_filter_ids($params);
+		return parent::itemsFilterIds($params);
 		}
 
 	/**
@@ -28,9 +28,9 @@ abstract class BItemsTree extends BItems{
 	 * @param $jn
 	 * @return bool
 	 */
-	public function items_filter_sql($params,&$wh,&$jn){
+	public function itemsFilterSql($params,&$wh,&$jn){
 		//Call parent method.
-		parent::items_filter_sql($params,$wh,$jn);
+		parent::itemsFilterSql($params,$wh,$jn);
 
 		//Select categories only with some level.
 		if(isset($params['level'])){
@@ -47,7 +47,7 @@ abstract class BItemsTree extends BItems{
 		//Entire parents tree. 
 		if(isset($params['parenttree'])){
 			$itemid=(int)$params['parenttree'];
-			$item=$this->item_get($itemid);
+			$item=$this->itemGet($itemid);
 			if(empty($item)){
 				return false;
 				}
@@ -67,7 +67,7 @@ abstract class BItemsTree extends BItems{
 		//Entire parents chain. 
 		if(isset($params['parentchain'])){
 			$itemid=(int)$params['parentchain'];
-			$item=$this->item_get($itemid);
+			$item=$this->itemGet($itemid);
 			if(empty($item)){
 				return false;
 				}
@@ -86,9 +86,9 @@ abstract class BItemsTree extends BItems{
 	 * News categories tree cache hash.
 	 *
 	 */
-	public function items_filter_hash($params){
+	public function itemsFilterHash($params){
 		$db=BFactory::getDBO();
-		$itemshash=parent::items_filter_hash($params);
+		$itemshash=parent::itemsFilterHash($params);
 
 		//Select categories only with some level
 		if(isset($params['level'])){
@@ -101,7 +101,7 @@ abstract class BItemsTree extends BItems{
 		//Entire parents tree. 
 		if(isset($params['parenttree'])){
 			$itemid=(int)$params['parenttree'];
-			$item=$this->item_get($itemid);
+			$item=$this->itemGet($itemid);
 			if(empty($item)){
 				return false;
 				}
@@ -119,7 +119,7 @@ abstract class BItemsTree extends BItems{
 		//Entire parents chain. 
 		if(isset($params['parentchain'])){
 			$itemid=(int)$params['parentchain'];
-			$item=$this->item_get($itemid);
+			$item=$this->itemGet($itemid);
 			if(empty($item)){
 				return false;
 				}
@@ -139,25 +139,25 @@ abstract class BItemsTree extends BItems{
 	/**
 	 *
 	 */
-	public function getitembyaliaschain($aliases,$lang=''){
+	public function getItemByAliasChain($aliases,$lang=''){
 		$hash='';
 		foreach($aliases as $alias){
 			$hash.=(empty($hash)?'':':').$alias;
 			}
-		$key=$this->tablename.':chain:'.$hash;
+		$key=$this->tableName.':chain:'.$hash;
 		//External cache... 
 
 		//items tree.
-		$item1=$this->item_get(1);
+		$item1=$this->itemGet(1);
 		if(empty($item1)){
-			BLog::addtolog('[BItemsTree] getitembyaliaschain(): Could not get root items!',LL_ERROR);
+			BLog::addtolog('[BItemsTree] getItemByAliasChain(): Could not get root items!',LL_ERROR);
 			return NULL;
 			}
 		//Aliases
 		foreach($aliases as $alias){
 			$item1=$item1->children($lang,$alias);
 			if(empty($item1)){
-				BLog::addtolog('[BItemsTree]: getitembyaliaschain() Could not get news item children!',LL_ERROR);
+				BLog::addtolog('[BItemsTree]: getItemByAliasChain() Could not get news item children!',LL_ERROR);
 				return NULL;
 				}
 			}
@@ -168,7 +168,7 @@ abstract class BItemsTree extends BItems{
 	 */
 	protected function rebuildtree_recursive($cat,&$lft,&$rgt){
 		BLog::addtolog('[Items] Processing item ['.$cat->id.']');
-		$ch=$this->items_filter(array('parent'=>$cat->id));
+		$ch=$this->itemsFilter(array('parent'=>$cat->id));
 		BLog::addtolog('[Items] Fill children array and sort them by "ordering". count='.count($ch));
 		//
 		$children=array();
@@ -221,7 +221,7 @@ abstract class BItemsTree extends BItems{
 			$bcache->invalidate();
 			}
 		//
-		$catslist=$this->items_filter(array());
+		$catslist=$this->itemsFilter(array());
 		BLog::addtolog('[Items] Total categories count:'.count($catslist).'...');
 
 		$rootcats=array();
@@ -267,7 +267,7 @@ abstract class BItemsTree extends BItems{
 			}
 		BLog::addtolog('[Items] Updating nested set...');
 		foreach($catslist as $ct){
-			$qr='UPDATE `'.$this->tablename.'` set `'.$this->leftkey.'`='.$ct->lft.', `'.$this->rightkey.'`='.$ct->rgt.', `'.$this->levelkey.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
+			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftkey.'`='.$ct->lft.', `'.$this->rightkey.'`='.$ct->rgt.', `'.$this->levelkey.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
 			$q=$db->query($qr);
 			if(empty($q)){
 				return false;
@@ -290,9 +290,9 @@ abstract class BItemsTree extends BItems{
 	 * Get simple tree as list.
 	 */
 	public function getsimpletree($fields=array(),$transfields=array(),$lang='',$wh=array()){
-		$lang=$this->detectlang($lang);
+		$lang=$this->detectLanguage($lang);
 		//
-		$cachekey=$this->tablename.':simpletree:'.$lang;
+		$cachekey=$this->tableName.':simpletree:'.$lang;
 		if(!empty($wh)){
 			$cachekey.=':wh('.implode(';',$wh).')';
 		}
@@ -319,7 +319,7 @@ abstract class BItemsTree extends BItems{
 		foreach($transfields as $fld){
 			$qr.=', `'.$fld.'_'.$lang.'` as `'.$fld.'`';
 			}
-		$qr.=' FROM `'.$this->tablename.'`';
+		$qr.=' FROM `'.$this->tableName.'`';
 		if(!empty($wh)){
 			$qr.=' WHERE ('.implode(' AND ',$wh).')';
 			}
@@ -372,8 +372,8 @@ abstract class BItemsTree extends BItems{
 	 * @param $ids
 	 * @return bool
 	 */
-	public function items_delete($ids){
-		parent::items_delete($ids);
+	public function itemsDelete($ids){
+		parent::itemsDelete($ids);
 		$this->rebuildtree();
 		return true;
 		}

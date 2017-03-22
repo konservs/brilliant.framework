@@ -91,7 +91,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		}
 		$collname = $this->collectionname;
 		$bitems = $collname::getInstance();
-		$fparent = $bitems->item_get($parentid);
+		$fparent = $bitems->itemGet($parentid);
 		return $fparent;
 	}
 
@@ -127,7 +127,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		if (empty($parentid)) {
 			return true;
 			}
-		$cachekey = $this->tablename . ':itemid:' . $parentid;
+		$cachekey = $this->tableName . ':itemid:' . $parentid;
 		$bcache->delete($cachekey);
 		//Update some lists
 		$params = array();
@@ -135,7 +135,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		$params['parentisnull'] = true;
 		$collname = $this->collectionname;
 		$bitems = $collname::getInstance();
-		$cachekey = $bitems->items_filter_hash($params);
+		$cachekey = $bitems->itemsFilterHash($params);
 		$bcache->delete($cachekey);
 		//All is ok
 		return true;
@@ -161,7 +161,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 			$this->{$this->leftkeyname} = $parent->{$this->rightkeyname};
 			$this->{$this->rightkeyname} = $parent->{$this->rightkeyname} + 1;
 			$this->{$this->levelkeyname} = $parent->{$this->levelkeyname} + 1;
-			$qr = 'UPDATE `' . $this->tablename . '` SET ';
+			$qr = 'UPDATE `' . $this->tableName . '` SET ';
 			$qr .= '`' . $this->rightkeyname . '`=`' . $this->rightkeyname . '`+2, ';
 			$qr .= '`' . $this->leftkeyname . '` = IF(`' . $this->leftkeyname . '` > ' . $parent->{$this->rightkeyname} . ', `' . $this->leftkeyname . '`+2, `' . $this->leftkeyname . '`)';
 			$qr .= ' WHERE ((`' . $this->groupName . '` = ' . $this->{$this->groupName} . ') AND (`' . $this->rightkeyname . '`>=' . $parent->{$this->rightkeyname} . '))';
@@ -173,7 +173,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 				}
 			//Because some elements in our internal cache was changed - need to flush it.
 			$collection=$this->getCollection();
-			$collection->flushinternalcache();
+			$collection->flushInternalCache();
 			}
 		//Forming query...
 		$this->modified = new DateTime();

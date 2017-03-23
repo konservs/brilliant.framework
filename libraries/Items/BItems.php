@@ -19,7 +19,7 @@ abstract class BItems{
 	protected $orderingkey='ordering';
 	protected $hitskey='';
 	protected $hits_daily_table='';
-	protected $linkedtables=array();
+	protected $linkedTables=array();
 	protected $cache_items=array();
 	protected $cachetime=3600;
 	/**
@@ -149,14 +149,14 @@ abstract class BItems{
 				$idd=(int)$l[$this->primarykey];
 				$item_obj[$idd]=$l;
 				}
-			foreach($this->linkedtables as $tbl){
+			foreach($this->linkedTables as $tbl){
 				$item_obj[$idd][$tbl['field']]=array();
 				}
 			}
 		//-------------------------------------------------
 		// Loading data from external tables...
 		//-------------------------------------------------
-		foreach($this->linkedtables as $tbl){
+		foreach($this->linkedTables as $tbl){
 			$wh=array();
 			$wh[]='(`'.$tbl['extkey'].'` in ('.implode(',',$ids_q).'))';
 			if(!empty($tbl['filter'])){

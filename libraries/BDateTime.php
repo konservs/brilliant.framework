@@ -4,8 +4,9 @@
  * 
  * @author Andrii Biriev
  */
-
 namespace Brilliant;
+
+use Brilliant\CMS\BLang;
 
 class BDateTime extends \DateTime{
 	public static $dtnow=NULL;
@@ -15,7 +16,7 @@ class BDateTime extends \DateTime{
 	 * $format=2 - 14 Янв.
 	 */
 	public function prettydate($format=1){
-		$now=new DateTime();
+		$now=new \DateTime();
 		$now_year=(int)$now->format('Y');
 
 		$ths_year=(int)$this->format('Y');
@@ -37,7 +38,7 @@ class BDateTime extends \DateTime{
 	 */
 	function SeconsToNow(){ // as datetime object returns difference in seconds
 		if(empty(self::$dtnow)){
-			self::$dtnow=new DateTime();
+			self::$dtnow=new \DateTime();
 			}
 		//Get difference
 		$diff = $this->diff(self::$dtnow);
@@ -56,7 +57,7 @@ class BDateTime extends \DateTime{
 	 */
 	function DaysToNow(){ // as datetime object returns difference in seconds
 		if(empty(self::$dtnow)){
-			self::$dtnow=new DateTime();
+			self::$dtnow=new \DateTime();
 			}
 		//Get difference
 		$diff=$this->diff(self::$dtnow);
@@ -91,12 +92,12 @@ class BDateTime extends \DateTime{
 	/**
 	 *
 	 */
-	public function prettydatetime($format=1){
-		$now=new DateTime();
+	public function prettyDateTime($format=1){
+		$now=new \DateTime();
 		if($now->format('Ymd')==$this->format('Ymd')){
 			return $this->format(BLang::sprintf('PRETTYDATETIME_TODAY'));
 			}
-		if($now->add(DateInterval::createFromDateString('yesterday'))->format('Ymd')==$this->format('Ymd')){
+		if($now->add(\DateInterval::createFromDateString('yesterday'))->format('Ymd')==$this->format('Ymd')){
 			return $this->format(BLang::sprintf('PRETTYDATETIME_YESTERDAY'));
 			}
 		return $this->format(BLang::sprintf('PRETTYDATETIME_COMMON',

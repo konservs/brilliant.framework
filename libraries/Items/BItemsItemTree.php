@@ -34,7 +34,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	 *
 	 */
 	public function getparentchain(){
-		$collname=$this->collectionname;
+		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
 		$fchain=$bitems->itemsFilter(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $fchain;
@@ -43,7 +43,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	 * Get 
 	 */
 	public function getparentchain_ids(){
-		$collname=$this->collectionname;
+		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
 		$chain=$bitems->itemsFilterIds(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
 		return $chain;
@@ -56,7 +56,7 @@ abstract class BItemsItemTree extends BItemsItem{
 		if(empty($parentid)){
 			return NULL;
 			}
-		$collname=$this->collectionname;
+		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
 		$fparent=$bitems->itemGet($parentid);
 		return $fparent;
@@ -65,7 +65,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	 * Get children items by alias.
 	 */
 	public function children($lang='',$alias=''){
-		$collname=$this->collectionname;
+		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
 		$children=$bitems->itemsFilter(array('parent'=>$this->id));
 		if(empty($alias)){
@@ -92,8 +92,8 @@ abstract class BItemsItemTree extends BItemsItem{
 		parent::getfieldsvalues($qr_fields,$qr_values);
 		$parent=$this->getparent();
 		if(empty($parent)){
-			$collectionname=$this->collectionname;
-			$collection=$collectionname::getInstance();
+			$collectionName=$this->collectionName;
+			$collection=$collectionName::getInstance();
 			$parent=$collection->itemGet(1);
 			$this->{$this->parentkeyname}=1;
 			}
@@ -119,8 +119,8 @@ abstract class BItemsItemTree extends BItemsItem{
 		//
 		$parent=$this->getparent();
 		if(empty($parent)){
-			$collectionname=$this->collectionname;
-			$collection=$collectionname::getInstance();
+			$collectionName=$this->collectionName;
+			$collection=$collectionName::getInstance();
 			$parent=$collection->itemGet(1);
 			$this->{$this->parentkeyname}=1;
 			}

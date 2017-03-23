@@ -43,8 +43,8 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 * @return BItemsRTree
 	 */
 	public function getCollection() {
-		$collectionname = $this->collectionname;
-		$collection = $collectionname::getInstance();
+		$collectionName = $this->collectionName;
+		$collection = $collectionName::getInstance();
 		return $collection;
 	}
 
@@ -89,7 +89,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		if (empty($parentid)) {
 			return NULL;
 		}
-		$collname = $this->collectionname;
+		$collname = $this->collectionName;
 		$bitems = $collname::getInstance();
 		$fparent = $bitems->itemGet($parentid);
 		return $fparent;
@@ -133,7 +133,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		$params = array();
 		$params['group'] = $this->getGroupId();
 		$params['parentisnull'] = true;
-		$collname = $this->collectionname;
+		$collname = $this->collectionName;
 		$bitems = $collname::getInstance();
 		$cachekey = $bitems->itemsFilterHash($params);
 		$bcache->delete($cachekey);

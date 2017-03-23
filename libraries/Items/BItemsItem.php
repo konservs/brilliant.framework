@@ -12,7 +12,7 @@ abstract class BItemsItem{
 	public $id=0; //Necessary field
 	public $isnew=true;
 	protected $tableName='';
-	protected $collectionname='';
+	protected $collectionName='';
 	protected $primarykey='id';
 	protected $fields=array();
 	/**

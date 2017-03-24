@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\mvc;
+namespace Brilliant\MVC;
 //============================================================
 // Basic model class
 //
@@ -7,5 +7,8 @@ namespace Brilliant\mvc;
 //============================================================
 
 abstract class BModel{
+	function __construct() {
+		return true;
+		}
 	abstract public function get_data($segments);
 	}

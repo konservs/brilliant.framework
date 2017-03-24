@@ -4,9 +4,9 @@
  *
  * Author: Andrii Biriev
  */
-namespace Brilliant\mvc;
-use Brilliant\log\BLog;
-use Brilliant\http\BBrowserUseragent;
+namespace Brilliant\MVC;
+use Brilliant\Log\BLog;
+use Brilliant\HTTP\BBrowserUseragent;
 
 class BView{
 	public $paths;

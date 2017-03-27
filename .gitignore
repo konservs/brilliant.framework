@@ -2,3 +2,4 @@
 /.idea
 /tools/php_errors.log
 /tests/vendor
+/tests/composer.lock

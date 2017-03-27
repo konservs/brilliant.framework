@@ -1,0 +1,17 @@
+paths:
+    migrations: ./application/db/migrations
+    seeds: ./application/db/seeds
+
+environments:
+    default_migration_table: phinxlog
+    default_database: testing
+    testing:
+        adapter: mysql
+        host: localhost
+        name: financello_testing
+        user: root
+        pass: ''
+        port: 3306
+        charset: utf8
+
+version_order: creation

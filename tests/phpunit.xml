@@ -1,8 +1,8 @@
-<phpunit bootstrap="libraries/init.php">
+<phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
 		<!-- Cache tests -->
 		<testsuite name="Cache">
-			<file>tests/cache/cache1.php</file>
+			<file>unit/cache/ufCacheFilesTest1.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

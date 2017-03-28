@@ -548,7 +548,7 @@ abstract class BItems{
 	/**
 	 * Hit the item.
 	 */
-	public function hititem($id){
+	public function hitItem($id){
 		if(empty($this->hitskey)){
 			return false;
 			}
@@ -556,7 +556,7 @@ abstract class BItems{
 		if(empty($db)){
 			return false;
 			}
-		$qr='UPDATE `'.$this->tableName.'` SET hits=hits+1 WHERE (`'.$this->primarykey.'`='.$id.')';
+		$qr='UPDATE `'.$this->tableName.'` SET `hits`=`hits`+1 WHERE (`'.$this->primarykey.'`='.$id.')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -583,5 +583,20 @@ abstract class BItems{
 			}
 		$l=$spx->fetch($q);
 		return $l['cnt'];
+		}
+	/**
+	 *
+	 */
+	public function truncateAll(){
+		$qr='truncate `'.$this->tableName.'`';
+		$db=\Brilliant\BFactory::getDBO();
+		if(empty($db)){
+			return false;
+			}
+		$q=$db->Query($qr);
+		if(empty($q)){
+			return false;
+			}
+		return true;
 		}
 	}

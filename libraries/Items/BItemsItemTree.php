@@ -3,8 +3,12 @@
  * Sets of functions and classes to work with tree item.
  *
  * @author Andrii Biriev
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
  */
-bimport('items.item');
+namespace Brilliant\Items;
+
+use Brilliant\Log\BLog;
 
 abstract class BItemsItemTree extends BItemsItem{
 	protected $parentkeyname='parent';
@@ -154,12 +158,11 @@ abstract class BItemsItemTree extends BItemsItem{
 			$db->rollback();
 			return false;
 			}
-		$this->{$this->primarykey}=$db->insert_id();
+		$this->{$this->primarykey}=$db->insertId();
 		$db->commit();
 		//Updating cache...
-		$this->updatecache();
+		$this->updateCache();
 		//Return result
 		return true;
-	}
-
+		}
 	}

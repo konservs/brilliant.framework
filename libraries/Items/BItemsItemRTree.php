@@ -3,8 +3,12 @@
  * Sets of functions and classes to work with grouped tree item.
  *
  * @author Andrii Biriev
+ *
+ * @copyright © Andrii Biriev, <a@konservs.com>
  */
-bimport('items.item_tree');
+namespace Brilliant\Items;
+
+use Brilliant\Log\BLog;
 
 abstract class BItemsItemRTree extends BItemsItem {
 	protected $parentkeyname = 'parent';
@@ -117,8 +121,8 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 *
 	 * @return bool
 	 */
-	public function updatecache() {
-		parent::updatecache();
+	public function updateCache() {
+		parent::updateCache();
 		$bcache = BFactory::getCache();
 		if (empty($bcache)) {
 			return false;
@@ -189,12 +193,12 @@ abstract class BItemsItemRTree extends BItemsItem {
 			}
 			return false;
 		}
-		$this->{$this->primarykey} = $db->insert_id();
+		$this->{$this->primarykey} = $db->insertId();
 		if ($closeTransaction) {
 			$db->commit();
 		}
 		//Updating cache...
-		$this->updatecache();
+		$this->updateCache();
 		//Return result
 		return true;
 	}

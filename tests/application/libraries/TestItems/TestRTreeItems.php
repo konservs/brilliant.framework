@@ -1,5 +1,5 @@
 <?php
-namespace \Application\TestItems;
+namespace Application\TestItems;
 
 /**
  * Basic class to control companies
@@ -11,7 +11,7 @@ namespace \Application\TestItems;
  * @author Andrii Biriev <a@konservs.com>
  * @copyright © Andrii Biriev, a@konservs.com, www.konservs.com
  */
-class TestRTreeItems extends \Brilliant\Items\ItemsRTree{
+class TestRTreeItems extends \Brilliant\Items\BItemsRTree{
 	use \Brilliant\BSingleton;
 	protected $tableName='rtree_items';
 	protected $itemClassName='\Application\TestItems\TestRTreeItem';

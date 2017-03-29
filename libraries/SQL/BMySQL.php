@@ -198,7 +198,7 @@ class BMySQL{
 	//====================================================
 	//
 	//====================================================
-	public function insert_id(){
+	public function insertId(){
 		return $this->mysqli->insert_id;
 		}
 	}

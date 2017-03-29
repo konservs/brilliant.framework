@@ -68,7 +68,7 @@ class BUserVirtual{
 		if(empty($q)){
 			return false;
 			}
-		$this->id=$db->insert_id();
+		$this->id=$db->insertId();
 		$this->sessionid=$sessid;
 		$this->lastaction=clone $nowdate;
 		$this->start=clone $nowdate;

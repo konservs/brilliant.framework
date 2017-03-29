@@ -4,8 +4,9 @@
  *
  * @author Andrii Biriev
  */
-bimport('items.tree');
-bimport('items.item_rtree');
+namespace Brilliant\Items;
+
+use Brilliant\Log\BLog;
 
 abstract class BItemsRTree extends BItems {
 	/**

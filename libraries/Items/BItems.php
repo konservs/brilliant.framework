@@ -4,7 +4,7 @@
  *
  * @author Andrii Biriev
  *
- * @copyright © Andrii Biriev, <a@konservs.com>
+ * @copyright Â© Andrii Biriev, <a@konservs.com>
  */
 namespace Brilliant\Items;
 

@@ -2,7 +2,7 @@
 use \PHPUnit\Framework\TestCase;
 use \Brilliant\Cache\BCacheFiles;
 
-class ufCacheFilesTest1 extends TestCase{
+class ufCacheFilesTest extends TestCase{
 	/**
 	 *
 	 */

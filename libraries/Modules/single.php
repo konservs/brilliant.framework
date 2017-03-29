@@ -103,7 +103,7 @@ class BSoftModule{
 			'-1,-1'.')';
 			
 			$q=$db->Query($qr);
-			$this->id=$db->insert_id();
+			$this->id=$db->insertId();
 			}
 		$this->updatecache();
 		return $this;

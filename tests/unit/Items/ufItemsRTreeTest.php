@@ -3,7 +3,7 @@ use \PHPUnit\Framework\TestCase;
 use \Application\TestItems\TestRTreeItems;
 use \Application\TestItems\TestRTreeItem;
 
-class ufItemsRTreeTest1 extends TestCase{
+class ufItemsRTreeTest extends TestCase{
 	/**
 	 *
 	 */
@@ -13,7 +13,6 @@ class ufItemsRTreeTest1 extends TestCase{
 
 		$itemOne = new TestRTreeItem();
 		//$itemOne->
-
 		}
 	}
 

@@ -37,7 +37,7 @@ class BSoftModulesGroup{
 		if(!$db->query($qr)){
 			return false;
 			}
-		$this->id=$db->insert_id();
+		$this->id=$db->insertId();
 		return true;
 		}
 	//===================================================

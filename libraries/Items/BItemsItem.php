@@ -4,7 +4,7 @@
  *
  * @author Andrii Biriev
  *
- * @copyright © Andrii Biriev, <a@konservs.com>
+ * @copyright Â© Andrii Biriev, <a@konservs.com>
  */
 namespace Brilliant\Items;
 
@@ -519,7 +519,7 @@ abstract class BItemsItem{
 	/**
 	 *
 	 */
-	public function updatecache(){
+	public function updateCache(){
 		$bcache=BFactory::getCache();
 		if(empty($bcache)){
 			return false;
@@ -559,10 +559,10 @@ abstract class BItemsItem{
 		if(empty($q)){
 			return false;
 			}
-		$this->{$this->primarykey}=$db->insert_id();
+		$this->{$this->primarykey}=$db->insertId();
 		$this->isnew=false;
 		//Updating cache...
-		$this->updatecache();
+		$this->updateCache();
 		//Return result
 		return true;
 		}
@@ -589,7 +589,7 @@ abstract class BItemsItem{
 			return false;
 			}
 		//Updating cache...
-		$this->updatecache();
+		$this->updateCache();
 		//Return result
 		return true;
 		}

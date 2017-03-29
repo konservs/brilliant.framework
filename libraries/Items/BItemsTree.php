@@ -1,5 +1,7 @@
 <?php
-bimport('items.general');
+namespace Brilliant\Items;
+
+use Brilliant\Log\BLog;
 
 abstract class BItemsTree extends BItems{
 	protected $leftkey='lft';

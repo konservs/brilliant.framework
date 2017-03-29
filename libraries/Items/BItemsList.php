@@ -8,6 +8,8 @@
  */
 namespace Brilliant\Items;
 
+use Brilliant\Log\BLog;
+
 abstract class BItemsList extends \Brilliant\Items\BItems{
 	/**
 	 *

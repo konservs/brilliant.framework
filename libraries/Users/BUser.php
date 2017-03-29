@@ -300,7 +300,7 @@ class BUser{
 		if(empty($q)){
 			return false;
 			}
-		$this->id=$db->insert_id();
+		$this->id=$db->insertId();
 		$this->updatecache();
 		return true;
 		}

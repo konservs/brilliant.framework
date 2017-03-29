@@ -600,7 +600,7 @@ class BUsers{
 				}
 			return false;
 			}
-		$userid=$db->insert_id();
+		$userid=$db->insertId();
 		
 		if(isset($fields['tels'])){
 			foreach($fields['tels'] as &$ar){

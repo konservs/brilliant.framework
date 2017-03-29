@@ -1,5 +1,5 @@
 <?php
-namespace Application\TestItems;
+//namespace Application\TestItems;
 
 /**
  * Basic class to control Items Item
@@ -7,7 +7,7 @@ namespace Application\TestItems;
  * @author Andrii Biriev <a@konservs.com>
  * @copyright © Andrii Biriev, a@konservs.com, www.konservs.com
  */
-class TestRTreeItem extends \Brilliant\Items\BItemsItem{
+class TestRTreeItem extends \Brilliant\Items\BItemsItemRTree{
 	protected $collectionName='\Application\TestItems\TestRTreeItems';
 	protected $tableName='rtree_items';
 	/**

@@ -12,7 +12,7 @@ class ufItemsRTreeTest1 extends TestCase{
 		$bItemsTree->truncateAll();
 
 		$itemOne = new TestRTreeItem();
-		$itemOne->
+		//$itemOne->
 
 		}
 	}

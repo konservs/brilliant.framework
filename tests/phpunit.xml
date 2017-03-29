@@ -1,8 +1,12 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
+		<!-- Items tests -->
+		<testsuite name="Items">
+			<directory suffix="Test.php">./unit/items/</directory>
+		</testsuite>
 		<!-- Cache tests -->
 		<testsuite name="Cache">
-			<file>unit/cache/ufCacheFilesTest1.php</file>
+			<directory suffix="Test.php">./unit/cache/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

@@ -238,6 +238,9 @@ abstract class BItems{
 		if(DEBUG_LOG_BITEMS){
 			BLog::addToLog('[BItems.'.$this->tableName.'] itemsFilter got IDs: '.var_export($ids,true));
 			}
+		if(empty($ids)){
+			return array();
+			}
 		$result = $this->itemsGet($ids);
 		if(DEBUG_LOG_BITEMS){
 			BLog::addToLog('[BItems.'.$this->tableName.'] Got items!');

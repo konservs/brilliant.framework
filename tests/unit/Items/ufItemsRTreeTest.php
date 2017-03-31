@@ -100,6 +100,82 @@ class ufItemsRTreeTest extends TestCase{
 		$this->assertTrue(($itemThree->rgt == 9),'[3.1]->rgt should be 9 (got '.$itemThree->rgt.')');
 		$this->assertTrue(($itemThree->level == 2),'[3.1]->level should be 2 (got '.$itemThree->level.')');
 		}
+	/**
+	 *
+	 */
+	public function testRTree3(){
+		$bItemsTree = new TestRTreeItems();
+		$bItemsTree->truncateAll();
+		//First Element
+		$itemOne = new TestRTreeItem();
+		$itemOne->group = 1;
+		$itemOne->name='Element 1';
+		$itemOne->saveToDB();
+		$this->assertFalse(empty($itemOne->id),'ID of 1 element is empty!');
+		//Second Element
+		$itemTwo = new TestRTreeItem();
+		$itemTwo->group = 1;
+		$itemTwo->name='Element 2';
+		$itemTwo->saveToDB();
+		$this->assertFalse(empty($itemTwo->id),'ID of 2 element is empty!');
+		//Second.Second Element
+		$item21 = new TestRTreeItem();
+		$item21->group = 1;
+		$item21->parent = $itemTwo->id;
+		$item21->name='Element 2.1';
+		$item21->saveToDB();
+		$this->assertFalse(empty($item21->id),'ID of 2.1 element is empty!');
+		//Third Element
+		$item3 = new TestRTreeItem();
+		$item3->group = 1;
+		$item3->name='Element 3';
+		$item3->saveToDB();
+		$this->assertFalse(empty($item3->id),'ID of 3 element is empty!');
+		//2.2 Element
+		$item22 = new TestRTreeItem();
+		$item22->group = 1;
+		$item22->parent = $itemTwo->id;
+		$item22->name='Element 2.2';
+		$item22->saveToDB();
+		$this->assertFalse(empty($item22->id),'ID of 2.2 element is empty!');
+
+		//3.1
+		$item31 = new TestRTreeItem();
+		$item31->group = 1;
+		$item31->parent = $item3->id;
+		$item31->name='Element 3.1';
+		$item31->saveToDB();
+		$this->assertFalse(empty($item31->id),'ID of 3.1 element is empty!');
+
+		//3.2
+		$item32 = new TestRTreeItem();
+		$item32->group = 1;
+		$item32->parent = $item3->id;
+		$item32->name='Element 3.2';
+		$item32->saveToDB();
+		$this->assertFalse(empty($item32->id),'ID of 3.2 element is empty!');
+
+		//3.1.1.
+		$item311 = new TestRTreeItem();
+		$item311->group = 1;
+		$item311->parent = $item31->id;
+		$item311->name='Element 3.1.1';
+		$item311->saveToDB();
+		$this->assertFalse(empty($item311->id),'ID of 3.1.1 element is empty!');
+		//4.
+		$item4 = new TestRTreeItem();
+		$item4->group = 1;
+		$item4->name='Element 4';
+		$item4->saveToDB();
+		$this->assertFalse(empty($item4->id),'ID of 4 element is empty!');
+		//4.1.
+		$item41 = new TestRTreeItem();
+		$item41->group = 1;
+		$item41->parent = $item4->id;
+		$item41->name='Element 4.1';
+		$item41->saveToDB();
+		$this->assertFalse(empty($item41->id),'ID of 4.1 element is empty!');
+		}
 
 	}
 

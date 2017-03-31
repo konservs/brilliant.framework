@@ -17,6 +17,8 @@ class ufItemsRTreeTest extends TestCase{
 		$itemOne->saveToDB();
 
 		$this->assertFalse(empty($itemOne->id),'ID of newly created element is empty!');
+
+
 		//$itemOne->
 		}
 	}

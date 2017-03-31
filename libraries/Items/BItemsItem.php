@@ -8,6 +8,8 @@
  */
 namespace Brilliant\Items;
 
+use Brilliant\Log\BLog;
+
 abstract class BItemsItem{
 	public $id=0; //Necessary field
 	public $isnew=true;
@@ -115,7 +117,7 @@ abstract class BItemsItem{
 		if($lang!=''){
 			$fldname.='_'.$lang;
 			}
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		if(!isset($this->fields[$name])){
 			return '';
 			}
@@ -520,7 +522,7 @@ abstract class BItemsItem{
 	 *
 	 */
 	public function updateCache(){
-		$bcache=BFactory::getCache();
+		$bcache=\Brilliant\BFactory::getCache();
 		if(empty($bcache)){
 			return false;
 			}
@@ -544,7 +546,7 @@ abstract class BItemsItem{
 	//====================================================
 	public function dbInsert(){
 		BLog::addtolog('[Items.Item.'.$this->tableName.']: Inserting data...');
-		if(!$db=BFactory::getDBO()){
+		if(!$db=\Brilliant\BFactory::getDBO()){
 			return false;
 			}
 		//Forming query...
@@ -576,7 +578,7 @@ abstract class BItemsItem{
 		if(empty($this->id)){
 			return false;
 			}
-		if(!$db=BFactory::getDBO()){
+		if(!$db=\Brilliant\BFactory::getDBO()){
 			return false;
 			}
 		//

@@ -123,7 +123,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 */
 	public function updateCache() {
 		parent::updateCache();
-		$bcache = BFactory::getCache();
+		$bcache = \Brilliant\BFactory::getCache();
 		if (empty($bcache)) {
 			return false;
 			}
@@ -152,7 +152,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 */
 	public function dbInsert() {
 		BLog::addtolog('[Items.ItemTree]: Inserting data...');
-		if (!$db = BFactory::getDBO()) {
+		if (!$db = \Brilliant\BFactory::getDBO()) {
 			return false;
 		}
 		//

@@ -37,7 +37,7 @@ abstract class BItemsList extends \Brilliant\Items\BItems{
 			return $cacheSimpleList[$cachekey];
 			}
 		//
-		$bcache=BFactory::getCache();
+		$bcache=\Brilliant\BFactory::getCache();
 		if($bcache){
 			$res=$bcache->get($cachekey);
 			if(($res!==false)&&($res!==NULL)){
@@ -46,7 +46,7 @@ abstract class BItemsList extends \Brilliant\Items\BItems{
 				}
 			}
 		//Load simle cities names.
-		if(!$db=BFactory::getDBO()){
+		if(!$db=\Brilliant\BFactory::getDBO()){
 			return NULL;
 			}
 		$qr='SELECT `'.$this->primarykey.'`';

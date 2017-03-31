@@ -4,10 +4,10 @@ namespace Brilliant\Items;
 use Brilliant\Log\BLog;
 
 abstract class BItemsTree extends BItems{
-	protected $leftkey='lft';
-	protected $rightkey='rgt';
-	protected $levelkey='level';
-	protected $parentkey='parent';
+	protected $leftKeyName='lft';
+	protected $rightKeyName='rgt';
+	protected $levelKeyName='level';
+	protected $parentKeyName='parent';
 
 	/**
 	 * Filters items and return array of IDs
@@ -17,7 +17,7 @@ abstract class BItemsTree extends BItems{
 	 */
 	public function itemsFilterIds($params){
 		if(empty($params['orderby'])){
-			$params['orderby']=$this->leftkey;
+			$params['orderby']=$this->leftKeyName;
 			}
 		return parent::itemsFilterIds($params);
 		}
@@ -36,15 +36,15 @@ abstract class BItemsTree extends BItems{
 
 		//Select categories only with some level.
 		if(isset($params['level'])){
-			$wh[]='(`'.$this->levelkey.'`='.(int)$params['level'].')';
+			$wh[]='(`'.$this->levelKeyName.'`='.(int)$params['level'].')';
 			}
 		//Select categories only with parentid=$params['parent'].
 		if(isset($params['parent'])){
-			$wh[]='(`'.$this->parentkey.'`='.(int)$params['parent'].')';
+			$wh[]='(`'.$this->parentKeyName.'`='.(int)$params['parent'].')';
 			}
 		//Select categories only with parentid=NULL
 		if(!empty($params['parentisnull'])){
-			$wh[]='(`'.$this->parentkey.'` is NULL)';
+			$wh[]='(`'.$this->parentKeyName.'` is NULL)';
 		}
 		//Entire parents tree. 
 		if(isset($params['parenttree'])){
@@ -53,8 +53,8 @@ abstract class BItemsTree extends BItems{
 			if(empty($item)){
 				return false;
 				}
-			$wh[]='(`'.$this->leftkey.'`>='.$item->lft.')';
-			$wh[]='(`'.$this->rightkey.'`<='.$item->rgt.')';
+			$wh[]='(`'.$this->leftKeyName.'`>='.$item->lft.')';
+			$wh[]='(`'.$this->rightKeyName.'`<='.$item->rgt.')';
 			}
 		//Entire parents tree, second version. 
 		if((isset($params['parenttree_lft']))&&(isset($params['parenttree_rgt']))){
@@ -63,8 +63,8 @@ abstract class BItemsTree extends BItems{
 			if(($lft<1)||($rgt<1)||($lft>=$rgt)){
 				return false;
 				}
-			$wh[]='(`'.$this->leftkey.'`>='.$lft.')';
-			$wh[]='(`'.$this->rightkey.'`<='.$rgt.')';
+			$wh[]='(`'.$this->leftKeyName.'`>='.$lft.')';
+			$wh[]='(`'.$this->rightKeyName.'`<='.$rgt.')';
 			}
 		//Entire parents chain. 
 		if(isset($params['parentchain'])){
@@ -73,13 +73,13 @@ abstract class BItemsTree extends BItems{
 			if(empty($item)){
 				return false;
 				}
-			$wh[]='(`'.$this->leftkey.'`<='.$item->lft.')';
-			$wh[]='(`'.$this->rightkey.'`>='.$item->rgt.')';
+			$wh[]='(`'.$this->leftKeyName.'`<='.$item->lft.')';
+			$wh[]='(`'.$this->rightKeyName.'`>='.$item->rgt.')';
 			}
 		//Entire parents chain. 
 		if((isset($params['parentchain_lft']))&&(isset($params['parentchain_rgt']))){
-			$wh[]='(`'.$this->leftkey.'`<='.(int)$params['parentchain_lft'].')';
-			$wh[]='(`'.$this->rightkey.'`>='.(int)$params['parentchain_rgt'].')';
+			$wh[]='(`'.$this->leftKeyName.'`<='.(int)$params['parentchain_lft'].')';
+			$wh[]='(`'.$this->rightKeyName.'`>='.(int)$params['parentchain_rgt'].')';
 			}
 
 		return true;
@@ -89,7 +89,7 @@ abstract class BItemsTree extends BItems{
 	 *
 	 */
 	public function itemsFilterHash($params){
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		$itemshash=parent::itemsFilterHash($params);
 
 		//Select categories only with some level
@@ -218,7 +218,7 @@ abstract class BItemsTree extends BItems{
 		//Rebuild nested set - get cat
 		BLog::addtolog('[Items] rebuilding nested sets...');
 		//
-		$bcache=BFactory::getCache();
+		$bcache=\Brilliant\BFactory::getCache();
 		if($bcache){
 			$bcache->invalidate();
 			}
@@ -232,7 +232,7 @@ abstract class BItemsTree extends BItems{
 			$cat->level=0;
 			$cat->lft=0;
 			$cat->rgt=0;
-			if(empty($cat->{$this->parentkey})){
+			if(empty($cat->{$this->parentKeyName})){
 				$rootcats[]=$cat;
 				}
 			}
@@ -263,20 +263,20 @@ abstract class BItemsTree extends BItems{
 			$rcat->lft=1;
 			$rcat->rgt=$rgt;
 			}
-		$db=BFactory::getDBO();
+		$db=\Brilliant\BFactory::getDBO();
 		if(empty($db)){
 			return false;
 			}
 		BLog::addtolog('[Items] Updating nested set...');
 		foreach($catslist as $ct){
-			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftkey.'`='.$ct->lft.', `'.$this->rightkey.'`='.$ct->rgt.', `'.$this->levelkey.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
+			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftKeyName.'`='.$ct->lft.', `'.$this->rightKeyName.'`='.$ct->rgt.', `'.$this->levelKeyName.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
 			$q=$db->query($qr);
 			if(empty($q)){
 				return false;
 				}
 			}
 		//Invalidate all cache.
-		$bcache=BFactory::getCache();
+		$bcache=\Brilliant\BFactory::getCache();
 		if($bcache){
 			$bcache->invalidate();
 			}
@@ -304,7 +304,7 @@ abstract class BItemsTree extends BItems{
 			return $cache_simpletree[$cachekey];
 			}
 		//
-		$bcache=BFactory::getCache();
+		$bcache=\Brilliant\BFactory::getCache();
 		if($bcache){
 			$res=$bcache->get($cachekey);
 			if(($res!==false)&&($res!==NULL)){
@@ -313,7 +313,7 @@ abstract class BItemsTree extends BItems{
 				}
 			}
 		//Load simle cities names.
-		if(!$db=BFactory::getDBO()){return NULL;}
+		if(!$db=\Brilliant\BFactory::getDBO()){return NULL;}
 		$qr='SELECT `'.$this->primarykey.'`';
 		foreach($fields as $fld){
 			$qr.=', `'.$fld.'`';
@@ -325,7 +325,7 @@ abstract class BItemsTree extends BItems{
 		if(!empty($wh)){
 			$qr.=' WHERE ('.implode(' AND ',$wh).')';
 			}
-		$qr.=' ORDER BY `'.$this->leftkey.'`;';
+		$qr.=' ORDER BY `'.$this->leftKeyName.'`;';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return $res;

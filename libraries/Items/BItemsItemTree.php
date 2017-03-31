@@ -117,7 +117,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	 */
 	public function dbInsert(){
 		BLog::addtolog('[Items.ItemTree]: Inserting data...');
-		if(!$db=BFactory::getDBO()){
+		if(!$db=\Brilliant\BFactory::getDBO()){
 			return false;
 			}
 		//

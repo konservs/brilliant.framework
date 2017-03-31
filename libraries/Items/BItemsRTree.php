@@ -25,10 +25,14 @@ abstract class BItemsRTree extends BItems {
 	 * @return BItemsItemRTree|null
 	 */
 	public function getGroupRoot($groupId) {
+		BLog::addToLog('[Items.ItemsRTree.'.$this->tableName.']: getGroupRoot('.var_export($groupId,true).').');
 		$params = array();
 		$params['group'] = $groupId;
 		$params['parentisnull'] = true;
 		$list = $this->itemsFilter($params);
+		if(empty($list)){
+			return NULL;
+			}
 		$item = reset($list);
 		return $item;
 	}
@@ -286,7 +290,7 @@ abstract class BItemsRTree extends BItems {
 			$rcat->rgt = $rgt;
 			BLog::addToLog('[Items] Updating nested set...');
 			foreach ($catslist as $ct) {
-				$qr = 'UPDATE `' . $this->tableName . '` set `' . $this->leftKeyName . '`=' . $ct->lft . ', `' . $this->rightKeyName . '`=' . $ct->rgt . ', `' . $this->levelKeyName . '`=' . $ct->level . ' WHERE `' . $this->primarykey . '`=' . $ct->id;
+				$qr = 'UPDATE `' . $this->tableName . '` set `' . $this->leftKeyName . '`=' . $ct->lft . ', `' . $this->rightKeyName . '`=' . $ct->rgt . ', `' . $this->levelKeyName . '`=' . $ct->level . ' WHERE `' . $this->primaryKeyName . '`=' . $ct->id;
 				$q = $db->query($qr);
 				if (empty($q)) {
 					return false;
@@ -342,7 +346,7 @@ abstract class BItemsRTree extends BItems {
 		if (!$db = \Brilliant\BFactory::getDBO()) {
 			return NULL;
 		}
-		$qr = 'SELECT `' . $this->primarykey . '`';
+		$qr = 'SELECT `' . $this->primaryKeyName . '`';
 		foreach ($fields as $fld) {
 			$qr .= ', `' . $fld . '`';
 		}
@@ -361,9 +365,9 @@ abstract class BItemsRTree extends BItems {
 		//
 		$res = array();
 		while ($l = $db->fetch($q)) {
-			$id = (int)$l[$this->primarykey];
+			$id = (int)$l[$this->primaryKeyName];
 			$val = array();
-			$val[$this->primarykey] = $id;
+			$val[$this->primaryKeyName] = $id;
 			foreach ($fields as $fld) {
 				$val[$fld] = $l[$fld];
 			}
@@ -391,7 +395,7 @@ abstract class BItemsRTree extends BItems {
 		}
 		$tree = array();
 		foreach ($list as $li) {
-			$id = (int)$li->{$this->primarykey};
+			$id = (int)$li->{$this->primaryKeyName};
 			$ti = $li;
 			//TODO: finish children
 			$ti->children = array();

@@ -158,7 +158,7 @@ abstract class BItemsItemTree extends BItemsItem{
 			$db->rollback();
 			return false;
 			}
-		$this->{$this->primarykey}=$db->insertId();
+		$this->{$this->primaryKeyName}=$db->insertId();
 		$db->commit();
 		//Updating cache...
 		$this->updateCache();

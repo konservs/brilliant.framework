@@ -11,10 +11,12 @@ class TestRtreeItems extends AbstractMigration{
 		$table->addColumn('lft', 'integer')
 			->addColumn('rgt', 'integer')
 			->addColumn('level', 'integer')
-			->addColumn('parent', 'integer')
+			->addColumn('parent', 'integer', ['null'=>true])
+			->addColumn('group', 'integer')
 			->addColumn('name', 'string')
 			->addColumn('created', 'datetime')
 			->addColumn('modified', 'datetime')
+			->addIndex(array('lft'))
 			->create();
 		}
 	}

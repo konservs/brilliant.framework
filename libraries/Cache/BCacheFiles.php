@@ -56,8 +56,8 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 		if(empty($f))
 			return false;
 
-		$dt_exp=new DateTime(fgets($f));
-		$dt_now=new DateTime();
+		$dt_exp=new \DateTime(fgets($f));
+		$dt_now=new \DateTime();
 		if($dt_exp<$dt_now){
 			fclose($f);
 			@unlink($fn);

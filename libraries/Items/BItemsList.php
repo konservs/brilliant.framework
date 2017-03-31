@@ -49,7 +49,7 @@ abstract class BItemsList extends \Brilliant\Items\BItems{
 		if(!$db=\Brilliant\BFactory::getDBO()){
 			return NULL;
 			}
-		$qr='SELECT `'.$this->primarykey.'`';
+		$qr='SELECT `'.$this->primaryKeyName.'`';
 		foreach($fields as $fld){
 			$qr.=', `'.$fld.'`';
 			}
@@ -71,9 +71,9 @@ abstract class BItemsList extends \Brilliant\Items\BItems{
 		//
 		$res=array();
 		while($l=$db->fetch($q)){
-			$id=(int)$l[$this->primarykey];
+			$id=(int)$l[$this->primaryKeyName];
 			$val=array();
-			$val[$this->primarykey]=$id;
+			$val[$this->primaryKeyName]=$id;
 			foreach($fields as $fld){
 				$val[$fld]=$l[$fld];
 				}

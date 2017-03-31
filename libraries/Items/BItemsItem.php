@@ -15,7 +15,7 @@ abstract class BItemsItem{
 	public $isnew=true;
 	protected $tableName='';
 	protected $collectionName='';
-	protected $primarykey='id';
+	protected $primaryKeyName='id';
 	protected $fields=array();
 	/**
 	 * @var \Brilliant\BDateTime
@@ -58,7 +58,7 @@ abstract class BItemsItem{
 	 *
 	 */
 	public function getPrimaryKey(){
-		return $this->{$this->primarykey};
+		return $this->{$this->primaryKeyName};
 		}
 	/**
 	 * Get RAW field value from DB.
@@ -190,12 +190,12 @@ abstract class BItemsItem{
 	 */
 	public function load($obj){
 		//Load primary key / keys
-		if(is_array($this->primarykey)){
-			foreach($this->primarykey as $pk){
+		if(is_array($this->primaryKeyName)){
+			foreach($this->primaryKeyName as $pk){
 				$this->{$pk}=$obj[$pk];
 				}
 			}else{
-			$this->{$this->primarykey}=(int)$obj[$this->primarykey];
+			$this->{$this->primaryKeyName}=(int)$obj[$this->primaryKeyName];
 			}
 		//
 		$this->isnew=false;
@@ -514,7 +514,7 @@ abstract class BItemsItem{
 			$qr.=($first?'':', ').$field.'='.$qr_values[$i];
 			$first=false;
 			}
-		$qr.=' WHERE `'.$this->primarykey.'`='.$this->{$this->primarykey};
+		$qr.=' WHERE `'.$this->primaryKeyName.'`='.$this->{$this->primaryKeyName};
 		return $qr;
 		}
 
@@ -527,13 +527,13 @@ abstract class BItemsItem{
 			return false;
 			}
 		$cachekey='';
-		if(is_array($this->primarykey)){
-			foreach($this->primarykey as $pk){
+		if(is_array($this->primaryKeyName)){
+			foreach($this->primaryKeyName as $pk){
 				$pkk=$this->{$pk};
 				$cachekey.=(empty($cachekey)?'':':').$this->{$pk};
 				}
 			}else{
-			$cachekey=$this->{$this->primarykey};
+			$cachekey=$this->{$this->primaryKeyName};
 			}
 		$cachekey=$this->tableName.':itemid:'.$cachekey;
 		$bcache->delete($cachekey);
@@ -561,7 +561,7 @@ abstract class BItemsItem{
 		if(empty($q)){
 			return false;
 			}
-		$this->{$this->primarykey}=$db->insertId();
+		$this->{$this->primaryKeyName}=$db->insertId();
 		$this->isnew=false;
 		//Updating cache...
 		$this->updateCache();

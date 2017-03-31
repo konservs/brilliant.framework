@@ -15,7 +15,7 @@ abstract class BItems{
 	protected $itemClassName='';
 
 	protected $searchtablename='';
-	protected $primarykey='id';
+	protected $primaryKeyName='id';
 	protected $orderingkey='ordering';
 	protected $hitskey='';
 	protected $hits_daily_table='';
@@ -53,7 +53,7 @@ abstract class BItems{
 	 * Load data from db/cache array.
 	 */
 	public function itemsGet($ids){
-		if(!is_array($ids)){
+		if((!is_array($ids))||(empty($ids))){
 			return array();
 			}
 		if(DEBUG_LOG_BITEMS){
@@ -116,7 +116,7 @@ abstract class BItems{
 		if(empty($db)){
 			return $items;
 			}
-		if(is_array($this->primarykey)){
+		if(is_array($this->primaryKeyName)){
 			$whi=array();
 			foreach($ids_q as $id){
 				$s=array();
@@ -128,7 +128,7 @@ abstract class BItems{
 			$wh=implode(' OR ',$whi);
 			$qr='SELECT * from `'.$this->tableName.'` WHERE ('.$wh.')';
 			}else{
-			$qr='SELECT * from `'.$this->tableName.'` WHERE (`'.$this->primarykey.'` in ('.implode(',',$ids_q).'))';
+			$qr='SELECT * from `'.$this->tableName.'` WHERE (`'.$this->primaryKeyName.'` in ('.implode(',',$ids_q).'))';
 			}
 		$q=$db->Query($qr);
 		if(empty($q)){
@@ -138,15 +138,15 @@ abstract class BItems{
 		$tocache=array();
 		$item_obj=array();
 		while($l=$db->fetch($q)){
-			if(is_array($this->primarykey)){
+			if(is_array($this->primaryKeyName)){
 				$id=array();
-				foreach($this->primarykey as $pk){
+				foreach($this->primaryKeyName as $pk){
 					$id[$pk]=$l[$pk];
 					}
 				$idd=implode(':',$id);
 				$item_obj[$idd]=$l;
 				}else{
-				$idd=(int)$l[$this->primarykey];
+				$idd=(int)$l[$this->primaryKeyName];
 				$item_obj[$idd]=$l;
 				}
 			foreach($this->linkedTables as $tbl){
@@ -228,7 +228,10 @@ abstract class BItems{
 		if(DEBUG_LOG_BITEMS){
 			BLog::addToLog('[BItems.'.$this->tableName.'] itemsFilter got IDs: '.var_export($ids,true));
 			}
-		return $this->itemsGet($ids);
+		$result = $this->itemsGet($ids);
+		if(DEBUG_LOG_BITEMS){
+			BLog::addToLog('[BItems.'.$this->tableName.'] Got items!');
+			}
 		}
 	/**
 	 * Get all items
@@ -251,7 +254,7 @@ abstract class BItems{
 		$wh=array();
 		$jn=array();
 		if(isset($params['exclude'])&&(is_array($params['exclude']))){
-			$wh[]= '(`'.$this->primarykey.'` not in ('.implode(',', $params['exclude']).'))';
+			$wh[]= '(`'.$this->primaryKeyName.'` not in ('.implode(',', $params['exclude']).'))';
 			}
 		return true;
 		}
@@ -305,14 +308,14 @@ abstract class BItems{
 		if(!$db=$this->getDBO()){
 			return false;
 			}
-		if(is_array($this->primarykey)){
+		if(is_array($this->primaryKeyName)){
 			$flds=array();
-			foreach($this->primarykey as $pk){
+			foreach($this->primaryKeyName as $pk){
 				$flds[]='`'.$this->tableName.'`.`'.$pk.'`';
 				}
 			$qr='select '.implode(',',$flds).' from `'.$this->tableName.'`';
 			}else{
-			$qr='select `'.$this->tableName.'`.`'.$this->primarykey.'` from `'.$this->tableName.'`';
+			$qr='select `'.$this->tableName.'`.`'.$this->primaryKeyName.'` from `'.$this->tableName.'`';
 			}
 		$this->itemsFilterSql($params,$wh,$jn);
 		if(!empty($jn)){
@@ -345,13 +348,13 @@ abstract class BItems{
 			}
 		$ids=array();
 		while($l=$db->fetch($q)){
-			if(is_array($this->primarykey)){
+			if(is_array($this->primaryKeyName)){
 				$id=array();
-				foreach($this->primarykey as $pk){
+				foreach($this->primaryKeyName as $pk){
 					$id[$pk]=$l[$pk];
 					}
 				}else{
-				$id=(int)$l[$this->primarykey];
+				$id=(int)$l[$this->primaryKeyName];
 				}
 			$ids[]=$id;
 			}
@@ -447,7 +450,7 @@ abstract class BItems{
 		if(empty($db)){
 			return false;
 			}
-		$qr='DELETE FROM `'.$this->tableName.'` WHERE (`'.$this->primarykey.'` in ('.implode(',', $ids).'))';
+		$qr='DELETE FROM `'.$this->tableName.'` WHERE (`'.$this->primaryKeyName.'` in ('.implode(',', $ids).'))';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -469,7 +472,7 @@ abstract class BItems{
 		foreach($ids as $i=>$id){
 			$values[]='('.$id.','.$i.')';
 			}
-		$qr='INSERT INTO `'.$this->tableName.'` (`'.$this->primarykey.'`,`'.$this->orderingkey.'`)';
+		$qr='INSERT INTO `'.$this->tableName.'` (`'.$this->primaryKeyName.'`,`'.$this->orderingkey.'`)';
 		$qr.=' VALUES '.implode(',',$values);
 		$qr.=' ON DUPLICATE KEY UPDATE '.$this->orderingkey.'=VALUES('.$this->orderingkey.')';
 		$q=$db->Query($qr);
@@ -519,7 +522,7 @@ abstract class BItems{
 			return false;
 			}
 		$this->search_sql($params,$wh);
-		$qr='SELECT '.$this->primarykey.' from `'.$this->searchtablename.'`';
+		$qr='SELECT '.$this->primaryKeyName.' from `'.$this->searchtablename.'`';
 		if(!empty($wh)){
 			$qr.=' where ('.implode('AND',$wh).')';
 			}
@@ -556,7 +559,7 @@ abstract class BItems{
 		if(empty($db)){
 			return false;
 			}
-		$qr='UPDATE `'.$this->tableName.'` SET `hits`=`hits`+1 WHERE (`'.$this->primarykey.'`='.$id.')';
+		$qr='UPDATE `'.$this->tableName.'` SET `hits`=`hits`+1 WHERE (`'.$this->primaryKeyName.'`='.$id.')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;

@@ -269,7 +269,7 @@ abstract class BItemsTree extends BItems{
 			}
 		BLog::addToLog('[Items] Updating nested set...');
 		foreach($catslist as $ct){
-			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftKeyName.'`='.$ct->lft.', `'.$this->rightKeyName.'`='.$ct->rgt.', `'.$this->levelKeyName.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
+			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftKeyName.'`='.$ct->lft.', `'.$this->rightKeyName.'`='.$ct->rgt.', `'.$this->levelKeyName.'`='.$ct->level.' WHERE `'.$this->primaryKeyName.'`='.$ct->id;
 			$q=$db->query($qr);
 			if(empty($q)){
 				return false;
@@ -314,7 +314,7 @@ abstract class BItemsTree extends BItems{
 			}
 		//Load simle cities names.
 		if(!$db=\Brilliant\BFactory::getDBO()){return NULL;}
-		$qr='SELECT `'.$this->primarykey.'`';
+		$qr='SELECT `'.$this->primaryKeyName.'`';
 		foreach($fields as $fld){
 			$qr.=', `'.$fld.'`';
 			}
@@ -333,9 +333,9 @@ abstract class BItemsTree extends BItems{
 		//
 		$res=array();
 		while($l=$db->fetch($q)){
-			$id=(int)$l[$this->primarykey];
+			$id=(int)$l[$this->primaryKeyName];
 			$val=array();
-			$val[$this->primarykey]=$id;
+			$val[$this->primaryKeyName]=$id;
 			foreach($fields as $fld){
 				$val[$fld]=$l[$fld];
 				}
@@ -362,7 +362,7 @@ abstract class BItemsTree extends BItems{
 			}
 		$tree=array();
 		foreach($list as $li){
-			$id=(int)$li->{$this->primarykey};
+			$id=(int)$li->{$this->primaryKeyName};
 		        $ti=$li;
 			//TODO: finish children
 			$ti->children=array();

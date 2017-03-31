@@ -14,7 +14,7 @@ class ufCacheFilesTest extends TestCase{
 		$v = $bcache->get('cache1');
 		$this->assertTrue($v === 'abc','Could not get cached value (received '.var_export($v,true).')!');
 
-		unlink($bcache);
+		unset($bcache);
 		}
 	}
 

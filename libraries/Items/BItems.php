@@ -122,7 +122,7 @@ abstract class BItems{
 			foreach($ids_q as $id){
 				$s=array();
 				foreach($id as $idk=>$idv){
-					$s[]='(`'.$idk.'`='.$db->escape_string($idv).')';
+					$s[]='(`'.$idk.'`='.$db->escapeString($idv).')';
 					}
 				$whi[]='('.implode(' AND ',$s).')';
 				}
@@ -251,7 +251,9 @@ abstract class BItems{
 	 * @return BItemsItem
 	 */
 	public function itemsFilterFirst($params){
-		$list = $this->itemsFilter($params);
+		$params2 = $params;
+		$params2['limit']=1;
+		$list = $this->itemsFilter($params2);
 		if(empty($list)){
 			return NULL;
 			}

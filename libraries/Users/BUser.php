@@ -227,7 +227,7 @@ class BUser{
 		if(empty($db)){
 			return false;
 			}
-		$qr='update users set password='.$db->escape_string($this->password).' where id='.$this->id;
+		$qr='update users set password='.$db->escapeString($this->password).' where id='.$this->id;
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -265,7 +265,7 @@ class BUser{
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
-		$q=$db->Query('select id from users where email='.$db->escape_string($email));
+		$q=$db->Query('select id from users where email='.$db->escapeString($email));
 		if($q->num_rows>1){
 			return false;
 			}
@@ -289,12 +289,12 @@ class BUser{
 			return false;
 			}
 		$qr='insert into users (name,password,email,active,created,modified,birthday)values(';
-		$qr.=$db->escape_string($this->name);
-		$qr.=','.$db->escape_string($this->password);
-		$qr.=','.(empty($this->email)?'NULL':$db->escape_string($this->email));
-		$qr.=','.$db->escape_string($this->active);
+		$qr.=$db->escapeString($this->name);
+		$qr.=','.$db->escapeString($this->password);
+		$qr.=','.(empty($this->email)?'NULL':$db->escapeString($this->email));
+		$qr.=','.$db->escapeString($this->active);
 		$qr.=',now(),now()';
-		$qr.=','.(empty($this->birthday)?'NULL':$db->escape_string($this->birthday->format('Y-m-d')));
+		$qr.=','.(empty($this->birthday)?'NULL':$db->escapeString($this->birthday->format('Y-m-d')));
 		$qr.=')';
 		$q=$db->Query($qr);
 		if(empty($q)){
@@ -311,16 +311,16 @@ class BUser{
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
-		//$db->start_transaction();
+		//$db->startTransaction();
 		$qr='update `users` set';
-		$qr.=' name='.$db->escape_string($this->name);
-		$qr.=',password='.$db->escape_string($this->password);
-		$qr.=',email='.(empty($this->email)?'NULL':$db->escape_string($this->email));
+		$qr.=' name='.$db->escapeString($this->name);
+		$qr.=',password='.$db->escapeString($this->password);
+		$qr.=',email='.(empty($this->email)?'NULL':$db->escapeString($this->email));
 		//$qr.=',active='.(int)$this->active;
 		if($this->birthday instanceof DateTime){
-			$qr.=',birthday='.$db->escape_string($this->birthday->format("Y-m-d"));
+			$qr.=',birthday='.$db->escapeString($this->birthday->format("Y-m-d"));
 			}
-		$qr.=',avatar='.$db->escape_string($this->avatar);
+		$qr.=',avatar='.$db->escapeString($this->avatar);
 		$qr.=' where id='.(int)$this->id;
 		$db->Query($qr);
 		$qr='';
@@ -345,7 +345,7 @@ class BUser{
 		$qr='insert into users_fieldslog (user,dt,field,prevval,nextval) values';
 		$fields=array();
 		foreach($this->changed_fields as $fld){
-			$fields[]='('.$this->id.',NOW(),'.$db->escape_string($fld['field']).','.$db->escape_string($fld['prevval']).','.$db->escape_string($fld['nextval']).')';
+			$fields[]='('.$this->id.',NOW(),'.$db->escapeString($fld['field']).','.$db->escapeString($fld['prevval']).','.$db->escapeString($fld['nextval']).')';
 			}
 		if(empty($fields)){
 			return false;

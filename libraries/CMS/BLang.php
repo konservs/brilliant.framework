@@ -164,9 +164,9 @@ class BLang{
 			}
 		$qr='SELECT count(*) as cnt from `languages`';
 		if(!empty($keyword)){
-			$qr.=' where (lower(const) like '.$db->escape_string('%'.$keyword.'%').')or'.
-				       '(lower(ru) like '.$db->escape_string('%'.$keyword.'%').')or'.
-				       '(lower(ua) like '.$db->escape_string('%'.$keyword.'%').')';;
+			$qr.=' where (lower(const) like '.$db->escapeString('%'.$keyword.'%').')or'.
+				       '(lower(ru) like '.$db->escapeString('%'.$keyword.'%').')or'.
+				       '(lower(ua) like '.$db->escapeString('%'.$keyword.'%').')';;
 			
 			}
 		$q=$db->Query($qr);
@@ -187,7 +187,7 @@ class BLang{
 		if(!$db=BFactory::getDBO()){
 			return '';
 			}
-		$qr='select '.$lang.' as res from languages where const='.$db->escape_string($short);
+		$qr='select '.$lang.' as res from languages where const='.$db->escapeString($short);
 		$q=$db->Query($qr);
 		$l=$db->fetch($q);
 		return $l['res'];
@@ -218,9 +218,9 @@ class BLang{
 		$qr='SELECT * from `languages`';
 		
 		if(!empty($keyword)){
-			$qr.=' where (lower(const) like '.$db->escape_string('%'.$keyword.'%').')or'.
-				       '(lower(ru) like '.$db->escape_string('%'.$keyword.'%').')or'.
-				       '(lower(ua) like '.$db->escape_string('%'.$keyword.'%').')';
+			$qr.=' where (lower(const) like '.$db->escapeString('%'.$keyword.'%').')or'.
+				       '(lower(ru) like '.$db->escapeString('%'.$keyword.'%').')or'.
+				       '(lower(ua) like '.$db->escapeString('%'.$keyword.'%').')';
 			}
 			
 		if($limit!=0)
@@ -246,7 +246,7 @@ class BLang{
 		if(empty($db)){
 			return NULL;
 			}
-		$qr='update `languages` set ru='.$db->escape_string($ru).', ua='.$db->escape_string($ua).' where const='.$db->escape_string($const).' ';
+		$qr='update `languages` set ru='.$db->escapeString($ru).', ua='.$db->escapeString($ua).' where const='.$db->escapeString($const).' ';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;

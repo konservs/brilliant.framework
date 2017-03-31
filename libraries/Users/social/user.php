@@ -73,7 +73,7 @@ class BUsersSocialUser extends BItemsItem{
 		$qr_values[]=$this->user;
 		//
 		$qr_fields[]='`provider`';
-		$qr_values[]=$db->escape_string($this->provider);
+		$qr_values[]=$db->escapeString($this->provider);
 		//
 		$qr='INSERT INTO `'.$this->tablename.'` ('.implode(',',$qr_fields).') VALUES ('.implode(',',$qr_values).')';
 		//Running query...

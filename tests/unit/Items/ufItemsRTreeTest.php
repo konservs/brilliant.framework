@@ -73,14 +73,18 @@ class ufItemsRTreeTest extends TestCase{
 		$itemThree->name='Element 3.1';
 		$itemThree->saveToDB();
 		$this->assertFalse(empty($itemThree->id),'ID of 3.1 element is empty!');
-
 		//
-		$this->assertTrue(($itemOne->lft == 2),'[1.1]->lft should be 2');
-		$this->assertTrue(($itemOne->rgt == 3),'[1.1]->rgt should be 3');
-		$this->assertTrue(($itemOne->level == 2),'[1.1]->level should be 2');
+		$itemOne = $bItemsTree->itemsFilterFirst(array('name'=>'Element 1.1'));
+		$itemTwo = $bItemsTree->itemsFilterFirst(array('name'=>'Element 2.1'));
+		$itemTwoTwo = $bItemsTree->itemsFilterFirst(array('name'=>'Element 2.2'));
+		$itemThree = $bItemsTree->itemsFilterFirst(array('name'=>'Element 3.1'));
 		//
-		$this->assertTrue(($itemTwo->lft == 4),'[2.1]->lft should be 4 (except '.$itemTwo->lft.')');
-		$this->assertTrue(($itemTwo->rgt == 7),'[2.1]->rgt should be 7 (except '.$itemTwo->rgt.')');
+		$this->assertTrue(($itemOne->lft == 2),'[1.1]->lft should be 2 (got '.$itemOne->lft.')');
+		$this->assertTrue(($itemOne->rgt == 3),'[1.1]->rgt should be 3 (got '.$itemOne->rgt.')');
+		$this->assertTrue(($itemOne->level == 2),'[1.1]->level should be 2 (got '.$itemOne->level.')');
+		//
+		$this->assertTrue(($itemTwo->lft == 4),'[2.1]->lft should be 4 (got '.$itemTwo->lft.')');
+		$this->assertTrue(($itemTwo->rgt == 7),'[2.1]->rgt should be 7 (got '.$itemTwo->rgt.')');
 		$this->assertTrue(($itemTwo->level == 2),'[2.1]->level should be 2');
 		//
 		$this->assertTrue(($itemTwoTwo->lft == 5),'[2.2]->lft should be 5');

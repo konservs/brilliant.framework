@@ -59,7 +59,7 @@ class BMySQL{
 	//================================================================================
 	//
 	//================================================================================
-	public function TryConnect(){
+	public function tryConnect(){
 		if($this->db_connected){
 			return TRUE;
 			}
@@ -79,7 +79,7 @@ class BMySQL{
 	/**
 	 * Real query
 	 */
-	public function real_query($sql){
+	public function realQuery($sql){
 		BLog::addToLog($this->logsuffix.' Query: '.$sql);
 		$this->queries_count++;
 		$r=$this->mysqli->real_query($sql);
@@ -111,14 +111,14 @@ class BMySQL{
 	//====================================================
 	//
 	//====================================================
-	public function multi_query($sql){
+	public function multiQuery($sql){
 		$this->queries_count++;
 		return $this->mysqli->multi_query($sql);
 		}
 	//====================================================
 	//
 	//====================================================
-	public function escape_string($s, $EMPTY_NULL=false){
+	public function escapeString($s, $EMPTY_NULL=false){
 		if((!is_string($s))&&(!is_numeric($s))){
 			$s='';
 			}
@@ -130,7 +130,7 @@ class BMySQL{
 	/**
 	 *
 	 */
-	public function escape_datetime($dt, $EMPTY_NULL=true){
+	public function escapeDateTime($dt, $EMPTY_NULL=true){
 		/*if(!is_string($s)){
 			$s='';
 			}*/
@@ -153,7 +153,7 @@ class BMySQL{
 	//====================================================
 	//
 	//====================================================
-	public function lasterror(){
+	public function lastError(){
 		if(empty($this->mysqli)){
 			return 'MySQLi not created!';
 			}else{
@@ -163,7 +163,7 @@ class BMySQL{
 	//====================================================
 	//
 	//====================================================
-	public function QueryAndFetch($sql){
+	public function queryAndFetch($sql){
 		$q=$this->Query($sql);
 		if(empty($q))return 0;
 		$res=array();
@@ -174,13 +174,13 @@ class BMySQL{
 	//====================================================
 	//
 	//====================================================
-	public function affected_rows(){
+	public function affectedRows(){
 		return $this->mysqli->affected_rows;
 		}
 	//====================================================
 	//
 	//====================================================
-	public function start_transaction(){
+	public function startTransaction(){
 		return $this->Query('start transaction');
 		}
 	//====================================================

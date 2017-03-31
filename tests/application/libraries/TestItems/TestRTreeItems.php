@@ -16,4 +16,23 @@ class TestRTreeItems extends \Brilliant\Items\BItemsRTree{
 	protected $tableName='rtree_items';
 	protected $itemClassName='\Application\TestItems\TestRTreeItem';
 
+	/**
+	 * Get filter for SQL query.
+	 *
+	 * @param $params
+	 * @param $wh
+	 * @param $jn
+	 * @return bool
+	 */
+	public function itemsFilterSql($params, &$wh, &$jn) {
+		//Call parent method.
+		parent::itemsFilterSql($params, $wh, $jn);
+		$db = \Brilliant\BFactory::getDBO();
+		//Select items only with some group.
+		if (isset($params['name'])) {
+			$wh[] = '(`' . $this->groupKeyName . '`=' . $db->escapeString($params['name']) . ')';
+			}
+		return true;
+		}
+
 	}

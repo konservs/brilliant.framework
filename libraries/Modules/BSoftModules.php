@@ -152,7 +152,7 @@ class BSoftModules{
 			BLog::addToLog('BSoftModules: Could not connect to the database!',LL_ERROR);
 			return NULL;
 			}
-		$qr='SELECT * from `soft_modules_alias` where alias='.$db->escape_string($alias);
+		$qr='SELECT * from `soft_modules_alias` where alias='.$db->escapeString($alias);
 		$q=$db->Query($qr);
 		if(empty($q)){
 			BLog::addToLog('BSoftModules: Could not execute query!',LL_ERROR);

@@ -63,7 +63,7 @@ class BUsersSession{
 		if(empty($db)){
 			return false;
 			}
-		$qr='SELECT * from `sessions` WHERE (sessionid='.$db->escape_string($secret[1]).'&&userid='.(int)$secret[0].')';
+		$qr='SELECT * from `sessions` WHERE (sessionid='.$db->escapeString($secret[1]).'&&userid='.(int)$secret[0].')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			if(DEBUG_MODE){
@@ -145,13 +145,13 @@ class BUsersSession{
 		//-------------------------------------------
 		$qr='insert into `sessions` (`sessionid`,`ipv4`,`start`,`end`,'.
 			'lastaction,userid,`data`,updatestep,`interval`) values ('.
-			$db->escape_string($obj['sessionid']).', '.
+			$db->escapeString($obj['sessionid']).', '.
 			sprintf('%u',$obj['ipv4']).', '.
-			$db->escape_string($obj['start']).', '.
-			$db->escape_string($obj['end']).', '.
-			$db->escape_string($obj['lastaction']).', '.
+			$db->escapeString($obj['start']).', '.
+			$db->escapeString($obj['end']).', '.
+			$db->escapeString($obj['lastaction']).', '.
 			$obj['userid'].','.
-			$db->escape_string($obj['data']).', '.
+			$db->escapeString($obj['data']).', '.
 			$obj['updatestep'].','.
 			$obj['interval'].')';
 		$q=$db->Query($qr);
@@ -171,9 +171,9 @@ class BUsersSession{
 		//-------------------------------------------
 		$qr='insert into `users_iplog` (`user`,`dt`,`IPv4`,`UserAgent`) values ('.
 			$obj['userid'].','.
-			$db->escape_string($obj['start']).', '.
+			$db->escapeString($obj['start']).', '.
 			sprintf('%u',$obj['ipv4']).', '.
-			$db->escape_string($_SERVER['HTTP_USER_AGENT']).')';
+			$db->escapeString($_SERVER['HTTP_USER_AGENT']).')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -238,7 +238,7 @@ class BUsersSession{
 			$qr='update sessions set 
 			     `end`=DATE_ADD(now(),INTERVAL '.$obj['interval'].' SECOND),
 			     lastaction=NOW()
-			     WHERE sessionid='.$db->escape_string($obj['sessionid']);
+			     WHERE sessionid='.$db->escapeString($obj['sessionid']);
 				$q=$db->Query($qr);
 			if(empty($q)){
 				return false;
@@ -288,7 +288,7 @@ class BUsersSession{
 		if($bCache){
 			$bCache->delete('session:'.$this->sessionid);
 			}
-		$q=$db->Query('delete from sessions where sessionid='.$db->escape_string($this->sessionid));
+		$q=$db->Query('delete from sessions where sessionid='.$db->escapeString($this->sessionid));
 		if(empty($q)){
 			BLog::addToLog('[Users.Session]: close(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 			return false;

@@ -176,7 +176,7 @@ class BItemsItemRTree extends BItemsItem {
 		$closeTransaction=false;
 
 		if(!$this->isRoot){
-			$db->start_transaction();
+			$db->startTransaction();
 			$closeTransaction = true;
 			//---------------------------------------------------
 			// Try to get parent / root element, create root

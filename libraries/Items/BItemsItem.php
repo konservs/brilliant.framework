@@ -150,15 +150,15 @@ abstract class BItemsItem{
 				if(($emptynull)&&(empty($value))){
 					return 'NULL';
 					}
-				return $db->escape_string($this->{$fldname});
+				return $db->escapeString($this->{$fldname});
 			case 'binary':
 				$value=$this->{$fldname};
 				if(($emptynull)&&(empty($value))){
 					return 'NULL';
 					}
-				return 'UNHEX('.$db->escape_string($this->{$fldname}).')';
+				return 'UNHEX('.$db->escapeString($this->{$fldname}).')';
 			case 'enum':
-				return $db->escape_string($this->{$fldname});
+				return $db->escapeString($this->{$fldname});
 			case 'dt':
 				$obj=$this->{$fldname};
 				if(!is_object($obj)){
@@ -172,14 +172,14 @@ abstract class BItemsItem{
 				if(!is_object($obj)){
 					return NULL;
 					}
-				return $db->escape_string($obj->url);
+				return $db->escapeString($obj->url);
 			case 'json':
 				$obj=$this->{$fldname};
 				if(is_object($obj)){
-					return $db->escape_string(json_encode($obj));
+					return $db->escapeString(json_encode($obj));
 					}
 				elseif(is_array($obj)){
-					return $db->escape_string(json_encode($obj));
+					return $db->escapeString(json_encode($obj));
 					}
 				return '""';
 				}

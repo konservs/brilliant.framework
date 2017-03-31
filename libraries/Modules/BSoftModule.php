@@ -74,11 +74,11 @@ class BSoftModule{
 		if(!empty($this->id)){
 			$qr='update soft_modules_rules set';
 			$qr.=' pageid='.$this->pageid;
-			$qr.=',name='.$db->escape_string($this->name);
-			$qr.=',com='.$db->escape_string($this->com);
-			$qr.=',segments='.$db->escape_string(json_encode($this->segments));
-			$qr.=',position_desktop='.$db->escape_string($this->position_desktop);
-			$qr.=',position_mobile='.$db->escape_string($this->position_mobile);
+			$qr.=',name='.$db->escapeString($this->name);
+			$qr.=',com='.$db->escapeString($this->com);
+			$qr.=',segments='.$db->escapeString(json_encode($this->segments));
+			$qr.=',position_desktop='.$db->escapeString($this->position_desktop);
+			$qr.=',position_mobile='.$db->escapeString($this->position_mobile);
 			$qr.=',enable_desktop='.$this->enable_desktop;
 			$qr.=',enable_mobile='.$this->enable_mobile;
 			if(isset($this->enable_children_desktop))
@@ -93,13 +93,13 @@ class BSoftModule{
 			$q=$db->Query($qr);
 			}else{
 			$qr.='insert into soft_modules_rules (com,segments,pageid,enable_mobile,enable_desktop,position_desktop,position_mobile,ordering_desktop,ordering_mobile) values('.
-			$db->escape_string($this->com).','.
-			$db->escape_string(json_encode($this->segments)).','.
+			$db->escapeString($this->com).','.
+			$db->escapeString(json_encode($this->segments)).','.
 			$this->pageid.','.
 			(!empty($this->position_mobile)?'1':'0').','.
 			(!empty($this->position_desktop)?'1':'0').','.
-			$db->escape_string($this->position_desktop).','.
-			$db->escape_string($this->position_mobile).','.
+			$db->escapeString($this->position_desktop).','.
+			$db->escapeString($this->position_mobile).','.
 			'-1,-1'.')';
 			
 			$q=$db->Query($qr);

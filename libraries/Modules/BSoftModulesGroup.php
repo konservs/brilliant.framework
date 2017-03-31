@@ -33,7 +33,7 @@ class BSoftModulesGroup{
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
-		$qr='INSERT INTO `soft_modules_alias` (alias) VALUES ('.$db->escape_string($this->alias).')';
+		$qr='INSERT INTO `soft_modules_alias` (alias) VALUES ('.$db->escapeString($this->alias).')';
 		if(!$db->query($qr)){
 			return false;
 			}

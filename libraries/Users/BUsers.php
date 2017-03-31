@@ -186,7 +186,7 @@ class BUsers{
 			return NULL;
 			}
 		//Get users...
-		$qr='SELECT * from `users` WHERE (email='.$db->escape_string($email).' )';
+		$qr='SELECT * from `users` WHERE (email='.$db->escapeString($email).' )';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return NULL;
@@ -310,8 +310,8 @@ class BUsers{
 			}
 		if(!empty($params['keyword'])){
 			$params['keyword']=mb_strtolower($params['keyword'],'utf8');
-			$where.=(($where!='')?'&&':'').'((lower(name) like '.$db->escape_string('%'.$params['keyword'].'%').')or'.
-				       '(lower(email) like '.$db->escape_string('%'.$params['keyword'].'%').'))';
+			$where.=(($where!='')?'&&':'').'((lower(name) like '.$db->escapeString('%'.$params['keyword'].'%').')or'.
+				       '(lower(email) like '.$db->escapeString('%'.$params['keyword'].'%').'))';
 			}
 		if(!empty($params['ip'])){
 			$where.=(($where!='')?'&&':'').'(IPv4='.sprintf('%u',ip2long($params['ip'])).')';
@@ -373,8 +373,8 @@ class BUsers{
 			$where.=(($where!='')?'&&':'').'(active=1)';
 			}
 		if(!empty($params['keyword'])){
-			$where.=(($where!='')?'&&':'').'((name like '.$db->escape_string('%'.$params['keyword'].'%').')or'.
-				       '(email like '.$db->escape_string('%'.$params['keyword'].'%').'))';
+			$where.=(($where!='')?'&&':'').'((name like '.$db->escapeString('%'.$params['keyword'].'%').')or'.
+				       '(email like '.$db->escapeString('%'.$params['keyword'].'%').'))';
 			}
 		if(!empty($params['ip'])){
 			$where.=(($where!='')?'&&':'').'(IPv4='.sprintf('%u',ip2long($params['ip'])).')';
@@ -484,7 +484,7 @@ class BUsers{
 		if(!strpos($fields['email'],'@')){
 			$r['email']=REGISTER_ERROR_NOTVALIDEMAIL;
 			}else{
-			$qr='select * from `users` where `email`='.$db->escape_string($fields['email']);
+			$qr='select * from `users` where `email`='.$db->escapeString($fields['email']);
 			$q=$db->Query($qr);
 			if($q->num_rows!==0){
 				$r['email']=REGISTER_ERROR_EMAILISINBASE;
@@ -576,18 +576,18 @@ class BUsers{
 		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db))return;
-		$db->start_transaction();
+		$db->startTransaction();
 
 		$confirmlink=sha1(uniqid(rand(),1));
 		$lang=empty($fields['lang'])?'ru':$fields['lang'];
 
 		$qr='insert into `users` (email,password,name,confirmlink,active,city,lang,created,lastmodified) values';
-		$qr.='('.$db->escape_string($fields['email']).','
-			.$db->escape_string($this->makepass($fields['email'],$fields['password'])).','
-			.$db->escape_string($fields['name']).','
-			.$db->escape_string($confirmlink).','.USER_STATUS_NOTACTIVATED.','
+		$qr.='('.$db->escapeString($fields['email']).','
+			.$db->escapeString($this->makepass($fields['email'],$fields['password'])).','
+			.$db->escapeString($fields['name']).','
+			.$db->escapeString($confirmlink).','.USER_STATUS_NOTACTIVATED.','
 			.$fields['city'].','
-			.$db->escape_string($lang).','
+			.$db->escapeString($lang).','
 			.'NOW(),NOW())';
 		if(DEBUG_MODE){
 			BLog::addToLog('[Users]: register() inserting user fields...');
@@ -618,8 +618,8 @@ class BUsers{
 				if(empty($tel['code'])){
 					$qr.=empty($qr)?'(':',(';
 					$qr.=$userid.',380,';
-					$qr.=$tel['tel'].','.$db->escape_string($tel['from']).','.$db->escape_string($tel['to']);
-					$qr.=','.$db->escape_string($tel['name']);			
+					$qr.=$tel['tel'].','.$db->escapeString($tel['from']).','.$db->escapeString($tel['to']);
+					$qr.=','.$db->escapeString($tel['name']);			
 					$qr.=',0)';
 					}
 				else{
@@ -708,7 +708,7 @@ class BUsers{
 			}
 		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
-		$qr='select * from users where email='.$db->escape_string($email);
+		$qr='select * from users where email='.$db->escapeString($email);
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return false;
@@ -719,7 +719,7 @@ class BUsers{
 			}
 		bimport('email.templates');
 		$restorelink=sha1(uniqid(rand(),1));
-		$qr='update users set confirmlink='.$db->escape_string($restorelink).' where email='.$db->escape_string($email);
+		$qr='update users set confirmlink='.$db->escapeString($restorelink).' where email='.$db->escapeString($email);
 		$q=$db->Query($qr);
 		if(CACHE_TYPE){
 			bimport('cache.general');
@@ -782,7 +782,7 @@ class BUsers{
 		$jn=array();
 		if(!empty($params['keyword'])){
 			$lcasekw=mb_strtolower($params['keyword'],'UTF-8');
-			$searchmask=$db->escape_string('%'.$lcasekw.'%');
+			$searchmask=$db->escapeString('%'.$lcasekw.'%');
 
 			if(is_numeric($params['keyword'])){
 				$searchid=(int)$params['keyword'];

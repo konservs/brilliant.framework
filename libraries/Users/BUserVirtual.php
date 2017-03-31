@@ -31,7 +31,7 @@ class BUserVirtual{
 		if(!$db=BFactory::getDBO()){
 			return false;
 			}
-		$qr='select * from sessions_virtual where sessionid='.$db->escape_string($sessionid);
+		$qr='select * from sessions_virtual where sessionid='.$db->escapeString($sessionid);
 		$q=$db->Query($qr);
 		if(empty($q)){
 			return $this->startnewsession();
@@ -62,7 +62,7 @@ class BUserVirtual{
 			$ip = $_SERVER['REMOTE_ADDR'];
 			}
 		$ipv4=ip2long($ip);
-		$qr='insert into sessions_virtual (sessionid,ipv4,start,end,lastaction)values('.$db->escape_string($sessid).','.
+		$qr='insert into sessions_virtual (sessionid,ipv4,start,end,lastaction)values('.$db->escapeString($sessid).','.
 			$ipv4.',NOW(),NOW()+INTERVAL 1 MONTH,NOW())';
 		$q=$db->Query($qr);
 		if(empty($q)){

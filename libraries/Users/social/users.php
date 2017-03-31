@@ -17,18 +17,18 @@ class BUsersSocialUsers extends BItemsList{
 	/**
 	 *
 	 */
-	public function items_filter_sql($params,&$wh,&$jn){
-		parent::items_filter_sql($params,$wh,$jn);
+	public function itemsFilterSql($params,&$wh,&$jn){
+		parent::itemsFilterSql($params,$wh,$jn);
 		$db=BFactory::getDBO();
 		if(!empty($params['provider'])){
-			$wh[]='(`provider`='.$db->escape_string($params['provider']).')';
+			$wh[]='(`provider`='.$db->escapeString($params['provider']).')';
 			}
 		if(!empty($params['user'])){
 			$wh[]='(`user`='.(int)$params['user'].')';
 			}
 		if(!empty($params['social_id'])){
 			$social_id=(string)$params['social_id'];
-			$wh[]='(`social_id`='.$db->escape_string($params['social_id']).')';
+			$wh[]='(`social_id`='.$db->escapeString($params['social_id']).')';
 			}
 		return true;
 		}

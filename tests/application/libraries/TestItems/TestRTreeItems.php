@@ -30,7 +30,7 @@ class TestRTreeItems extends \Brilliant\Items\BItemsRTree{
 		$db = \Brilliant\BFactory::getDBO();
 		//Select items only with some group.
 		if (isset($params['name'])) {
-			$wh[] = '(`' . $this->groupKeyName . '`=' . $db->escapeString($params['name']) . ')';
+			$wh[] = '(`name`=' . $db->escapeString($params['name']) . ')';
 			}
 		return true;
 		}

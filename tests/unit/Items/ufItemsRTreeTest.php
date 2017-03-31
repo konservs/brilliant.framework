@@ -79,7 +79,12 @@ class ufItemsRTreeTest extends TestCase{
 		$itemTwoTwo = $bItemsTree->itemsFilterFirst(array('name'=>'Element 2.2'));
 		$itemThree = $bItemsTree->itemsFilterFirst(array('name'=>'Element 3.1'));
 		//
-		$this->assertTrue(($itemOne->lft == 2),'[1.1]->lft should be 2 (got '.$itemOne->lft.')');
+		$this->assertFalse(empty($itemOne),'1st element is empty!');
+		$this->assertFalse(empty($itemTwo),'2.1 element is empty!');
+		$this->assertFalse(empty($itemTwoTwo),'2.2 element is empty!');
+		$this->assertFalse(empty($itemThree),'3.1 element is empty!');
+		//
+		$this->assertTrue(($itemOne->lft == 2),'[1.1]->lft should be 2 (got '.$itemOne->lft.PHP_EOL.var_export($itemOne,true).')');
 		$this->assertTrue(($itemOne->rgt == 3),'[1.1]->rgt should be 3 (got '.$itemOne->rgt.')');
 		$this->assertTrue(($itemOne->level == 2),'[1.1]->level should be 2 (got '.$itemOne->level.')');
 		//
@@ -87,13 +92,13 @@ class ufItemsRTreeTest extends TestCase{
 		$this->assertTrue(($itemTwo->rgt == 7),'[2.1]->rgt should be 7 (got '.$itemTwo->rgt.')');
 		$this->assertTrue(($itemTwo->level == 2),'[2.1]->level should be 2');
 		//
-		$this->assertTrue(($itemTwoTwo->lft == 5),'[2.2]->lft should be 5');
-		$this->assertTrue(($itemTwoTwo->rgt == 6),'[2.2]->rgt should be 6');
-		$this->assertTrue(($itemTwoTwo->level == 2),'[2.2]->level should be 2');
+		$this->assertTrue(($itemTwoTwo->lft == 5),'[2.2]->lft should be 5 (got '.$itemTwoTwo->lft.')');
+		$this->assertTrue(($itemTwoTwo->rgt == 6),'[2.2]->rgt should be 6 (got '.$itemTwoTwo->rgt.')');
+		$this->assertTrue(($itemTwoTwo->level == 3),'[2.2]->level should be 3 (got '.$itemTwoTwo->level.')');
 		//
-		$this->assertTrue(($itemThree->lft == 8),'[2.1]->lft should be 8');
-		$this->assertTrue(($itemThree->rgt == 9),'[2.1]->rgt should be 9');
-		$this->assertTrue(($itemThree->level == 2),'[2.1]->level should be 2');
+		$this->assertTrue(($itemThree->lft == 8),'[3.1]->lft should be 8 (got '.$itemThree->lft.')');
+		$this->assertTrue(($itemThree->rgt == 9),'[3.1]->rgt should be 9 (got '.$itemThree->rgt.')');
+		$this->assertTrue(($itemThree->level == 2),'[3.1]->level should be 2 (got '.$itemThree->level.')');
 		}
 
 	}

@@ -1,7 +1,7 @@
 <?php
 bimport('sql.mysql');
 
-class BSearchSphinxQl extends BMySQL{
+class BSearchSphinxQL extends BMySQL{
 	protected static $sphinxinstance=NULL;
 	/**
 	 *

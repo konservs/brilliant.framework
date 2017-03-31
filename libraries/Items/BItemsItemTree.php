@@ -11,10 +11,10 @@ namespace Brilliant\Items;
 use Brilliant\Log\BLog;
 
 abstract class BItemsItemTree extends BItemsItem{
-	protected $parentkeyname='parent';
-	protected $leftkeyname='lft';
-	protected $rightkeyname='rgt';
-	protected $levelkeyname='level';
+	protected $parentKeyName='parent';
+	protected $leftKeyName='lft';
+	protected $rightKeyName='rgt';
+	protected $levelKeyName='level';
 	/**
 	 * Constructor - init fields...
 	 */
@@ -28,10 +28,10 @@ abstract class BItemsItemTree extends BItemsItem{
 	 */
 	public function load($obj){
 		parent::load($obj);
-		$this->{$this->parentkeyname}=(int)$obj[$this->parentkeyname];
-		$this->{$this->leftkeyname}=(int)$obj[$this->leftkeyname];
-		$this->{$this->rightkeyname}=(int)$obj[$this->rightkeyname];
-		$this->{$this->levelkeyname}=(int)$obj[$this->levelkeyname];
+		$this->{$this->parentKeyName}=(int)$obj[$this->parentKeyName];
+		$this->{$this->leftKeyName}=(int)$obj[$this->leftKeyName];
+		$this->{$this->rightKeyName}=(int)$obj[$this->rightKeyName];
+		$this->{$this->levelKeyName}=(int)$obj[$this->levelKeyName];
 		return true;
 		}
 	/**
@@ -40,7 +40,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain(){
 		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
-		$fchain=$bitems->itemsFilter(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
+		$fchain=$bitems->itemsFilter(array('parentchain_lft'=>$this->{$this->leftKeyName},'parentchain_rgt'=>$this->{$this->rightKeyName},'cacheenabled'=>true));
 		return $fchain;
 		}
 	/**
@@ -49,14 +49,14 @@ abstract class BItemsItemTree extends BItemsItem{
 	public function getparentchain_ids(){
 		$collname=$this->collectionName;
 		$bitems=$collname::GetInstance();
-		$chain=$bitems->itemsFilterIds(array('parentchain_lft'=>$this->{$this->leftkeyname},'parentchain_rgt'=>$this->{$this->rightkeyname},'cacheenabled'=>true));
+		$chain=$bitems->itemsFilterIds(array('parentchain_lft'=>$this->{$this->leftKeyName},'parentchain_rgt'=>$this->{$this->rightKeyName},'cacheenabled'=>true));
 		return $chain;
 		}
 	/**
 	 *
 	 */
 	public function getparent(){
-		$parentid=$this->{$this->parentkeyname};
+		$parentid=$this->{$this->parentKeyName};
 		if(empty($parentid)){
 			return NULL;
 			}
@@ -99,23 +99,23 @@ abstract class BItemsItemTree extends BItemsItem{
 			$collectionName=$this->collectionName;
 			$collection=$collectionName::getInstance();
 			$parent=$collection->itemGet(1);
-			$this->{$this->parentkeyname}=1;
+			$this->{$this->parentKeyName}=1;
 			}
-		$qr_fields[]=$this->parentkeyname;
-		$qr_values[]=$this->{$this->parentkeyname};
-		$qr_fields[]=$this->leftkeyname;
-		$qr_values[]=$this->{$this->leftkeyname};
-		$qr_fields[]=$this->rightkeyname;
-		$qr_values[]=$this->{$this->rightkeyname};
-		$qr_fields[]=$this->levelkeyname;
-		$qr_values[]=$this->{$this->levelkeyname};
+		$qr_fields[]=$this->parentKeyName;
+		$qr_values[]=$this->{$this->parentKeyName};
+		$qr_fields[]=$this->leftKeyName;
+		$qr_values[]=$this->{$this->leftKeyName};
+		$qr_fields[]=$this->rightKeyName;
+		$qr_values[]=$this->{$this->rightKeyName};
+		$qr_fields[]=$this->levelKeyName;
+		$qr_values[]=$this->{$this->levelKeyName};
 		return true;
 		}
 	/**
 	 *
 	 * @return bool
 	 */
-	public function dbinsert(){
+	public function dbInsert(){
 		BLog::addtolog('[Items.ItemTree]: Inserting data...');
 		if(!$db=BFactory::getDBO()){
 			return false;
@@ -126,19 +126,19 @@ abstract class BItemsItemTree extends BItemsItem{
 			$collectionName=$this->collectionName;
 			$collection=$collectionName::getInstance();
 			$parent=$collection->itemGet(1);
-			$this->{$this->parentkeyname}=1;
+			$this->{$this->parentKeyName}=1;
 			}
 		if(empty($parent)){
 			return false;
 			}
 		$db->start_transaction();
-		$this->{$this->leftkeyname}=$parent->{$this->rightkeyname};
-		$this->{$this->rightkeyname}=$parent->{$this->rightkeyname}+1;
-		$this->{$this->levelkeyname}=$parent->{$this->levelkeyname}+1;
+		$this->{$this->leftKeyName}=$parent->{$this->rightKeyName};
+		$this->{$this->rightKeyName}=$parent->{$this->rightKeyName}+1;
+		$this->{$this->levelKeyName}=$parent->{$this->levelKeyName}+1;
 		$qr='UPDATE `'.$this->tableName.'` '.
-			'SET `'.$this->rightkeyname.'`=`'.$this->rightkeyname.'`+2, '.
-			'`'.$this->leftkeyname.'` = IF(`'.$this->leftkeyname.'` > '.$parent->{$this->rightkeyname}.', `'.$this->leftkeyname.'`+2, `'.$this->leftkeyname.'`)'.
-			' WHERE (`'.$this->rightkeyname.'`>='.$parent->{$this->rightkeyname}.')';
+			'SET `'.$this->rightKeyName.'`=`'.$this->rightKeyName.'`+2, '.
+			'`'.$this->leftKeyName.'` = IF(`'.$this->leftKeyName.'` > '.$parent->{$this->rightKeyName}.', `'.$this->leftKeyName.'`+2, `'.$this->leftKeyName.'`)'.
+			' WHERE (`'.$this->rightKeyName.'`>='.$parent->{$this->rightKeyName}.')';
 		$q=$db->Query($qr);
 		if(empty($q)){
 			$db->rollback();
@@ -149,7 +149,7 @@ abstract class BItemsItemTree extends BItemsItem{
 		if(empty($this->created)){
 			$this->created=new DateTime();
 			}
-		$qr=$this->dbinsertquery();
+		$qr=$this->dbInsertQuery();
 
 
 		//Running query...

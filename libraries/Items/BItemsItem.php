@@ -492,7 +492,7 @@ abstract class BItemsItem{
 	/**
 	 *
 	 */
-	protected function dbinsertquery(){
+	protected function dbInsertQuery(){
 		$qr_fields=array();
 		$qr_values=array();
 		$this->getfieldsvalues($qr_fields,$qr_values);
@@ -542,7 +542,7 @@ abstract class BItemsItem{
 	// 
 	// returns true if OK and false if not
 	//====================================================
-	public function dbinsert(){
+	public function dbInsert(){
 		BLog::addtolog('[Items.Item.'.$this->tableName.']: Inserting data...');
 		if(!$db=BFactory::getDBO()){
 			return false;
@@ -553,7 +553,7 @@ abstract class BItemsItem{
 		if(empty($this->created)){
 			$this->created=new DateTime();
 			}
-		$qr=$this->dbinsertquery();
+		$qr=$this->dbInsertQuery();
 		//Running query...
 		$q=$db->query($qr);
 		if(empty($q)){
@@ -601,7 +601,7 @@ abstract class BItemsItem{
 		$result=false;
 		while((!$result)&&($i<$limit)){
 			BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDBTimes('.$i.' / '.$limit.')');
-			$result=$this->savetodb();
+			$result=$this->saveToDB();
 			$i++;
 			}
 		return $result;
@@ -614,7 +614,7 @@ abstract class BItemsItem{
 	public function saveToDB(){
 		BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDB()');
 		if($this->isnew){
-			return $this->dbinsert();
+			return $this->dbInsert();
 			}else{
 			return $this->dbupdate();
 			}

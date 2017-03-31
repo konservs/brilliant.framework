@@ -12,6 +12,11 @@ class ufItemsRTreeTest extends TestCase{
 		$bItemsTree->truncateAll();
 
 		$itemOne = new TestRTreeItem();
+		$itemOne->group = 1;
+		$itemOne->name='Element';
+		$itemOne->saveToDB();
+
+		$this->assertFalse(empty($itemOne->id),'ID of newly created element is empty!');
 		//$itemOne->
 		}
 	}

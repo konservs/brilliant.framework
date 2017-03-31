@@ -11,10 +11,10 @@ namespace Brilliant\Items;
 use Brilliant\Log\BLog;
 
 abstract class BItemsItemRTree extends BItemsItem {
-	protected $parentkeyname = 'parent';
-	protected $leftkeyname = 'lft';
-	protected $rightkeyname = 'rgt';
-	protected $levelkeyname = 'level';
+	protected $parentKeyName = 'parent';
+	protected $leftKeyName = 'lft';
+	protected $rightKeyName = 'rgt';
+	protected $levelKeyName = 'level';
 	protected $groupName = 'group';
 
 	/**
@@ -33,10 +33,10 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 */
 	public function load($obj) {
 		parent::load($obj);
-		$this->{$this->parentkeyname} = (int)$obj[$this->parentkeyname];
-		$this->{$this->leftkeyname} = (int)$obj[$this->leftkeyname];
-		$this->{$this->rightkeyname} = (int)$obj[$this->rightkeyname];
-		$this->{$this->levelkeyname} = (int)$obj[$this->levelkeyname];
+		$this->{$this->parentKeyName} = (int)$obj[$this->parentKeyName];
+		$this->{$this->leftKeyName} = (int)$obj[$this->leftKeyName];
+		$this->{$this->rightKeyName} = (int)$obj[$this->rightKeyName];
+		$this->{$this->levelKeyName} = (int)$obj[$this->levelKeyName];
 		$this->{$this->groupName} = (int)$obj[$this->groupName];
 		return true;
 	}
@@ -64,20 +64,20 @@ abstract class BItemsItemRTree extends BItemsItem {
 		$qr_values = array();
 		parent::getfieldsvalues($qr_fields, $qr_values);
 
-		if (empty($this->{$this->parentkeyname})) {
-			$qr_fields[] = '`' . $this->parentkeyname . '`';
+		if (empty($this->{$this->parentKeyName})) {
+			$qr_fields[] = '`' . $this->parentKeyName . '`';
 			$qr_values[] = 'NULL';
 		} else {
-			$qr_fields[] = '`' . $this->parentkeyname . '`';
-			$qr_values[] = $this->{$this->parentkeyname};
+			$qr_fields[] = '`' . $this->parentKeyName . '`';
+			$qr_values[] = $this->{$this->parentKeyName};
 		}
 
-		$qr_fields[] = '`' . $this->leftkeyname . '`';
-		$qr_values[] = $this->{$this->leftkeyname};
-		$qr_fields[] = '`' . $this->rightkeyname . '`';
-		$qr_values[] = $this->{$this->rightkeyname};
-		$qr_fields[] = '`' . $this->levelkeyname . '`';
-		$qr_values[] = $this->{$this->levelkeyname};
+		$qr_fields[] = '`' . $this->leftKeyName . '`';
+		$qr_values[] = $this->{$this->leftKeyName};
+		$qr_fields[] = '`' . $this->rightKeyName . '`';
+		$qr_values[] = $this->{$this->rightKeyName};
+		$qr_fields[] = '`' . $this->levelKeyName . '`';
+		$qr_values[] = $this->{$this->levelKeyName};
 		$qr_fields[] = '`' . $this->groupName . '`';
 		$qr_values[] = $this->{$this->groupName};
 		return true;
@@ -89,7 +89,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 * @return BItemsRTree
 	 */
 	public function getParent() {
-		$parentid = $this->{$this->parentkeyname};
+		$parentid = $this->{$this->parentKeyName};
 		if (empty($parentid)) {
 			return NULL;
 		}
@@ -127,7 +127,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		if (empty($bcache)) {
 			return false;
 			}
-		$parentid = $this->{$this->parentkeyname};
+		$parentid = $this->{$this->parentKeyName};
 		if (empty($parentid)) {
 			return true;
 			}
@@ -150,7 +150,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 	 *
 	 * @return bool
 	 */
-	public function dbinsert() {
+	public function dbInsert() {
 		BLog::addtolog('[Items.ItemTree]: Inserting data...');
 		if (!$db = BFactory::getDBO()) {
 			return false;
@@ -162,13 +162,13 @@ abstract class BItemsItemRTree extends BItemsItem {
 			$closeTransaction = true;
 			$db->start_transaction();
 			$this->{$this->groupName} = $parent->{$this->groupName};
-			$this->{$this->leftkeyname} = $parent->{$this->rightkeyname};
-			$this->{$this->rightkeyname} = $parent->{$this->rightkeyname} + 1;
-			$this->{$this->levelkeyname} = $parent->{$this->levelkeyname} + 1;
+			$this->{$this->leftKeyName} = $parent->{$this->rightKeyName};
+			$this->{$this->rightKeyName} = $parent->{$this->rightKeyName} + 1;
+			$this->{$this->levelKeyName} = $parent->{$this->levelKeyName} + 1;
 			$qr = 'UPDATE `' . $this->tableName . '` SET ';
-			$qr .= '`' . $this->rightkeyname . '`=`' . $this->rightkeyname . '`+2, ';
-			$qr .= '`' . $this->leftkeyname . '` = IF(`' . $this->leftkeyname . '` > ' . $parent->{$this->rightkeyname} . ', `' . $this->leftkeyname . '`+2, `' . $this->leftkeyname . '`)';
-			$qr .= ' WHERE ((`' . $this->groupName . '` = ' . $this->{$this->groupName} . ') AND (`' . $this->rightkeyname . '`>=' . $parent->{$this->rightkeyname} . '))';
+			$qr .= '`' . $this->rightKeyName . '`=`' . $this->rightKeyName . '`+2, ';
+			$qr .= '`' . $this->leftKeyName . '` = IF(`' . $this->leftKeyName . '` > ' . $parent->{$this->rightKeyName} . ', `' . $this->leftKeyName . '`+2, `' . $this->leftKeyName . '`)';
+			$qr .= ' WHERE ((`' . $this->groupName . '` = ' . $this->{$this->groupName} . ') AND (`' . $this->rightKeyName . '`>=' . $parent->{$this->rightKeyName} . '))';
 
 			$q = $db->query($qr);
 			if (empty($q)) {
@@ -184,7 +184,7 @@ abstract class BItemsItemRTree extends BItemsItem {
 		if(empty($this->created)){
 			$this->created=new DateTime();
 			}
-		$qr = $this->dbinsertquery();
+		$qr = $this->dbInsertQuery();
 		//Running query...
 		$q = $db->query($qr);
 		if (empty($q)) {

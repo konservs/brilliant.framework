@@ -4,8 +4,7 @@
  *
  * @author Andrii Biriev, a@konservs.com, www.konservs.com
  */
-namespace Brilliant\log;
-use BLogger;
+namespace Brilliant\Log;
 
 define('LL_GENERAL',1);
 define('LL_DEBUG',2);

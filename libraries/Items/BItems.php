@@ -245,6 +245,20 @@ abstract class BItems{
 		return $result;
 		}
 	/**
+	 * Get First Item by params
+	 *
+	 * @param $params array
+	 * @return BItemsItem
+	 */
+	public function itemsFilterFirst($params){
+		$list = $this->itemsFilter($params);
+		if(empty($list)){
+			return NULL;
+			}
+		$item = reset($list);
+		return $item;
+		}
+	/**
 	 * Get all items
 	 *
 	 * @return BItemsItem[]

@@ -184,12 +184,11 @@ class BItemsItemRTree extends BItemsItem {
 			//---------------------------------------------------
 			BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Try to get parent / root element.');
 			$parent = $this->getParentOrRoot();
-			if(DEBUG_LOG_BITEMS){
-				BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Got parent / root ('.var_export($parent,true).')!');
-				}
 			if (empty($parent)) {
 				$className = get_class($this);
-				BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Parent is empty. Need to insert parent element ('.$className.')');
+				if(DEBUG_LOG_BITEMS){
+					BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Parent is empty. Need to insert parent element ('.$className.')');
+					}
 				$parent = new $className();
 				$parent->{$this->groupKeyName} = $this->{$this->groupKeyName};
 				$parent->{$this->leftKeyName} = 1;
@@ -201,15 +200,17 @@ class BItemsItemRTree extends BItemsItem {
 					return false;
 					}
 				//
+				$this->{$this->parentKeyName} = $parent->{$this->primaryKeyName};
 				$this->{$this->groupKeyName} = $parent->{$this->groupKeyName};
 				$this->{$this->leftKeyName} = 2;
 				$this->{$this->rightKeyName} = 3;
 				$this->{$this->levelKeyName} = 2;
 				} else {
-				BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Parent is not empty.');
-				$this->{$this->parentKeyName} = $parent->{$this->groupKeyName};
-
-				$this->{$this->groupKeyName} = $parent->{$this->$primaryKeyName};
+				if(DEBUG_LOG_BITEMS){
+					BLog::addToLog('[Items.ItemTree.'.$this->tableName.']: Parent is not empty.');
+					}
+				$this->{$this->parentKeyName} = $parent->{$this->primaryKeyName};
+				$this->{$this->groupKeyName} = $parent->{$this->groupKeyName};
 				$this->{$this->leftKeyName} = (int)$parent->{$this->rightKeyName};
 				$this->{$this->rightKeyName} = (int)$parent->{$this->rightKeyName} + 1;
 				$this->{$this->levelKeyName} = (int)$parent->{$this->levelKeyName} + 1;

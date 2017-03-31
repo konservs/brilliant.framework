@@ -54,6 +54,7 @@ abstract class BItems{
 	 */
 	public function itemsGet($ids){
 		if((!is_array($ids))||(empty($ids))){
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsGet() $ids empty='.var_export($ids,true).')',LL_ERROR);
 			return array();
 			}
 		if(DEBUG_LOG_BITEMS){
@@ -156,6 +157,9 @@ abstract class BItems{
 		//-------------------------------------------------
 		// Loading data from external tables...
 		//-------------------------------------------------
+		if(DEBUG_LOG_BITEMS){
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsGet() Loading data from external tables...');
+			}
 		foreach($this->linkedTables as $tbl){
 			$wh=array();
 			$wh[]='(`'.$tbl['extkey'].'` in ('.implode(',',$ids_q).'))';
@@ -177,6 +181,9 @@ abstract class BItems{
 		//-------------------------------------------------
 		// Creating item object...
 		//-------------------------------------------------
+		if(DEBUG_LOG_BITEMS){
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsGet() Creating item objects...');
+			}
 		foreach($item_obj as $k=>$l){
 			$classname=$this->itemClassName;
 			if(!class_exists($classname)){
@@ -197,8 +204,11 @@ abstract class BItems{
 		//-------------------------------------------------
 		// Cache storing, if necessary.
 		//-------------------------------------------------
-		if(CACHE_TYPE&&count($tocache)!=0){
+		if((!empty($cache))&&(count($tocache)!=0)){
 			$cache->mset($tocache,$this->cachetime);//1 hour
+			}
+		if(DEBUG_LOG_BITEMS){
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsGet() All done! Returning items.');
 			}
 		return $items;
 		}
@@ -232,6 +242,7 @@ abstract class BItems{
 		if(DEBUG_LOG_BITEMS){
 			BLog::addToLog('[BItems.'.$this->tableName.'] Got items!');
 			}
+		return $result;
 		}
 	/**
 	 * Get all items

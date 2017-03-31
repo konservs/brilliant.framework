@@ -1,6 +1,9 @@
 <?php
 define('BHOSTNAME','financello.app');
 
+define('DEBUG_MODE',1);
+define('DEBUG_LOG_BITEMS',1);
+
 //Database settings
 define('MYSQL_DB_HOST','localhost');
 define('MYSQL_DB_USERNAME','root');

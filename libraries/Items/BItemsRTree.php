@@ -30,10 +30,12 @@ abstract class BItemsRTree extends BItems {
 		$params['group'] = $groupId;
 		$params['parentisnull'] = true;
 		$list = $this->itemsFilter($params);
+		BLog::addToLog('[Items.ItemsRTree.'.$this->tableName.']: $list='.var_export($list,true).'.');
 		if(empty($list)){
 			return NULL;
 			}
 		$item = reset($list);
+		BLog::addToLog('[Items.ItemsRTree.'.$this->tableName.']: $item='.var_export($item,true).'.');
 		return $item;
 	}
 

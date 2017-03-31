@@ -285,13 +285,13 @@ abstract class BItemsTree extends BItems{
 	/**
 	 *
 	 */
-	public function getsimpletree_filteritem(&$itm){
+	public function getSimpleTreeFilterItem(&$itm){
 		return true;
 		}
 	/**
 	 * Get simple tree as list.
 	 */
-	public function getsimpletree($fields=array(),$transfields=array(),$lang='',$wh=array()){
+	public function getSimpleTree($fields=array(),$transfields=array(),$lang='',$wh=array()){
 		$lang=$this->detectLanguage($lang);
 		//
 		$cachekey=$this->tableName.':simpletree:'.$lang;
@@ -343,7 +343,7 @@ abstract class BItemsTree extends BItems{
 				$val[$fld]=$l[$fld];
 				}
 			$xval=(object)$val;
-			$this->getsimpletree_filteritem($xval);
+			$this->getSimpleTreeFilterItem($xval);
 			$res[$id]=$xval;
 			}
 		$this->cache_simpletree[$cachekey]=$res;
@@ -355,8 +355,8 @@ abstract class BItemsTree extends BItems{
 	/**
 	 * Get recursive tree
 	 */
-	public function getsimpletree_recursive($fields=array(),$transfields=array(),$lang='',$wh=array()){
-		$list=$this->getsimpletree($fields,$transfields,$lang,$wh);
+	public function getSimpleTreeRecursive($fields=array(),$transfields=array(),$lang='',$wh=array()){
+		$list=$this->getSimpleTree($fields,$transfields,$lang,$wh);
 		if(!is_array($list)){
 			return array();
 			}

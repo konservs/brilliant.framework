@@ -61,7 +61,7 @@ abstract class BModelAdminItemNew extends BModelAdminItem{
 				}
 			$data->fieldsval=$this->fieldsval;
 			if(empty($this->errors)){
-				$r=$data->item->savetodb();
+				$r=$data->item->saveToDB();
 				if($r){
 					$this->itemaftersave($data->item,$data);
 					$data->redirect=$this->generateitemredirect($data->item);

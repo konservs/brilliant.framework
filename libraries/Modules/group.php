@@ -43,7 +43,7 @@ class BSoftModulesGroup{
 	//===================================================
 	//
 	//===================================================
-	public function savetodb(){
+	public function saveToDB(){
 		//Validate...
 		if(empty($this->alias)){
 			return false;

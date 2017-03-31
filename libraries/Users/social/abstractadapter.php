@@ -273,7 +273,7 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 				$user->active='Y';
 				$user->birthday=$this->getBirthdayObject();
 				$user->last_action=new DateTime();
-				$r=$user->savetodb();
+				$r=$user->saveToDB();
 				if(empty($r)){
 					BLog::addtolog('[Social.Adapter] Could not save user!',LL_ERROR);
 					return false;
@@ -309,13 +309,13 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 				return false;
 				}
 			}
-		$r=$su->savetodb();
+		$r=$su->saveToDB();
 		if(!$r){
 			return false;
 			}
 		if((!empty($su->avatar_local))&&($user->avatar!=$su->avatar_local)){
 			$user->avatar=$su->avatar_local;
-			$user->savetodb();
+			$user->saveToDB();
 			}
 		//Session.
 		$options=array('interval'=>2592000,'updatestep'=>60);

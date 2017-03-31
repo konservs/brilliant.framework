@@ -63,7 +63,7 @@ class BSoftModule{
 		return $r;
 		}
 	
-	public function savetodb($validate=true){
+	public function saveToDB($validate=true){
 		if($validate)
 			$err=$this->validate();
 		if(!empty($err)){

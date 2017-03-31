@@ -360,7 +360,7 @@ class BUser{
 	/**
 	 * Update user information in the database
 	 */
-	public function savetodb(){
+	public function saveToDB(){
 		$err=$this->validate();
 		if(!empty($err)){
 			return false;

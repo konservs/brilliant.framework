@@ -51,7 +51,7 @@ class BSoftModules{
 				if(empty($group)&&(!empty($itm->alias))){
 					$group=new BSoftModulesGroup;
 					$group->alias=$itm->alias;
-					$group->savetodb();
+					$group->saveToDB();
 					}
 				if(isset($group))
 					$itm->id=$group->id;else
@@ -63,7 +63,7 @@ class BSoftModules{
 				if(empty($subgroup)&&(!empty($itm->subalias))){
 					$subgroup=new BSoftModulesGroup;
 					$subgroup->alias=$itm->subalias;
-					$subgroup->savetodb();
+					$subgroup->saveToDB();
 					}
 				if(isset($group))
 					$itm->subid=$subgroup->id;else

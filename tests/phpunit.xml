@@ -1,4 +1,4 @@
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit bootstrap="init.php">
 	<testsuites>
 		<!-- Items tests -->
 		<testsuite name="Items">

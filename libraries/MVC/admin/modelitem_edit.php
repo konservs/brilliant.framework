@@ -62,7 +62,7 @@ abstract class BModelAdminItemEdit extends BModelAdminItem{
 				}
 			if(empty($data->errors)){
 				BLog::addtolog('[MVC.Admin.ModelItemEdit] Saving to database...');
-				$data->item->savetodb();
+				$data->item->saveToDB();
 				}
 			if($data->do=='save_exit'){
 				$data->redirect=$this->url_exit;;

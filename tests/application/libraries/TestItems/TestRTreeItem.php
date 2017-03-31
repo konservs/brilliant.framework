@@ -1,5 +1,5 @@
 <?php
-//namespace Application\TestItems;
+namespace Application\TestItems;
 
 /**
  * Basic class to control Items Item

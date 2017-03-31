@@ -3,3 +3,4 @@
 /tools/php_errors.log
 /tests/vendor
 /tests/composer.lock
+/tests/application/config.php

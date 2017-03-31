@@ -4,3 +4,4 @@
 /tests/vendor
 /tests/composer.lock
 /tests/application/config.php
+/tests/application/log/*.log

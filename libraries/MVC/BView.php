@@ -65,7 +65,7 @@ class BView{
 	//====================================================
 	public function setLocation($url,$time=0){
 		if(DEBUG_MODE){
-			BLog::addtolog('[BView] setLocation('.$url.','.$time.')');
+			BLog::addToLog('[BView] setLocation('.$url.','.$time.')');
 			}
 		if(isset($this->controller)){
 			$this->controller->locationurl=$url;
@@ -171,13 +171,13 @@ class BView{
 	public function load_js($file,$priority=100){
 		if(!isset($this->controller)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[MVC.View]: Could not load js file, because controller is empty!',LL_ERROR);
+				BLog::addToLog('[MVC.View]: Could not load js file, because controller is empty!',LL_ERROR);
 				}
 			return false;
 			}
 		if(!file_exists($file)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[MVC.View]: Could not load js file ('.$file.'), because it does not exists!',LL_ERROR);
+				BLog::addToLog('[MVC.View]: Could not load js file ('.$file.'), because it does not exists!',LL_ERROR);
 				}
 			return false;
 			}
@@ -195,13 +195,13 @@ class BView{
 	public function load_css($file,$priority=100){
 		if(!isset($this->controller)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[MVC.View]: Could not load css file, because controller is empty!',LL_ERROR);
+				BLog::addToLog('[MVC.View]: Could not load css file, because controller is empty!',LL_ERROR);
 				}
 			return false;
 			}
 		if(!file_exists($file)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[MVC.View]: Could not load css file, because it does not exists!',LL_ERROR);
+				BLog::addToLog('[MVC.View]: Could not load css file, because it does not exists!',LL_ERROR);
 				}
 			return false;
 			}
@@ -556,7 +556,7 @@ class BView{
 				}
 			foreach($fnames as $fn){
 				if(DEBUG_MODE){
-					BLog::addtolog('[View] try to load template:'.$fp.$fn);
+					BLog::addToLog('[View] try to load template:'.$fp.$fn);
 					}
 				if(file_exists($fp.$fn)){
 					$filename=$fp.$fn;

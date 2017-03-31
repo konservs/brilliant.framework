@@ -18,7 +18,7 @@ class BCacheMemcached extends \Brilliant\cache\BCache{
 		if(!is_object($this->memcached)){
 			if(!class_exists('Memcached')){
 				if(DEBUG_MODE){
-					BLog::addtolog('Memcached class not found!',LL_ERROR);
+					BLog::addToLog('Memcached class not found!',LL_ERROR);
 					}
 				return NULL;
 				}

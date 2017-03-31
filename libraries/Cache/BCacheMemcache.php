@@ -19,7 +19,7 @@ class BCacheMemcache extends \Brilliant\cache\BCache{
 		if (!is_object($this->memcache)){
 			if(!class_exists('Memcache')){
 				if(DEBUG_MODE){
-					BLog::addtolog('Memcache class not found!',LL_ERROR);
+					BLog::addToLog('Memcache class not found!',LL_ERROR);
 					}
 				return NULL;
 				}

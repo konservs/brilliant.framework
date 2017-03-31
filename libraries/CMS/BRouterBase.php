@@ -770,12 +770,12 @@ class BRouterBase{
 	//====================================================
 	private function checkRule($str,$mask,&$items){
 		if(ROUTER_DEBUG){
-			BLog::addtolog('[Router]: Extended rule! mask="'.$mask.'" url="'.$str.'"');
+			BLog::addToLog('[Router]: Extended rule! mask="'.$mask.'" url="'.$str.'"');
 			}
 		$r=preg_match($mask,$str,$a);
 		if(ROUTER_DEBUG){
-			BLog::addtolog('[Router]: Result='.$r);
-			BLog::addtolog('[Router]: Data='.var_export($a,true));
+			BLog::addToLog('[Router]: Result='.$r);
+			BLog::addToLog('[Router]: Data='.var_export($a,true));
 			}
 		if(!$r)return false;
 		for($i=1; $i<count($a); $i++)
@@ -880,7 +880,7 @@ class BRouterBase{
 			echo('<h1>404</h1>');
 			}
 		if(!empty($this->htmllogger)){
-			BLog::addtolog('[Router]: 404 page.',LL_ERROR);
+			BLog::addToLog('[Router]: 404 page.',LL_ERROR);
 			$this->htmllogger->print_html();
 			}
 		return false;
@@ -890,7 +890,7 @@ class BRouterBase{
 	 */
 	public function run($URL,$host=''){
 		if(ROUTER_DEBUG){
-			BLog::addtolog('[Router]: Router started! URL='.$URL.'; host='.$host);
+			BLog::addToLog('[Router]: Router started! URL='.$URL.'; host='.$host);
 			}
 		//bimport('ip.ban');
 		//$r=BIpBan::check();
@@ -905,9 +905,9 @@ class BRouterBase{
 
 		if(ROUTER_DEBUG){
 			if($r){
-				BLog::addtolog('[Router]: Rules successfully parsed.');
+				BLog::addToLog('[Router]: Rules successfully parsed.');
 				}else{
-				BLog::addtolog('[Router]: Error of parsing rules!',LL_ERROR);
+				BLog::addToLog('[Router]: Error of parsing rules!',LL_ERROR);
 				}
 			}
 		if($r===false){
@@ -916,7 +916,7 @@ class BRouterBase{
 			return $this->errorpage('404');
 			}
 		if(ROUTER_DEBUG){
-			BLog::addtolog('[Router]: rules:'.var_export($this->rules,true));
+			BLog::addToLog('[Router]: rules:'.var_export($this->rules,true));
 			}
 		$this->render_positions();
 		switch($this->ctype){
@@ -965,14 +965,14 @@ class BRouterBase{
 			$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
 			}
 		if(!file_exists($fn)){
-			BLog::addtolog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);
+			BLog::addToLog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);
 			return NULL;
 			}
 		require_once($fn);
 		//Trying to create object of controller class...
 		$class='Controller_'.$cname;
 		if(!class_exists($class)){
-			BLog::addtolog('[Router]: Could not find class ('.$class.')!',LL_ERROR);
+			BLog::addToLog('[Router]: Could not find class ('.$class.')!',LL_ERROR);
 			return NULL;
 			}
 		$controller=new $class();
@@ -1046,7 +1046,7 @@ class BRouterBase{
 			if(!$c->rendered){
 				if(ROUTER_DEBUG){
 					$view=isset($c->segments['view'])?$c->segments['view']:'';
-					BLog::addtolog('[Router]: Rendering component ('.$c->com.(empty($view)?'':'.'.$view).')...');
+					BLog::addToLog('[Router]: Rendering component ('.$c->com.(empty($view)?'':'.'.$view).')...');
 					}
 				$controller=$this->component_load($c->com);
 				if(empty($controller)){
@@ -1205,14 +1205,14 @@ class BRouterBase{
 
 		//Starting render
 		if(DEBUG_MODE){
-			BLog::addtolog('[Router]: Rendering template...');
+			BLog::addToLog('[Router]: Rendering template...');
 			}
 		ob_start();
 		include $fn;
 		$tpl_str=ob_get_clean();
 		$tpl_str=str_replace('{{head}}','',$tpl_str);
 		if(DEBUG_MODE){
-			BLog::addtolog('[Router]: Filling empty positions...');
+			BLog::addToLog('[Router]: Filling empty positions...');
 			}
 		$pattern='/{{position.(?P<position>\w+)*}}/';
 		preg_match_all($pattern, $tpl_str, $matches);
@@ -1222,21 +1222,21 @@ class BRouterBase{
 				}
 			}
 		if(DEBUG_MODE){
-			BLog::addtolog('[Router]: Put content into positions...');
+			BLog::addToLog('[Router]: Put content into positions...');
 			}
 		foreach($this->positions as $p=>$val){
 			$tpl_str=str_replace('{{position:'.$p.'}}',$val,$tpl_str);
 			}
 		//Output debug information, if necessary.
 		if(DEBUG_MODE){
-			BLog::addtolog('[Router]: Generation time: '.sprintf('%7.7f',self::page_time()));
-			BLog::addtolog('[Router]: MySQL queries:'.BMySQL::getQueriesCount());
+			BLog::addToLog('[Router]: Generation time: '.sprintf('%7.7f',self::page_time()));
+			BLog::addToLog('[Router]: MySQL queries:'.BMySQL::getQueriesCount());
 			$qc=BCache::getQueriesCount();
-			BLog::addtolog('[Router]: Cache queries: get-'.$qc['get'].' set-'.$qc['set'].' mset-'.$qc['mset'].' mget-'.$qc['mget'].' gc-'.$qc['gc']);
-			BLog::addtolog('[Router]: Outputing the template...');
+			BLog::addToLog('[Router]: Cache queries: get-'.$qc['get'].' set-'.$qc['set'].' mset-'.$qc['mset'].' mget-'.$qc['mget'].' gc-'.$qc['gc']);
+			BLog::addToLog('[Router]: Outputing the template...');
 			}
 		echo($tpl_str);
-		BLog::addtolog('[Router]: All done!');
+		BLog::addToLog('[Router]: All done!');
 		if(!empty($this->htmllogger)){
 			$this->htmllogger->print_html();
 			}

@@ -32,7 +32,7 @@ abstract class BItems{
 	protected function detectLanguage($lang){
 		if(empty($lang)){
 			bimport('cms.language');
-			$lang=BLang::$langcode;
+			$lang=\Brilliant\CMS\BLang::$langcode;
 			}
 		return $lang;
 		}
@@ -57,7 +57,7 @@ abstract class BItems{
 			return array();
 			}
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tableName.'] itemsGet('.implode(',',$ids).')');
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsGet('.implode(',',$ids).')');
 			}
 		$items=array();
 		//-------------------------------------------------
@@ -132,7 +132,7 @@ abstract class BItems{
 			}
 		$q=$db->Query($qr);
 		if(empty($q)){
-			BLog::addtolog('[items]: itemsGet(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+			BLog::addToLog('[items]: itemsGet(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 			return $items;
 			}
 		$tocache=array();
@@ -165,7 +165,7 @@ abstract class BItems{
 			$qrl='SELECT * from `'.$tbl['name'].'` WHERE ('.implode(' AND ',$wh).')';
 			$ql=$db->Query($qrl);
 			if(empty($ql)){
-				BLog::addtolog('[items]: itemsGet(): Could not execute external tables query! MySQL error: '.$db->lasterror(),LL_ERROR);
+				BLog::addToLog('[items]: itemsGet(): Could not execute external tables query! MySQL error: '.$db->lasterror(),LL_ERROR);
 				return false;
 				}
 			$datal=array();
@@ -181,7 +181,7 @@ abstract class BItems{
 			$classname=$this->itemClassName;
 			if(!class_exists($classname)){
 				$msg='Class "'.$classname.'" does not exist!';
-				BLog::addtolog($msg,LL_ERROR);
+				BLog::addToLog($msg,LL_ERROR);
 				die($msg);
 				}
 			$items[$k]=new $classname();
@@ -222,11 +222,11 @@ abstract class BItems{
 	 */
 	public function itemsFilter($params){
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tableName.'] itemsFilter('.var_export($params,true).')');
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsFilter('.var_export($params,true).')');
 			}
 		$ids=$this->itemsFilterIds($params);
 		if(DEBUG_LOG_BITEMS){
-			BLog::addtolog('[BItems.'.$this->tableName.'] itemsFilter got IDs: '.var_export($ids,true));
+			BLog::addToLog('[BItems.'.$this->tableName.'] itemsFilter got IDs: '.var_export($ids,true));
 			}
 		return $this->itemsGet($ids);
 		}

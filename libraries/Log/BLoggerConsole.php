@@ -11,13 +11,13 @@ class BLoggerConsole extends BLogger{
 	/**
 	 *
 	 */
-	public function addtolog($msg,$level=LL_GENERAL){
+	public function addToLog($msg,$level=LL_GENERAL){
 		echo('[dd.mm.YYYY hh:mm:ss] '.$msg.PHP_EOL);
 		}
 	/**
 	 *
 	 */
 	public function addHR(){
-		$this->addtolog('---------------------------------------------------------');
+		$this->addToLog('---------------------------------------------------------');
 		}
 	}

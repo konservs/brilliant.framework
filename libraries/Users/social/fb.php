@@ -29,7 +29,7 @@ class BSocialAdapterFb extends BSocialAbstractAdapter{
 		$params = array(/*'access_token'=>$this->access_token,*/'height'=>512,'width'=>512,'redirect'=>0,'type'=>'square');
 		$userPicture = $this->get('https://graph.facebook.com/'.$this->userInfo['id'].'/picture', $params);
 		if(!isset($userPicture['data'])) {
-			BLog::addtolog('[Social.FB] User photo is not set!',LL_ERROR);
+			BLog::addToLog('[Social.FB] User photo is not set!',LL_ERROR);
 			return false;
 			}
 		$result=$userPicture['data']['url'];
@@ -57,7 +57,7 @@ class BSocialAdapterFb extends BSocialAbstractAdapter{
 		bimport('http.request');
 		$code=BRequest::GetString('code');
 		if(!isset($code)) {
-			BLog::addtolog('[Social.FB] Code is empty!',LL_ERROR);
+			BLog::addToLog('[Social.FB] Code is empty!',LL_ERROR);
 			return false;
 			}
 		$params = array(
@@ -69,30 +69,30 @@ class BSocialAdapterFb extends BSocialAbstractAdapter{
 			);
 		parse_str($this->get('https://graph.facebook.com/oauth/access_token', $params, false), $tokenInfo);
 		if(empty($tokenInfo)){
-			BLog::addtolog('[Social.FB] tokenInfo is empty!',LL_ERROR);
+			BLog::addToLog('[Social.FB] tokenInfo is empty!',LL_ERROR);
 			return false;
 			}
 		if(!isset($tokenInfo['access_token'])) {
-			BLog::addtolog('[Social.FB] Access token is not set!',LL_ERROR);
-			BLog::addtolog('[Social.FB] tokenInfo="'.var_export($tokenInfo,true).'".',LL_ERROR);
+			BLog::addToLog('[Social.FB] Access token is not set!',LL_ERROR);
+			BLog::addToLog('[Social.FB] tokenInfo="'.var_export($tokenInfo,true).'".',LL_ERROR);
 			return false;
 			}
 		$this->access_token=$tokenInfo['access_token'];
 		$params = array('access_token' => $this->access_token,'fields' => 'id,name,email,birthday,gender');
 		$userInfo = $this->get('https://graph.facebook.com/me', $params);
 		if(!isset($userInfo['id'])) {
-			BLog::addtolog('[Social.FB] userInfo id is not set!',LL_ERROR);
-			BLog::addtolog('[Social.FB] userInfo="'.var_export($userInfo,true).'".',LL_ERROR);
+			BLog::addToLog('[Social.FB] userInfo id is not set!',LL_ERROR);
+			BLog::addToLog('[Social.FB] userInfo="'.var_export($userInfo,true).'".',LL_ERROR);
 			return false;
 			}
-		BLog::addtolog('[Social.FB] Got social info: '.var_export($userInfo,true));
+		BLog::addToLog('[Social.FB] Got social info: '.var_export($userInfo,true));
 		$this->userInfo = $userInfo;
 		//
 		if(!$this->createsession()){
-			BLog::addtolog('[Social.FB] Could not create session!',LL_ERROR);
+			BLog::addToLog('[Social.FB] Could not create session!',LL_ERROR);
 			return false;
 			}
-		BLog::addtolog('[Social.FB] All done!');
+		BLog::addToLog('[Social.FB] All done!');
 		return true;
 		}
 	/**

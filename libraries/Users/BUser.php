@@ -381,7 +381,7 @@ class BUser{
 		$busers=BUsers::getInstance();
 		$hash=$busers->makepass($this->email,$pass);
 		if(DEBUG_MODE){
-			BLog::addtolog('[BUsers.single]: updaing password. hash='.$hash);
+			BLog::addToLog('[BUsers.single]: updaing password. hash='.$hash);
 			}
 		$this->changed_fields[]=array('field'=>'password','prevval'=>'','nextval'=>'');
 		$this->password=$hash;

@@ -152,14 +152,14 @@ abstract class BItemsTree extends BItems{
 		//items tree.
 		$item1=$this->itemGet(1);
 		if(empty($item1)){
-			BLog::addtolog('[BItemsTree] getItemByAliasChain(): Could not get root items!',LL_ERROR);
+			BLog::addToLog('[BItemsTree] getItemByAliasChain(): Could not get root items!',LL_ERROR);
 			return NULL;
 			}
 		//Aliases
 		foreach($aliases as $alias){
 			$item1=$item1->children($lang,$alias);
 			if(empty($item1)){
-				BLog::addtolog('[BItemsTree]: getItemByAliasChain() Could not get news item children!',LL_ERROR);
+				BLog::addToLog('[BItemsTree]: getItemByAliasChain() Could not get news item children!',LL_ERROR);
 				return NULL;
 				}
 			}
@@ -169,9 +169,9 @@ abstract class BItemsTree extends BItems{
 	 * Recursive.
 	 */
 	protected function rebuildtree_recursive($cat,&$lft,&$rgt){
-		BLog::addtolog('[Items] Processing item ['.$cat->id.']');
+		BLog::addToLog('[Items] Processing item ['.$cat->id.']');
 		$ch=$this->itemsFilter(array('parent'=>$cat->id));
-		BLog::addtolog('[Items] Fill children array and sort them by "ordering". count='.count($ch));
+		BLog::addToLog('[Items] Fill children array and sort them by "ordering". count='.count($ch));
 		//
 		$children=array();
 		foreach($ch as $c){
@@ -216,7 +216,7 @@ abstract class BItemsTree extends BItems{
 		//Rebuild categories ads trigger count.
 
 		//Rebuild nested set - get cat
-		BLog::addtolog('[Items] rebuilding nested sets...');
+		BLog::addToLog('[Items] rebuilding nested sets...');
 		//
 		$bcache=\Brilliant\BFactory::getCache();
 		if($bcache){
@@ -224,7 +224,7 @@ abstract class BItemsTree extends BItems{
 			}
 		//
 		$catslist=$this->itemsFilter(array());
-		BLog::addtolog('[Items] Total categories count:'.count($catslist).'...');
+		BLog::addToLog('[Items] Total categories count:'.count($catslist).'...');
 
 		$rootcats=array();
 		//
@@ -238,7 +238,7 @@ abstract class BItemsTree extends BItems{
 			}
 		//Sort root categories.
 		$n=count($rootcats);
-		BLog::addtolog('[Items] Root categories count:'.$n.'...');
+		BLog::addToLog('[Items] Root categories count:'.$n.'...');
 		for($i=0; $i<$n; $i++){
 			$m=$i;
 			for($j=$i+1; $j<$n; $j++){
@@ -255,7 +255,7 @@ abstract class BItemsTree extends BItems{
 
 		//Foreach by root categories...
 		foreach($rootcats as $rcat){
-			BLog::addtolog('[Items] Processing root category ['.$rcat->id.']');
+			BLog::addToLog('[Items] Processing root category ['.$rcat->id.']');
 
 			$rcat->level=1;
 			$lft=1; $rgt=2;
@@ -267,7 +267,7 @@ abstract class BItemsTree extends BItems{
 		if(empty($db)){
 			return false;
 			}
-		BLog::addtolog('[Items] Updating nested set...');
+		BLog::addToLog('[Items] Updating nested set...');
 		foreach($catslist as $ct){
 			$qr='UPDATE `'.$this->tableName.'` set `'.$this->leftKeyName.'`='.$ct->lft.', `'.$this->rightKeyName.'`='.$ct->rgt.', `'.$this->levelKeyName.'`='.$ct->level.' WHERE `'.$this->primarykey.'`='.$ct->id;
 			$q=$db->query($qr);

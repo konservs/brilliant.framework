@@ -16,7 +16,7 @@ class BLoggerHTML extends BLogger{
 	/**
 	 *
 	 */
-	public function addtolog($msg,$level=LL_GENERAL){
+	public function addToLog($msg,$level=LL_GENERAL){
 		$mem=0;
 		if(self::$memprof){
 			$mem=memory_get_usage();
@@ -33,7 +33,7 @@ class BLoggerHTML extends BLogger{
 	 *
 	 */
 	public function addHR(){
-		$this->addtolog('---------------------------------------------------------');
+		$this->addToLog('---------------------------------------------------------');
 		}
 	/**
 	 * Print HTML log.

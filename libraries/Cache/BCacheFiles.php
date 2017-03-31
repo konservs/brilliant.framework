@@ -46,7 +46,7 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 	 */
 	public function get($key){
 		if(DEBUG_CACHE){
-			BLog::addtolog('[FilesCache]: get('.$key.')');
+			BLog::addToLog('[FilesCache]: get('.$key.')');
 			}
 		$this->queries_get_count++;
 		$fn=$this->cachedir.sha1($key).'.dat';
@@ -79,8 +79,8 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 	 */
 	public function set($key,$value,$expired){
 		if(DEBUG_CACHE){
-			//BLog::addtolog('[FilesCache]: set('.$key.','.var_export($value,true).')');
-			BLog::addtolog('[FilesCache]: set('.$key.',...)');
+			//BLog::addToLog('[FilesCache]: set('.$key.','.var_export($value,true).')');
+			BLog::addToLog('[FilesCache]: set('.$key.',...)');
 			}
 		$dt_exp=new \DateTime();
 		$dt_exp->add(new \DateInterval('PT'.$expired.'S'));
@@ -102,7 +102,7 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 	 */
 	public function delete($key){
 		if(DEBUG_MODE){
-			BLog::addtolog('[FilesCache]: delete('.$key.')...)');
+			BLog::addToLog('[FilesCache]: delete('.$key.')...)');
 			}
 		$fn=$this->cachedir.sha1($key).'.dat';
 		if(!file_exists($fn)){
@@ -117,7 +117,7 @@ class BCacheFiles extends \Brilliant\cache\BCache{
 	 */
 	public function invalidate(){
 		if(DEBUG_MODE){
-			BLog::addtolog('[FilesCache]: Delete key('.$key.')');
+			BLog::addToLog('[FilesCache]: Delete key('.$key.')');
 			}
 		$dir=$this->cachedir;
 		$lastchar=substr($dir,-1,1);

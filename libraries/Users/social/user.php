@@ -194,22 +194,22 @@ class BUsersSocialUser extends BItemsItem{
 	 *
 	 */
 	public function downloadavatar($overwrite=false){
-		BLog::addtolog('[Usera.Social.User] Downloading avatar from "'.$this->avatar_remote.'"...');
+		BLog::addToLog('[Usera.Social.User] Downloading avatar from "'.$this->avatar_remote.'"...');
 		//Extract path
 		//From "https://scontent.xx.fbcdn.net/hprofile-xft1/v/t1.0-1/p720x720/11014811_812264902187047_8690741747689722528_n.jpg?oh=914a8bd73e222b0ce166ef56c2a82767&oe=57A46864"
 		//To "hprofile-xft1/v/t1.0-1/p720x720/11014811_812264902187047_8690741747689722528_n.jpg"
 		$avatar_path=parse_url($this->avatar_remote,PHP_URL_PATH);
-		BLog::addtolog('[Usera.Social.User] Avatar path="'.$avatar_path.'"...');
+		BLog::addToLog('[Usera.Social.User] Avatar path="'.$avatar_path.'"...');
 		//
 		$extx=explode('.',$avatar_path);
 		if(count($extx)<2){
-			BLog::addtolog('[Usera.Social.User] Could not extract extention by remote URL',LL_ERROR);
+			BLog::addToLog('[Usera.Social.User] Could not extract extention by remote URL',LL_ERROR);
 			return false;
 			}
 		$ext=mb_strtolower($extx[count($extx)-1],'UTF-8');
 		$allowed=array('png','jpg','jpeg','gif');
 		if(!in_array($ext,$allowed)){
-			BLog::addtolog('[Usera.Social.User] Invalid extention "'.$ext.'".',LL_ERROR);
+			BLog::addToLog('[Usera.Social.User] Invalid extention "'.$ext.'".',LL_ERROR);
 			return false;
 			}
 		//Local filename is depended on avatar URL hash.
@@ -221,15 +221,15 @@ class BUsersSocialUser extends BItemsItem{
 		$localdir=$this->getavatardir();
 		$localfullfn=$localdir.DIRECTORY_SEPARATOR.$localfn;
 		$localfullpath=$this->getavatarpath().'/'.$localfn;
-		BLog::addtolog('[Usera.Social.User] local file : '.$localfullfn);
-		BLog::addtolog('[Usera.Social.User] local path : '.$localfullpath);
+		BLog::addToLog('[Usera.Social.User] local file : '.$localfullfn);
+		BLog::addToLog('[Usera.Social.User] local path : '.$localfullpath);
 		if((file_exists($localfullfn))&&(!$overwrite)){
 			$this->avatar_local=$localfullpath;
-			BLog::addtolog('[Usera.Social.User] The avatar file exist.');
+			BLog::addToLog('[Usera.Social.User] The avatar file exist.');
 			return true;
 			}
 		//Download avatar...
-		BLog::addtolog('[Usera.Social.User] Downloading avatar...');
+		BLog::addToLog('[Usera.Social.User] Downloading avatar...');
 		$ch = curl_init($this->avatar_remote);
 		$fp = fopen($localfullfn, 'wb');
 		curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -240,7 +240,7 @@ class BUsersSocialUser extends BItemsItem{
 		fclose($fp);
 		//
 		$this->avatar_local=$localfullpath;
-		BLog::addtolog('[Usera.Social.User] All done!');
+		BLog::addToLog('[Usera.Social.User] All done!');
 		return true;
 		}
 

@@ -17,9 +17,9 @@ class BLog{
 	/**
 	 *
 	 */
-	public static function addtolog($msg,$level=LL_GENERAL){
+	public static function addToLog($msg,$level=LL_GENERAL){
 		foreach(self::$loggers as $logger){
-			$logger->addtolog($msg,$level);
+			$logger->addToLog($msg,$level);
 			}
 		return true;
 		}

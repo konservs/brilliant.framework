@@ -65,7 +65,7 @@ class BHTML{
 	 * @param type $lt
 	 */
 	public function setLocationUrl($lu,$lt){
-		BLog::addtolog('[HTML] setLocationUrl()');
+		BLog::addToLog('[HTML] setLocationUrl()');
 		$this->locationurl=$lu;
 		$this->locationtime=$lt;
 		}
@@ -123,7 +123,7 @@ class BHTML{
 	 */
 	public function load_css($file,$priority=100){
 		if(!file_exists($file)){
-			BLog::addtolog('[HTML]: Could not load css file, because it does not exists!',LL_ERROR);
+			BLog::addToLog('[HTML]: Could not load css file, because it does not exists!',LL_ERROR);
 			return false;
 			}
 		$src=file_get_contents($file);
@@ -156,25 +156,25 @@ class BHTML{
 	 * @return boolean
 	 */
 	public function add_less($filename,$name,$media=''){
-		BLog::addtolog('[BHTML]: Adding LESS ('.$filename.')');
+		BLog::addToLog('[BHTML]: Adding LESS ('.$filename.')');
 		$fn_in=$filename;
 		$fn_out=$filename.'.css';
 		//
 		if(!file_exists($fn_in)){
-			BLog::addtolog('[BHTML]: LESS file does not exists!',LL_ERROR);
+			BLog::addToLog('[BHTML]: LESS file does not exists!',LL_ERROR);
 			return false;
 			}
 		if(file_exists($fn_out)){
 			$time_in=filemtime($fn_in);
 			$time_out=filemtime($fn_out);
 			if(DEBUG_MODE){
-				BLog::addtolog('[BHTML]: Time of LESS: '.date('Y-m-d H:i:s',$time_in));
-				BLog::addtolog('[BHTML]: Time of CSS : '.date('Y-m-d H:i:s',$time_out));
+				BLog::addToLog('[BHTML]: Time of LESS: '.date('Y-m-d H:i:s',$time_in));
+				BLog::addToLog('[BHTML]: Time of CSS : '.date('Y-m-d H:i:s',$time_out));
 				}
 			//The CSS file is newest
 			if($time_in<=$time_out){ //TODO remove rthis fix
 				if(DEBUG_MODE){
-					BLog::addtolog('[BHTML]: The CSS is actual!');
+					BLog::addToLog('[BHTML]: The CSS is actual!');
 					}
 				$this->add_css($name,$media);
 				return true;
@@ -182,7 +182,7 @@ class BHTML{
 			}
 		//
 		if(DEBUG_MODE){
-			BLog::addtolog('[BHTML]: Time to compile CSS!');
+			BLog::addToLog('[BHTML]: Time to compile CSS!');
 			}
 		bimport('html.less.Less');
 		$options=array();

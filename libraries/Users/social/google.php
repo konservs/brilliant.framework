@@ -56,17 +56,17 @@ class BSocialAdapterGoogle extends BSocialAbstractAdapter{
 		$params['access_token'] = $tokenInfo['access_token'];
 		$userInfo = $this->get('https://www.googleapis.com/oauth2/v1/userinfo', $params);
 		if(!isset($userInfo[$this->socialFieldsMap['socialId']])) {
-			BLog::addtolog('[Social.Google] userInfo socialId is not set!',LL_ERROR);
-			BLog::addtolog('[Social.Google] userInfo="'.var_export($userInfo,true).'".',LL_ERROR);
+			BLog::addToLog('[Social.Google] userInfo socialId is not set!',LL_ERROR);
+			BLog::addToLog('[Social.Google] userInfo="'.var_export($userInfo,true).'".',LL_ERROR);
 			return false;
 			}
 		$this->userInfo = $userInfo;
 		//
 		if(!$this->createsession()){
-			BLog::addtolog('[Social.Google] Could not create session!',LL_ERROR);
+			BLog::addToLog('[Social.Google] Could not create session!',LL_ERROR);
 			return false;
 			}
-		BLog::addtolog('[Social.Google] All done!');
+		BLog::addToLog('[Social.Google] All done!');
 		return true;
 
 		}

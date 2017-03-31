@@ -140,7 +140,7 @@ class BUsers{
 		$qr='SELECT * from `users` WHERE (id in ('.$ids_q.'))';
 		$q=$db->Query($qr);
 		if(empty($q)){
-			BLog::addtolog('[Users]: users_get(): Could not execute query! MySQL error: '.$db->lasterror());
+			BLog::addToLog('[Users]: users_get(): Could not execute query! MySQL error: '.$db->lasterror());
 			return $users;
 			}
 		$tocache=array();
@@ -198,7 +198,7 @@ class BUsers{
 		//Get user...
 		$id=(int)$l['id'];
 		$user_obj=$l;
-		BLog::addtolog('[Users] found user: '.$id);
+		BLog::addToLog('[Users] found user: '.$id);
 		//Process users...
 		$tocache=array();
 		$res=new BUser();
@@ -392,7 +392,7 @@ class BUsers{
 		$q=$db->Query($qr);
 		if(empty($q)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: getusers_count(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+				BLog::addToLog('[Users]: getusers_count(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 				}
 			return 10000;
 			}
@@ -422,20 +422,20 @@ class BUsers{
 	public function login($email,$password,$longsession=false){
 		$user=$this->getUserByEmail($email);
 		if($user==false){
-			BLog::addtolog('[Users]: login() wrong email!',LL_ERROR);
+			BLog::addToLog('[Users]: login() wrong email!',LL_ERROR);
 			return USERS_ERROR_NOSUCHEMAIL;
 			}
 		if($user->active==USER_STATUS_NOTACTIVATED){
-			BLog::addtolog('[Users]: Not Activated',LL_ERROR);
+			BLog::addToLog('[Users]: Not Activated',LL_ERROR);
 			return USERS_ERROR_NOACTIVATED;
 			}
 		if($user->active==USER_STATUS_BANNED){
-			BLog::addtolog('[Users]: Banned user',LL_ERROR);
+			BLog::addToLog('[Users]: Banned user',LL_ERROR);
 			return USERS_ERROR_BANNED;
 			}			
 		$hash=$this->makepass($email,$password);
 		if($user->password!=$hash){
-			BLog::addtolog('[Users]: password hashes not equal! user hash='.$user->password.'; post hash='.$hash,LL_ERROR);
+			BLog::addToLog('[Users]: password hashes not equal! user hash='.$user->password.'; post hash='.$hash,LL_ERROR);
 			return USERS_ERROR_PASS;
 			}
 		$options=array(
@@ -518,7 +518,7 @@ class BUsers{
 						$code='0'.$code;
 						}
 					if(DEBUG_MODE){
-						BLog::addtolog('[Users]: check(): phone('.$tel['tel'].') is already registered. Sending code='.$code,LL_ERROR);
+						BLog::addToLog('[Users]: check(): phone('.$tel['tel'].') is already registered. Sending code='.$code,LL_ERROR);
 						}
 					$db->Query('update users_phones set checkcode='.$code.' where id='.$l['id']);
 
@@ -547,13 +547,13 @@ class BUsers{
 	 */
 	public function register($fields){
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users]: register()');
+			BLog::addToLog('[Users]: register()');
 			}
 		$r=$this->check($fields);
 					
 		if(!empty($r)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: register check failed! Errors:'.var_export($r,true),LL_ERROR);
+				BLog::addToLog('[Users]: register check failed! Errors:'.var_export($r,true),LL_ERROR);
 				}
 			return $r;
 			}
@@ -590,13 +590,13 @@ class BUsers{
 			.$db->escape_string($lang).','
 			.'NOW(),NOW())';
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users]: register() inserting user fields...');
+			BLog::addToLog('[Users]: register() inserting user fields...');
 			}
 		$q=$db->Query($qr);
 		if(empty($q)){
 			$db->rollback();
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: register(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+				BLog::addToLog('[Users]: register(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 				}
 			return false;
 			}
@@ -627,7 +627,7 @@ class BUsers{
 					}
 				}
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users]: register() inserting user phones...');
+				BLog::addToLog('[Users]: register() inserting user phones...');
 				}
 			if(!empty($qr)){
 				$qr='insert into `users_phones` (user,op_code,tel,call_from,call_to,call_name,checked) values'.$qr;

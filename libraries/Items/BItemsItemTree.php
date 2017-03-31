@@ -116,7 +116,7 @@ abstract class BItemsItemTree extends BItemsItem{
 	 * @return bool
 	 */
 	public function dbInsert(){
-		BLog::addtolog('[Items.ItemTree]: Inserting data...');
+		BLog::addToLog('[Items.ItemTree]: Inserting data...');
 		if(!$db=\Brilliant\BFactory::getDBO()){
 			return false;
 			}
@@ -145,9 +145,9 @@ abstract class BItemsItemTree extends BItemsItem{
 			return false;
 			}
 		//Forming query...
-		$this->modified=new DateTime();
+		$this->modified=new \Brilliant\BDateTime();
 		if(empty($this->created)){
-			$this->created=new DateTime();
+			$this->created=new \Brilliant\BDateTime();
 			}
 		$qr=$this->dbInsertQuery();
 

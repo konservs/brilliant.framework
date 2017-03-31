@@ -18,11 +18,11 @@ abstract class BItemsItem{
 	protected $primarykey='id';
 	protected $fields=array();
 	/**
-	 * @var DateTime
+	 * @var \Brilliant\BDateTime
 	 */
 	public $created;
 	/**
-	 * @var DateTime
+	 * @var \Brilliant\BDateTime
 	 */
 	public $modified;
 	/**
@@ -65,7 +65,7 @@ abstract class BItemsItem{
 	 *
 	 * @param $value
 	 * @param $type
-	 * @return BDateTime|BImage|bool|int|null|string
+	 * @return \Brilliant\BDateTime|BImage|bool|int|null|string
 	 */
 	protected function fieldFromRaw($value,$type){
 		switch($type){
@@ -259,8 +259,8 @@ abstract class BItemsItem{
 				$this->alias_ru=$obj['alias_ru'];
 				$this->alias_ua=$obj['alias_ua'];
 				return true;
-			case 'created': $this->created=new DateTime($obj['created']); return true;
-			case 'modified': $this->modified=new DateTime($obj['modified']); return true;
+			case 'created': $this->created=new \Brilliant\BDateTime($obj['created']); return true;
+			case 'modified': $this->modified=new \Brilliant\BDateTime($obj['modified']); return true;
 			}
 		return false;
 		}
@@ -270,7 +270,7 @@ abstract class BItemsItem{
 	protected function detectLanguage($lang){
 		if(empty($lang)){
 			bimport('cms.language');
-			$lang=BLang::$langcode;
+			$lang=\Brilliant\CMS\BLang::$langcode;
 			}
 		return $lang;
 		}
@@ -280,7 +280,7 @@ abstract class BItemsItem{
 	public function getlangvar($varname,$lang=''){
 		if(empty($lang)){
 			bimport('cms.language');
-			$lang=BLang::$langcode;
+			$lang=\Brilliant\CMS\BLang::$langcode;
 			//var_dump($lang); die('a');
 			}
 		$name=$varname.'_'.$lang;
@@ -337,7 +337,7 @@ abstract class BItemsItem{
 					foreach($this->fields[$varname]->alias as $aliasfld){
 						$str.=(empty($str)?'':'-').$this->{$aliasfld};
 						}
-					$value2=BLang::generatealias($str);
+					$value2=\Brilliant\CMS\BLang::generatealias($str);
 					}
 				if((empty($value2))&&($required)){
 					return false;
@@ -419,7 +419,7 @@ abstract class BItemsItem{
 					foreach($this->fields[$varname]->alias as $aliasfld){
 						$str.=(empty($str)?'':'-').$this->{$aliasfld.'_'.$lang};
 						}
-					$value2=BLang::generatealias($str);
+					$value2=\Brilliant\CMS\BLang::generatealias($str);
 					}
 				if((empty($value2))&&($required)){
 					return false;
@@ -464,7 +464,7 @@ abstract class BItemsItem{
 		$qr_fields=array();
 		$qr_values=array();
 		//Get languages list
-		$languages=BLang::langlist();
+		$languages=\Brilliant\CMS\BLang::langlist();
 		//Process additional fields
 		foreach($this->fields as $fld){
 			//Multi-language field + general field
@@ -545,15 +545,15 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbInsert(){
-		BLog::addtolog('[Items.Item.'.$this->tableName.']: Inserting data...');
+		BLog::addToLog('[Items.Item.'.$this->tableName.']: Inserting data...');
 		if(!$db=\Brilliant\BFactory::getDBO()){
 			return false;
 			}
 		//Forming query...
-		$this->modified=new DateTime();
+		$this->modified=new \Brilliant\BDateTime();
 		//For import we need ability to set `created`
 		if(empty($this->created)){
-			$this->created=new DateTime();
+			$this->created=new \Brilliant\BDateTime();
 			}
 		$qr=$this->dbInsertQuery();
 		//Running query...
@@ -574,7 +574,7 @@ abstract class BItemsItem{
 	// returns true if OK and false if not
 	//====================================================
 	public function dbupdate(){
-		BLog::addtolog('[Items.Item.'.$this->tableName.']: Updating data...');
+		BLog::addToLog('[Items.Item.'.$this->tableName.']: Updating data...');
 		if(empty($this->id)){
 			return false;
 			}
@@ -582,7 +582,7 @@ abstract class BItemsItem{
 			return false;
 			}
 		//
-		$this->modified=new DateTime();
+		$this->modified=new \Brilliant\BDateTime();
 		//Get query
 		$qr=$this->dbupdatequery();
 		//Running query...
@@ -602,7 +602,7 @@ abstract class BItemsItem{
 		$i=0;
 		$result=false;
 		while((!$result)&&($i<$limit)){
-			BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDBTimes('.$i.' / '.$limit.')');
+			BLog::addToLog('[Items.Item.'.$this->tableName.']: saveToDBTimes('.$i.' / '.$limit.')');
 			$result=$this->saveToDB();
 			$i++;
 			}
@@ -614,7 +614,7 @@ abstract class BItemsItem{
 	 * @return bool
 	 */
 	public function saveToDB(){
-		BLog::addtolog('[Items.Item.'.$this->tableName.']: saveToDB()');
+		BLog::addToLog('[Items.Item.'.$this->tableName.']: saveToDB()');
 		if($this->isnew){
 			return $this->dbInsert();
 			}else{

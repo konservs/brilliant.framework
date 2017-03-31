@@ -5,7 +5,7 @@ class BLogger{
 	/**
 	 *
 	 */
-	public function addtolog($msg,$level=LL_GENERAL){
+	public function addToLog($msg,$level=LL_GENERAL){
 		}
 	/**
 	 *

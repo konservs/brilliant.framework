@@ -36,12 +36,12 @@ abstract class BModelAdminItemEdit extends BModelAdminItem{
 		$itmcoll=$classname::getInstance();
 		$data->item=$itmcoll->item_get($segments['id']);
 		if(empty($data->item)){
-			BLog::addtolog('[MVC.Admin.ModelItemEdit] Could not get item!',LL_ERROR);
+			BLog::addToLog('[MVC.Admin.ModelItemEdit] Could not get item!',LL_ERROR);
 			$data->error=1;
 			return $data;
 			}
 		$data->do=BRequest::getString('do');
-		BLog::addtolog('[MVC.Admin.ModelItemEdit] do='.$data->do);
+		BLog::addToLog('[MVC.Admin.ModelItemEdit] do='.$data->do);
 
 		$data->saving=(($data->do=='save')||($data->do=='save_exit'));
 		$this->fieldsval=array();
@@ -50,18 +50,18 @@ abstract class BModelAdminItemEdit extends BModelAdminItem{
 		//
 		$this->getfilterdata($data);
 		if(($data->saving)&&($data->can_edit)){
-			BLog::addtolog('[MVC.Admin.ModelItemEdit] setting fields...');
+			BLog::addToLog('[MVC.Admin.ModelItemEdit] setting fields...');
 			if(!$this->itemsetfields($data->item)){
-				BLog::addtolog('[MVC.Admin.ModelItemEdit] We have some errors during setting fields.',LL_ERROR);
-				BLog::addtolog('[MVC.Admin.ModelItemEdit] errors: '.var_export($this->errors,true),LL_ERROR);
-				BLog::addtolog('[MVC.Admin.ModelItemEdit] warnings: '.var_export($this->warnings,true),LL_ERROR);
+				BLog::addToLog('[MVC.Admin.ModelItemEdit] We have some errors during setting fields.',LL_ERROR);
+				BLog::addToLog('[MVC.Admin.ModelItemEdit] errors: '.var_export($this->errors,true),LL_ERROR);
+				BLog::addToLog('[MVC.Admin.ModelItemEdit] warnings: '.var_export($this->warnings,true),LL_ERROR);
 				$data->errors=$this->errors;
 				$data->warnings=$this->warnings;
 				$data->error=2;
 				return $data;
 				}
 			if(empty($data->errors)){
-				BLog::addtolog('[MVC.Admin.ModelItemEdit] Saving to database...');
+				BLog::addToLog('[MVC.Admin.ModelItemEdit] Saving to database...');
 				$data->item->saveToDB();
 				}
 			if($data->do=='save_exit'){

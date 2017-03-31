@@ -65,11 +65,11 @@ class BSocialAdapterVk extends BSocialAbstractAdapter{
 	 * @return bool
 	 */
 	public function authenticate(){
-		BLog::addtolog('[Social.VK] Authentication started.');
+		BLog::addToLog('[Social.VK] Authentication started.');
 		bimport('http.request');
 		$code=BRequest::GetString('code');
 		if(!isset($code)) {
-			BLog::addtolog('[Social.VK] Could not get authorization code!',LL_ERROR);
+			BLog::addToLog('[Social.VK] Could not get authorization code!',LL_ERROR);
 			return false;
 			}
 		//
@@ -79,10 +79,10 @@ class BSocialAdapterVk extends BSocialAbstractAdapter{
 			'code'=>$code,
 			'redirect_uri'=>$this->redirectUri
 			);
-		BLog::addtolog('[Social.VK] Getting token info...');
+		BLog::addToLog('[Social.VK] Getting token info...');
 		$tokenInfo=$this->get('https://oauth.vk.com/access_token', $params);
 		if(!isset($tokenInfo['access_token'])){
-			BLog::addtolog('[Social.VK] Access token is not set!',LL_ERROR);
+			BLog::addToLog('[Social.VK] Access token is not set!',LL_ERROR);
 			//echo('<pre>'); var_dump($params); echo('</pre>'); die();
 			return false;
 			}
@@ -94,15 +94,15 @@ class BSocialAdapterVk extends BSocialAbstractAdapter{
 			);
 		$userInfo=$this->get('https://api.vk.com/method/users.get', $params);
 		if(!isset($userInfo['response'][0]['uid'])) {
-			BLog::addtolog('[Social.VK] Response UID is not set!',LL_ERROR);
+			BLog::addToLog('[Social.VK] Response UID is not set!',LL_ERROR);
 			return false;
 			}
 		$this->userInfo = $userInfo['response'][0];
 		if(!$this->createsession()){
-			BLog::addtolog('[Social.VK] Could not create session!',LL_ERROR);
+			BLog::addToLog('[Social.VK] Could not create session!',LL_ERROR);
 			return false;
 			}
-		BLog::addtolog('[Social.VK] All done!');
+		BLog::addToLog('[Social.VK] All done!');
 		return true;
 		}
 	/**

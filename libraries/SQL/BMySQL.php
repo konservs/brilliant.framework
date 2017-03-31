@@ -64,12 +64,12 @@ class BMySQL{
 			return TRUE;
 			}
 		if(!class_exists('mysqli')){
-			BLog::addtolog($this->logsuffix.': MySQLi class not found',LL_ERROR);
+			BLog::addToLog($this->logsuffix.': MySQLi class not found',LL_ERROR);
 			return FALSE;
 			}
 		$this->mysqli=new \mysqli($this->db_host, $this->db_username, $this->db_password, $this->db_name, $this->db_port);
 		if((empty($this->mysqli))||(mysqli_connect_errno())){
-			BLog::addtolog($this->logsuffix.': '.mysqli_connect_error(),LL_ERROR);
+			BLog::addToLog($this->logsuffix.': '.mysqli_connect_error(),LL_ERROR);
 			return FALSE;
 			}
 		if(!$this->mysqli->set_charset("utf8"))return FALSE;
@@ -80,13 +80,13 @@ class BMySQL{
 	 * Real query
 	 */
 	public function real_query($sql){
-		BLog::addtolog($this->logsuffix.' Query: '.$sql);
+		BLog::addToLog($this->logsuffix.' Query: '.$sql);
 		$this->queries_count++;
 		$r=$this->mysqli->real_query($sql);
 		if((DEBUG_MODE)&&(empty($r))){
-			BLog::addtolog($this->logsuffix.' query failed!',LL_ERROR);
-			BLog::addtolog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
-			BLog::addtolog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
+			BLog::addToLog($this->logsuffix.' query failed!',LL_ERROR);
+			BLog::addToLog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
+			BLog::addToLog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
 			}
 		return $r;
 		}
@@ -94,17 +94,17 @@ class BMySQL{
 	 * SQL query
 	 */
 	public function query($sql){
-		BLog::addtolog($this->logsuffix.' Query: '.$sql);
+		BLog::addToLog($this->logsuffix.' Query: '.$sql);
 		if(empty($this->mysqli)){
-			BLog::addtolog($this->logsuffix.'$this->mysqli is empty!',LL_ERROR);
+			BLog::addToLog($this->logsuffix.'$this->mysqli is empty!',LL_ERROR);
 			return false;
 			}
 
 		$this->queries_count++;
 		$r=$this->mysqli->query($sql);
 		if(empty($r)){
-			BLog::addtolog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
-			BLog::addtolog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
+			BLog::addToLog($this->logsuffix.' query="'.$sql.'";',LL_ERROR);
+			BLog::addToLog($this->logsuffix.' query error='.$this->lasterror(),LL_ERROR);
 			}
 		return $r;
 		}

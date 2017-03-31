@@ -180,9 +180,9 @@ abstract class BItemsRTree extends BItems {
 	 * Recursive.
 	 */
 	protected function rebuildtree_recursive($cat, &$lft, &$rgt) {
-		BLog::addtolog('[Items] Processing item [' . $cat->id . ']');
+		BLog::addToLog('[Items] Processing item [' . $cat->id . ']');
 		$ch = $this->itemsFilter(array('parent' => $cat->id));
-		BLog::addtolog('[Items] Fill children array and sort them by "ordering". count=' . count($ch));
+		BLog::addToLog('[Items] Fill children array and sort them by "ordering". count=' . count($ch));
 		//
 		$children = array();
 		foreach ($ch as $c) {
@@ -227,7 +227,7 @@ abstract class BItemsRTree extends BItems {
 	 */
 	public function rebuildtree() {
 		//Rebuild nested set - get cat
-		BLog::addtolog('[Items] rebuilding nested sets...');
+		BLog::addToLog('[Items] rebuilding nested sets...');
 
 
 		$db = \Brilliant\BFactory::getDBO();
@@ -236,22 +236,22 @@ abstract class BItemsRTree extends BItems {
 			}
 		$r = $db->query('LOCK TABLES `'.$this->tableName.'` WRITE');
 		if(!$r){
-			BLog::addtolog('[Items] Could not lock table!',LL_ERROR);
+			BLog::addToLog('[Items] Could not lock table!',LL_ERROR);
 			}
 		//
-		BLog::addtolog('[Items] Invalidating cache...');
+		BLog::addToLog('[Items] Invalidating cache...');
 		$bcache = \Brilliant\BFactory::getCache();
 		if ($bcache) {
 			$bcache->invalidate();
 			}
 		//
-		BLog::addtolog('[Items] Get root cats...');
+		BLog::addToLog('[Items] Get root cats...');
 		//
 		$catsCount = $this->itemsFilterCount(array());
-		BLog::addtolog('[Items] Total categories count:' . $catsCount . '...');
+		BLog::addToLog('[Items] Total categories count:' . $catsCount . '...');
 		//
 		$rootCatsCount = $this->itemsFilterCount(array('parentisnull'=>true));
-		BLog::addtolog('[Items] Root categories count:' . $rootCatsCount. '...');
+		BLog::addToLog('[Items] Root categories count:' . $rootCatsCount. '...');
 		//Go th
 		$rootCatsOffset = 0;
 		while($rootCatsOffset < $rootCatsCount) {
@@ -263,12 +263,12 @@ abstract class BItemsRTree extends BItems {
 			$paramsRoot['limit']=1;
 			$rootcats = $this->itemsFilter($paramsRoot);
 			if(count($rootcats)!=1){
-				BLog::addtolog('[Items] Root Category error!',LL_ERROR);
+				BLog::addToLog('[Items] Root Category error!',LL_ERROR);
 				}
 			$rcat = reset($rootcats);
 			$groupId = $rcat->getGroupId();
 			//
-			BLog::addtolog('[Items] Processing group #' . $groupId . ', root = ' . $rcat->id . '...');
+			BLog::addToLog('[Items] Processing group #' . $groupId . ', root = ' . $rcat->id . '...');
 			//
 			$paramsAll=array();
 			$paramsAll['group']=$groupId;
@@ -284,7 +284,7 @@ abstract class BItemsRTree extends BItems {
 			$this->rebuildtree_recursive($rcat, $lft, $rgt);
 			$rcat->lft = 1;
 			$rcat->rgt = $rgt;
-			BLog::addtolog('[Items] Updating nested set...');
+			BLog::addToLog('[Items] Updating nested set...');
 			foreach ($catslist as $ct) {
 				$qr = 'UPDATE `' . $this->tableName . '` set `' . $this->leftKeyName . '`=' . $ct->lft . ', `' . $this->rightKeyName . '`=' . $ct->rgt . ', `' . $this->levelKeyName . '`=' . $ct->level . ' WHERE `' . $this->primarykey . '`=' . $ct->id;
 				$q = $db->query($qr);

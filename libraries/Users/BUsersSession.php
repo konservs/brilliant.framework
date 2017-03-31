@@ -42,7 +42,7 @@ class BUsersSession{
 		if($this->triedstart){
 			return $this->triedresult;
 			}
-		BLog::addtolog('[Users.Session]: Start()');
+		BLog::addToLog('[Users.Session]: Start()');
 		$this->triedresult=false;
 		$this->triedstart=true;
 		$secret=explode(':',$_COOKIE['brillsecret']);
@@ -67,7 +67,7 @@ class BUsersSession{
 		$q=$db->Query($qr);
 		if(empty($q)){
 			if(DEBUG_MODE){
-				BLog::addtolog('[Session]: Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+				BLog::addToLog('[Session]: Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 				}
 			return false;
 			}
@@ -88,7 +88,7 @@ class BUsersSession{
 	// New session
 	//====================================================
 	public function newSession($uid,$options=array()){
-		BLog::addtolog('[Users.Session]: SessionStart()');
+		BLog::addToLog('[Users.Session]: SessionStart()');
 		//Checking options...
 		if(!isset($options['interval'])){
 			$options['interval']=10800;
@@ -192,10 +192,10 @@ class BUsersSession{
 		$expire=time()+$options['interval']+3600;//+1 hour
 		//$expire=0;
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: SessionStart() enddate='.$enddate->format('Y-m-d H:i:s'));
-			BLog::addtolog('[Users.Session]: SessionStart() nowdate='.$nowdate->format('Y-m-d H:i:s'));			
-			BLog::addtolog('[Users.Session]: Interval: '.$options['interval']);
-			BLog::addtolog('[Users.Session]: Set cookie. Expire='.$expire);
+			BLog::addToLog('[Users.Session]: SessionStart() enddate='.$enddate->format('Y-m-d H:i:s'));
+			BLog::addToLog('[Users.Session]: SessionStart() nowdate='.$nowdate->format('Y-m-d H:i:s'));			
+			BLog::addToLog('[Users.Session]: Interval: '.$options['interval']);
+			BLog::addToLog('[Users.Session]: Set cookie. Expire='.$expire);
 			}
 		//BDebug::print_html();die('SetCookie!');
 		setcookie('brillsecret',$uid.':'.$sessid,$expire,'/',BHOSTNAME);
@@ -206,20 +206,20 @@ class BUsersSession{
 	//====================================================
 	public function load($obj,$cacheupd=false){
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: Load()');
+			BLog::addToLog('[Users.Session]: Load()');
 			}
 		
 		$enddate=new \DateTime($obj['end']);
 		$nowdate=new \DateTime();
 		$lacdate=new \DateTime($obj['lastaction']);
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: Load() enddate='.$enddate->format('Y-m-d H:i:s'));
-			BLog::addtolog('[Users.Session]: Load() nowdate='.$nowdate->format('Y-m-d H:i:s'));
-			BLog::addtolog('[Users.Session]: Load() lacdate='.$lacdate->format('Y-m-d H:i:s'));
+			BLog::addToLog('[Users.Session]: Load() enddate='.$enddate->format('Y-m-d H:i:s'));
+			BLog::addToLog('[Users.Session]: Load() nowdate='.$nowdate->format('Y-m-d H:i:s'));
+			BLog::addToLog('[Users.Session]: Load() lacdate='.$lacdate->format('Y-m-d H:i:s'));
 			}
 		if(!is_string($obj['sessionid'])){
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users.Session]: Load() sessionid is not a string!',LL_ERROR);
+				BLog::addToLog('[Users.Session]: Load() sessionid is not a string!',LL_ERROR);
 				}
 			$this->sessionid='';
 			$this->close();
@@ -227,7 +227,7 @@ class BUsersSession{
 			}
 		if($enddate<$nowdate){
 			if(DEBUG_MODE){
-				BLog::addtolog('[Users.Session]: Load() $enddate<$nowdate. Closing session.',LL_ERROR);
+				BLog::addToLog('[Users.Session]: Load() $enddate<$nowdate. Closing session.',LL_ERROR);
 				}
 			$this->sessionid=$obj['sessionid'];
 			$this->close();
@@ -275,11 +275,11 @@ class BUsersSession{
 	//====================================================
 	public function close(){
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session]: close()');
+			BLog::addToLog('[Users.Session]: close()');
 			}
 		setcookie('brillsecret','',time()-3600,'/',BHOSTNAME);
 		if(DEBUG_MODE){
-			BLog::addtolog('[Users.Session] close session');
+			BLog::addToLog('[Users.Session] close session');
 			}
 		if(!$db=BFactory::getDBO()){
 			return false;
@@ -290,7 +290,7 @@ class BUsersSession{
 			}
 		$q=$db->Query('delete from sessions where sessionid='.$db->escape_string($this->sessionid));
 		if(empty($q)){
-			BLog::addtolog('[Users.Session]: close(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
+			BLog::addToLog('[Users.Session]: close(): Could not execute query! MySQL error: '.$db->lasterror(),LL_ERROR);
 			return false;
 			}
 		return true;

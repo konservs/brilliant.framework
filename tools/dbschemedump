@@ -23,7 +23,7 @@ while($l = $db->fetch($q)){
 	}
 
 foreach($tables as $tblname){
-	BLog::addtolog(' - Dumping "'.$tblname.'"...');
+	BLog::addToLog(' - Dumping "'.$tblname.'"...');
 	$fields=array();
 	$fieldnames=array();
 	$qr='show fields in `'.$tblname.'`';
@@ -55,7 +55,7 @@ foreach($tables as $tblname){
 			$primarykeys[]='\''.$fldname.'\'';
 			}
 		}
-	BLog::addtolog(' - Table fields: '.implode(', ',$fieldnames));
+	BLog::addToLog(' - Table fields: '.implode(', ',$fieldnames));
 	//
 	$result='$table = $this->table(\''.$tblname.'\', [\'id\' => false';
 	if(!empty($primarykeys)){

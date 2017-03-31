@@ -53,8 +53,8 @@ class BLang{
 			}
 		self::$suffix=$suffix;
 		if(DEBUG_BLANG){
-			BLog::addtolog('[BLang]: Initializing language ('.$lang.')');
-			BLog::addtolog('[BLang]: Loading file "'.$fn.'"...');
+			BLog::addToLog('[BLang]: Initializing language ('.$lang.')');
+			BLog::addToLog('[BLang]: Loading file "'.$fn.'"...');
 			}
 		include($fn);
 		self::$langcode=$lang;
@@ -83,7 +83,7 @@ class BLang{
 			$res=$short;
 			}
 		if(DEBUG_BLANG){
-			BLog::addtolog('[BLang]: Get language text "'.$short.'"=>"'.$res.'"');
+			BLog::addToLog('[BLang]: Get language text "'.$short.'"=>"'.$res.'"');
 			}
 		return $res;
 		}
@@ -117,7 +117,7 @@ class BLang{
 	//=====================================================
 	public function regeneratecache(){
 		if(DEBUG_MODE){
-			BLog::addtolog('[Lang]: Regenerating cache...');
+			BLog::addToLog('[Lang]: Regenerating cache...');
 			}
 		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
@@ -127,7 +127,7 @@ class BLang{
 		$qr='SELECT * from `languages`';
 		$q=$db->Query($qr);
 		if(DEBUG_MODE){
-			BLog::addtolog('[Lang]: query executed. Writing into file...');
+			BLog::addToLog('[Lang]: query executed. Writing into file...');
 			}
 		if(empty($q)){
 			return;
@@ -149,7 +149,7 @@ class BLang{
 		@file_put_contents($fru,$file1);
 		@file_put_contents($fua,$file2);
 		if(DEBUG_MODE){
-			BLog::addtolog('[Lang]: Regenerating cache done!');
+			BLog::addToLog('[Lang]: Regenerating cache done!');
 			}
 		return true;
 		}

@@ -23,7 +23,7 @@ class BCache{
 	public static function getInstance(){
 		if(!is_object(self::$instance)){
 			if(DEBUG_CACHE){
-				BLog::addtolog('[BCache]: Creating cache object ('.CACHE_TYPE.')...');
+				BLog::addToLog('[BCache]: Creating cache object ('.CACHE_TYPE.')...');
 				}
 			switch(CACHE_TYPE){
 				case 'files':

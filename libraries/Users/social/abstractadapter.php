@@ -252,21 +252,21 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 		$list=$bsu->items_filter(array('provider'=>$this->provider,'social_id'=>$this->getSocialId()));
 		$user=NULL;
 		if(!empty($list)){
-			BLog::addtolog('[Social.Adapter] Found social record in the database!');
+			BLog::addToLog('[Social.Adapter] Found social record in the database!');
 			$su=reset($list);
 			$user=$su->getuser();
 			}else{
-			BLog::addtolog('[Social.Adapter] Could not find social record in the database! Need to create it.');
+			BLog::addToLog('[Social.Adapter] Could not find social record in the database! Need to create it.');
 			//Try to load existing user with such email.
 			$email=$this->getEmail();
 			if(!empty($email)){
-				BLog::addtolog('[Social.Adapter] Loading user by email "'.$email.'"!');
+				BLog::addToLog('[Social.Adapter] Loading user by email "'.$email.'"!');
 				$bu=BUsers::getInstance();
 				$user=$bu->get_user_byemail($email);
 				}
 			//If we have not loaded user = 
 			if(empty($user)){
-				BLog::addtolog('[Social.Adapter] Could not load user! Creating it. Email="'.$email.'"');
+				BLog::addToLog('[Social.Adapter] Could not load user! Creating it. Email="'.$email.'"');
 				$user=new BUser();
 				$user->email=empty($email)?NULL:$email;
 				$user->name=$this->getName();
@@ -275,10 +275,10 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 				$user->last_action=new DateTime();
 				$r=$user->saveToDB();
 				if(empty($r)){
-					BLog::addtolog('[Social.Adapter] Could not save user!',LL_ERROR);
+					BLog::addToLog('[Social.Adapter] Could not save user!',LL_ERROR);
 					return false;
 					}
-				BLog::addtolog('[Social.Adapter] User saved. User id='.$user->id.'.');
+				BLog::addToLog('[Social.Adapter] User saved. User id='.$user->id.'.');
 				//User saved.
 				}
 			$su=new BUsersSocialUser();
@@ -288,11 +288,11 @@ abstract class BSocialAbstractAdapter implements BSocialAdapterInterface{
 			$su->created=new DateTime();
 			}
 		if(empty($su)){
-			BLog::addtolog('[Social.Adapter] Could not load social user record!',LL_ERROR);
+			BLog::addToLog('[Social.Adapter] Could not load social user record!',LL_ERROR);
 			return false;
 			}
 		if(empty($user)){
-			BLog::addtolog('[Social.Adapter] Could not load user!',LL_ERROR);
+			BLog::addToLog('[Social.Adapter] Could not load user!',LL_ERROR);
 			return false;
 			}
 		//Get fields.

@@ -10,7 +10,7 @@ defined('BEXEC') or die('No direct access!');
 use \Brilliant\Users\BUsersSession;
 
 class Model_users_logout extends \Brilliant\mvc\BModel{
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		$session=BUsersSession::getInstanceAndStart();
 		if(!empty($session))

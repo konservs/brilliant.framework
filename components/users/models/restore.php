@@ -8,7 +8,7 @@
 defined('BEXEC') or die('No direct access!');
 
 class Model_users_restore extends \Brilliant\mvc\BModel{
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		return $data;
 		}

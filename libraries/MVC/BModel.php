@@ -10,5 +10,5 @@ abstract class BModel{
 	function __construct() {
 		return true;
 		}
-	abstract public function get_data($segments);
+	abstract public function getData($segments);
 	}

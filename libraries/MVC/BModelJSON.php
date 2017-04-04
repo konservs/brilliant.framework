@@ -13,18 +13,18 @@ abstract class BModelJSON extends BModel{
 	 * @param $segments
 	 * @return bool
 	 */
-	abstract protected function get_data_json($segments);
+	abstract protected function getDataJson($segments);
 	/**
 	 * Get data
 	 *
 	 * @param $segments
 	 * @return stdClass
 	 */
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass();
 		$this->json=new stdClass();
 
-		$this->get_data_json($segments);
+		$this->getDataJson($segments);
 
 		$data->error=$this->error;
 		$data->json=$this->json;

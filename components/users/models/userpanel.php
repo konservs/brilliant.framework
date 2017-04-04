@@ -11,7 +11,7 @@ use \Brilliant\users\BUsers;
 use \Brilliant\users\BUsersSession;
 
 class Model_users_userpanel extends \Brilliant\mvc\BModel{
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		$session=BUsersSession::getInstanceAndStart();
 		if(!empty($session)){

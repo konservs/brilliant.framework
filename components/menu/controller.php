@@ -14,7 +14,7 @@ class Controller_menu extends \Brilliant\mvc\BController{
 			//case '...':
 			//	$model=$this->LoadModel('...');
 			//	$view=$this->LoadView('...');
-			//	return($view->generate($model->get_data($segments)));
+			//	return($view->generate($model->getData($segments)));
 			//	break;
 			default:
 				$model=$this->LoadModel($segments['view']);
@@ -23,7 +23,7 @@ class Controller_menu extends \Brilliant\mvc\BController{
 				$view=$this->LoadView($segments['view']);
 				if(empty($view))
 					return 'Menu: could not load view!';
-				return($view->generate($model->get_data($segments)));
+				return($view->generate($model->getData($segments)));
 				break;
 			}
 		return 'Menu: unknown params';

@@ -17,7 +17,7 @@ class Controller_users extends \Brilliant\mvc\BController{
 			//case 'blog':
 			//	$model=$this->LoadModel('category');
 			//	$view=$this->LoadView('blog');
-			//	return($view->generate($model->get_data($segments)));
+			//	return($view->generate($model->getData($segments)));
 			//	break;
 			default:
 				$model=$this->LoadModel($segments['view']);
@@ -26,7 +26,7 @@ class Controller_users extends \Brilliant\mvc\BController{
 				$view=$this->LoadView($segments['view']);
 				if(empty($view))
 					return 'Users: could not load view!';
-				return($view->generate($model->get_data($segments)));
+				return($view->generate($model->getData($segments)));
 				break;
 			}
 		return 'Users: unknown params';

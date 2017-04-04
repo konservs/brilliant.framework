@@ -21,7 +21,7 @@ class BModelAdminItemsTreeRefresh extends BModel{
 	/**
 	 * Main data & actions function.
 	 */
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		$data->triglog=array();
 		$data->error=-1;

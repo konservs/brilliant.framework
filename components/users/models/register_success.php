@@ -11,7 +11,7 @@ class Model_users_register_success extends \Brilliant\mvc\BModel{
 	/**
 	 * Get data - no data.
 	 */
-	public function get_data($segments){
+	public function getData($segments){
 		$data=array();
 		return $data;
 		}

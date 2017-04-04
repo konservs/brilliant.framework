@@ -11,7 +11,7 @@ class Model_users_confirm extends \Brilliant\mvc\BModel{
 	/**
 	 *
 	 */
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		$busers=BUsers::getInstance();
 		$r=$busers->confirm($segments['id'],$segments['confirmcode']);

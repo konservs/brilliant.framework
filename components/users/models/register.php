@@ -10,7 +10,7 @@ use \Brilliant\users\BUsers;
 use \Brilliant\users\BSocial;
 
 class Model_users_register extends \Brilliant\mvc\BModel{
-	public function get_data($segments){
+	public function getData($segments){
 		$data=new stdClass;
 		$data->email=isset($_POST['email'])?$_POST['email']:'';
 		$data->name=isset($_POST['name'])?$_POST['name']:'';

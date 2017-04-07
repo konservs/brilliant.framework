@@ -13,18 +13,22 @@ class BUsersSession{
 	protected $triedresult=false;
 	protected $triedstart=false;
 	protected static $instance=NULL;
-	//====================================================
-	//
-	//====================================================
+	/**
+	 * Get instance
+	 *
+	 * @return BUsersSession|null
+	 */
 	public static function getInstance(){
 		if (!is_object(self::$instance)){
 			self::$instance=new BUsersSession();
 			}
 		return self::$instance;
 		}
-	//====================================================
-	//
-	//====================================================
+	/**
+	 * Get instance
+	 *
+	 * @return BUsersSession|null
+	 */
 	public static function getInstanceAndStart(){
 		if(!is_object(self::$instance)){
 			self::$instance=new BUsersSession();
@@ -35,9 +39,12 @@ class BUsersSession{
 			return self::$instance;
 			}
 		}
-	//====================================================
-	// Init session.
-	//====================================================
+
+	/**
+	 * Init session
+	 *
+	 * @return bool
+	 */
 	public function Start(){
 		if($this->triedstart){
 			return $this->triedresult;
@@ -179,7 +186,7 @@ class BUsersSession{
 			return false;
 			}
 		$busers=BUsers::getInstance();
-		$me=$busers->get_single_user($obj['userid']);
+		$me=$busers->itemGet($obj['userid']);
 		$me->updatecache();
 		//-------------------------------------------
 		// Set cache...
@@ -247,7 +254,7 @@ class BUsersSession{
 			$qr='update users set last_action=NOW() where id='.$obj['userid'];
 			$q=$db->Query($qr);
 			$busers=BUsers::getInstance();
-			$me=$busers->get_single_user($obj['userid']);
+			$me=$busers->itemGet($obj['userid']);
 			$me->updatecache();
 			$lacdate=$nowdate;
 			$enddate->add(new \DateInterval('PT'.$obj['interval'].'S'));

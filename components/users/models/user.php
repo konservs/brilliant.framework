@@ -14,7 +14,7 @@ class Model_users_user extends \Brilliant\mvc\BModel{
 
 		$users=BUsers::getInstance();
 		$data=new stdClass;
-		$data->user=$users->get_single_user($id);
+		$data->user=$users->itemGet($id);
 		return $data;
 		}
 	}

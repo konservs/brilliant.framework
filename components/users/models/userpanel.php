@@ -18,7 +18,7 @@ class Model_users_userpanel extends \Brilliant\mvc\BModel{
 			$data->logged=true;
 			$data->lastmod=$session->start;
 			$busers=BUsers::getInstance();
-			$data->user=$busers->get_single_user($session->userid);
+			$data->user=$busers->itemGet($session->userid);
 			}
 		else{
 			$data->logged=false;

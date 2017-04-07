@@ -39,7 +39,7 @@ class BUsersSocialUser extends BItemsItem{
 			}
 		bimport('users.general');
 		$bu=BUsers::getInstance();
-		$user=$bu->get_single_user($this->user);
+		$user=$bu->itemGet($this->user);
 		return $user;
 		}
 	/**

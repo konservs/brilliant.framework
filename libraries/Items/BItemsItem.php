@@ -10,13 +10,13 @@ namespace Brilliant\Items;
 
 use Brilliant\Log\BLog;
 
-abstract class BItemsItem{
-	public $id=0; //Necessary field
-	public $isnew=true;
-	protected $tableName='';
-	protected $collectionName='';
-	protected $primaryKeyName='id';
-	protected $fields=array();
+abstract class BItemsItem {
+	public $id = 0; //Necessary field
+	public $isNew = true;
+	protected $tableName = '';
+	protected $collectionName = '';
+	protected $primaryKeyName = 'id';
+	protected $fields = array();
 	/**
 	 * @var \Brilliant\BDateTime
 	 */
@@ -25,18 +25,21 @@ abstract class BItemsItem{
 	 * @var \Brilliant\BDateTime
 	 */
 	public $modified;
+
 	/**
 	 * Simple constructor.
 	 */
 	public function __construct() {
 		//Do nothing.
-		}
+	}
+
 	/**
 	 *
 	 */
-	public function getfields(){
+	public function getfields() {
 		return $this->fields;
-		}
+	}
+
 	/**
 	 * Add field into fields list.
 	 *
@@ -45,21 +48,23 @@ abstract class BItemsItem{
 	 * @param array $params
 	 * @return bool
 	 */
-	protected function fieldAddRaw($name,$type,$params=array()){
-		if(empty($name)){
+	protected function fieldAddRaw($name, $type, $params = array()) {
+		if (empty($name)) {
 			return false;
-			}
-		$fldobj=(object)$params;
-		$fldobj->name=$name;
-		$fldobj->type=$type;
-		$this->fields[$name]=$fldobj;
 		}
+		$fldobj = (object)$params;
+		$fldobj->name = $name;
+		$fldobj->type = $type;
+		$this->fields[$name] = $fldobj;
+	}
+
 	/**
 	 *
 	 */
-	public function getPrimaryKey(){
+	public function getPrimaryKey() {
 		return $this->{$this->primaryKeyName};
-		}
+	}
+
 	/**
 	 * Get RAW field value from DB.
 	 *
@@ -67,8 +72,8 @@ abstract class BItemsItem{
 	 * @param $type
 	 * @return \Brilliant\BDateTime|BImage|bool|int|null|string
 	 */
-	protected function fieldFromRaw($value,$type){
-		switch($type){
+	protected function fieldFromRaw($value, $type) {
+		switch ($type) {
 			case 'int':
 			case 'integer':
 				return (int)$value;
@@ -88,158 +93,159 @@ abstract class BItemsItem{
 			case 'enum':
 				return $value;
 			case 'dt':
-				$obj=NULL;
-				if(!empty($value)){
-					$obj=new \Brilliant\BDateTime($value);
-					}
+				$obj = NULL;
+				if (!empty($value)) {
+					$obj = new \Brilliant\BDateTime($value);
+				}
 				return $obj;
 			case 'image':
-				if(empty($value)){
+				if (empty($value)) {
 					return NULL;
-					}
-				$img=new \Brilliant\Images\BImage();
-				$img->url=$value;
+				}
+				$img = new \Brilliant\Images\BImage();
+				$img->url = $value;
 				return $img;
 			case 'json':
-				if(empty($value)){
+				if (empty($value)) {
 					return NULL;
-					}
-				$obj=json_decode($value);
+				}
+				$obj = json_decode($value, true);
 				return $obj;
-			}
-		die('[BItem] fieldFromRaw() Unknown field type "'.$type.'"!');
 		}
+		die('[BItem] fieldFromRaw() Unknown field type "' . $type . '"!');
+	}
+
 	/**
 	 * Get RAW field value from DB.
 	 */
-	protected function fieldToSQL($name,$lang=''){
-		$fldname=$name;
-		if($lang!=''){
-			$fldname.='_'.$lang;
-			}
-		$db=\Brilliant\BFactory::getDBO();
-		if(!isset($this->fields[$name])){
+	protected function fieldToSQL($name, $lang = '') {
+		$fldname = $name;
+		if ($lang != '') {
+			$fldname .= '_' . $lang;
+		}
+		$db = \Brilliant\BFactory::getDBO();
+		if (!isset($this->fields[$name])) {
 			return '';
-			}
-		$type=$this->fields[$name]->type;
-		$emptynull=isset($this->fields[$name]->emptynull)?$this->fields[$name]->emptynull:false;
-		switch($type){
+		}
+		$type = $this->fields[$name]->type;
+		$emptynull = isset($this->fields[$name]->emptynull) ? $this->fields[$name]->emptynull : false;
+		switch ($type) {
 			case 'int':
 			case 'integer':
-				$value=(int)$this->{$fldname};
-				if(($emptynull)&&(empty($value))){
+				$value = (int)$this->{$fldname};
+				if (($emptynull) && (empty($value))) {
 					return 'NULL';
-					}
+				}
 				return $value;
 			case 'float':
-				$value=(float)$this->{$fldname};
-				if(($emptynull)&&(empty($value))){
+				$value = (float)$this->{$fldname};
+				if (($emptynull) && (empty($value))) {
 					return 'NULL';
-					}
+				}
 				return $value;
 			case 'itm':
 			case 'item':
-				$itemid=(int)$this->{$fldname};
-				return empty($itemid)?'NULL':$itemid;
+				$itemid = (int)$this->{$fldname};
+				return empty($itemid) ? 'NULL' : $itemid;
 			case 'bool':
 			case 'boolean':
 				return (int)$this->{$fldname};
 			case 'str':
 			case 'string':
-				$value=$this->{$fldname};
-				if(($emptynull)&&(empty($value))){
+				$value = $this->{$fldname};
+				if (($emptynull) && (empty($value))) {
 					return 'NULL';
-					}
+				}
 				return $db->escapeString($this->{$fldname});
 			case 'binary':
-				$value=$this->{$fldname};
-				if(($emptynull)&&(empty($value))){
+				$value = $this->{$fldname};
+				if (($emptynull) && (empty($value))) {
 					return 'NULL';
-					}
-				return 'UNHEX('.$db->escapeString($this->{$fldname}).')';
+				}
+				return 'UNHEX(' . $db->escapeString($this->{$fldname}) . ')';
 			case 'enum':
 				return $db->escapeString($this->{$fldname});
 			case 'dt':
-				$obj=$this->{$fldname};
-				if(!is_object($obj)){
+				$obj = $this->{$fldname};
+				if (!is_object($obj)) {
 					//return '""';
 					return 'NULL';
-					}
-				$s=$obj->format('Y-m-d H:i:s');
-				return '"'.$s.'"';
+				}
+				$s = $obj->format('Y-m-d H:i:s');
+				return '"' . $s . '"';
 			case 'image':
-				$obj=$this->{$fldname};
-				if(!is_object($obj)){
+				$obj = $this->{$fldname};
+				if (!is_object($obj)) {
 					return NULL;
-					}
+				}
 				return $db->escapeString($obj->url);
 			case 'json':
-				$obj=$this->{$fldname};
-				if(is_object($obj)){
+				$obj = $this->{$fldname};
+				if (is_object($obj)) {
 					return $db->escapeString(json_encode($obj));
-					}
-				elseif(is_array($obj)){
+				} elseif (is_array($obj)) {
 					return $db->escapeString(json_encode($obj));
-					}
-				return '""';
 				}
-		die('[BItem] fieldToSQL() Unknown field type "'.$type.'"!');
+				return '""';
 		}
+		die('[BItem] fieldToSQL() Unknown field type "' . $type . '"!');
+	}
+
 	/**
 	 *
 	 */
-	public function load($obj){
+	public function load($obj) {
 		//Load primary key / keys
-		if(is_array($this->primaryKeyName)){
-			foreach($this->primaryKeyName as $pk){
-				$this->{$pk}=$obj[$pk];
-				}
-			}else{
-			$this->{$this->primaryKeyName}=(int)$obj[$this->primaryKeyName];
+		if (is_array($this->primaryKeyName)) {
+			foreach ($this->primaryKeyName as $pk) {
+				$this->{$pk} = $obj[$pk];
 			}
+		} else {
+			$this->{$this->primaryKeyName} = (int)$obj[$this->primaryKeyName];
+		}
 		//
-		$this->isnew=false;
+		$this->isNew = false;
 		//Get languages list
-		$languages=\Brilliant\CMS\BLang::langlist();
+		$languages = \Brilliant\CMS\BLang::langlist();
 		//Process additional fields
-		foreach($this->fields as $fld){
+		foreach ($this->fields as $fld) {
 			//Multi-language field + general field
-			if($fld->multilang==2){
-				$this->{$fld->name}=$this->fieldFromRaw($obj[$fld->name],$fld->type);
-				foreach($languages as $lng){
-					$nn=$fld->name.'_'.$lng;
-					$this->$nn=$this->fieldFromRaw($obj[$nn],$fld->type);
-					}
+			if ($fld->multilang == 2) {
+				$this->{$fld->name} = $this->fieldFromRaw($obj[$fld->name], $fld->type);
+				foreach ($languages as $lng) {
+					$nn = $fld->name . '_' . $lng;
+					$this->$nn = $this->fieldFromRaw($obj[$nn], $fld->type);
 				}
-			//Simple multi-language
-			elseif($fld->multilang){
-				foreach($languages as $lng){
-					$nn=$fld->name.'_'.$lng;
-					$this->$nn=$this->fieldFromRaw($obj[$nn],$fld->type);
-					}
+			} //Simple multi-language
+			elseif ($fld->multilang) {
+				foreach ($languages as $lng) {
+					$nn = $fld->name . '_' . $lng;
+					$this->$nn = $this->fieldFromRaw($obj[$nn], $fld->type);
 				}
-			//Single language
-			else{
-				$this->{$fld->name}=$this->fieldFromRaw($obj[$fld->name],$fld->type);
-				}
+			} //Single language
+			else {
+				$this->{$fld->name} = $this->fieldFromRaw($obj[$fld->name], $fld->type);
 			}
+		}
 
 		return true;
-		}
+	}
+
 	/**
 	 * @param $obj
 	 * @param $list
 	 * @return bool
 	 */
-	protected function loadItems(&$obj,$list){
-		$arr=explode(',',$list);
-		if(!is_array($arr)){
+	protected function loadItems(&$obj, $list) {
+		$arr = explode(',', $list);
+		if (!is_array($arr)) {
 			return false;
-			}
-		foreach($arr as $itm){
-			$this->loadItem($obj,trim($itm));
-			}
 		}
+		foreach ($arr as $itm) {
+			$this->loadItem($obj, trim($itm));
+		}
+	}
+
 	/**
 	 * Load item by type
 	 *
@@ -247,47 +253,57 @@ abstract class BItemsItem{
 	 * @param $item
 	 * @return bool
 	 */
-	protected function loadItem(&$obj,$item){
-		switch($item){
-			case 'id':$this->id=(int)$obj['id']; return true;
-			case 'published': $this->published=$obj['published']; return true;
+	protected function loadItem(&$obj, $item) {
+		switch ($item) {
+			case 'id':
+				$this->id = (int)$obj['id'];
+				return true;
+			case 'published':
+				$this->published = $obj['published'];
+				return true;
 			case 'name':
-				$this->name_ru=$obj['name_ru'];
-				$this->name_ua=$obj['name_ua'];
+				$this->name_ru = $obj['name_ru'];
+				$this->name_ua = $obj['name_ua'];
 				return true;
 			case 'alias':
-				$this->alias_ru=$obj['alias_ru'];
-				$this->alias_ua=$obj['alias_ua'];
+				$this->alias_ru = $obj['alias_ru'];
+				$this->alias_ua = $obj['alias_ua'];
 				return true;
-			case 'created': $this->created=new \Brilliant\BDateTime($obj['created']); return true;
-			case 'modified': $this->modified=new \Brilliant\BDateTime($obj['modified']); return true;
-			}
+			case 'created':
+				$this->created = new \Brilliant\BDateTime($obj['created']);
+				return true;
+			case 'modified':
+				$this->modified = new \Brilliant\BDateTime($obj['modified']);
+				return true;
+		}
 		return false;
-		}
+	}
+
 	/**
 	 *
 	 */
-	protected function detectLanguage($lang){
-		if(empty($lang)){
+	protected function detectLanguage($lang) {
+		if (empty($lang)) {
 			bimport('cms.language');
-			$lang=\Brilliant\CMS\BLang::$langcode;
-			}
+			$lang = \Brilliant\CMS\BLang::$langcode;
+		}
 		return $lang;
-		}
+	}
+
 	/**
 	 *
 	 */
-	public function getlangvar($varname,$lang=''){
-		if(empty($lang)){
+	public function getlangvar($varname, $lang = '') {
+		if (empty($lang)) {
 			bimport('cms.language');
-			$lang=\Brilliant\CMS\BLang::$langcode;
+			$lang = \Brilliant\CMS\BLang::$langcode;
 			//var_dump($lang); die('a');
-			}
-		$name=$varname.'_'.$lang;
-		//var_dump($lang); die('b');
-		$result=isset($this->$name)?$this->$name:'';
-		return $result;
 		}
+		$name = $varname . '_' . $lang;
+		//var_dump($lang); die('b');
+		$result = isset($this->$name) ? $this->$name : '';
+		return $result;
+	}
 
 	/**
 	 * Set var value.
@@ -297,88 +313,88 @@ abstract class BItemsItem{
 	 * @param bool $required
 	 * @return bool
 	 */
-	public function setvarval($varname,$value,$required=false){
-		if(!isset($this->fields[$varname])){
+	public function setvarval($varname, $value, $required = false) {
+		if (!isset($this->fields[$varname])) {
 			return false;
-			}
-		$type=$this->fields[$varname]->type;
+		}
+		$type = $this->fields[$varname]->type;
 
-		switch($type){
+		switch ($type) {
 			case 'int':
 			case 'integer':
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				$this->{$varname}=(int)$value;
+				}
+				$this->{$varname} = (int)$value;
 				return true;
 			case 'float':
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				$this->{$varname}=(float)$value;
+				}
+				$this->{$varname} = (float)$value;
 				return true;
 			case 'itm':
 			case 'item':
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				$this->{$varname}=(int)$value;
+				}
+				$this->{$varname} = (int)$value;
 				return true;
 			case 'bool':
 			case 'boolean':
-				$this->{$varname}=(bool)$value;
+				$this->{$varname} = (bool)$value;
 				return true;
 			case 'str':
 			case 'string':
-				$value2=$value;
+				$value2 = $value;
 				//If the fiels is alias, that
-				if((empty($value2))&&(!empty($this->fields[$varname]->alias))){
-					$str='';
-					foreach($this->fields[$varname]->alias as $aliasfld){
-						$str.=(empty($str)?'':'-').$this->{$aliasfld};
-						}
-					$value2=\Brilliant\CMS\BLang::generatealias($str);
+				if ((empty($value2)) && (!empty($this->fields[$varname]->alias))) {
+					$str = '';
+					foreach ($this->fields[$varname]->alias as $aliasfld) {
+						$str .= (empty($str) ? '' : '-') . $this->{$aliasfld};
 					}
-				if((empty($value2))&&($required)){
+					$value2 = \Brilliant\CMS\BLang::generatealias($str);
+				}
+				if ((empty($value2)) && ($required)) {
 					return false;
-					}
-				$this->{$varname}=$value2;
+				}
+				$this->{$varname} = $value2;
 				return true;
 			case 'binary':
-				$this->{$varname}=$value;
+				$this->{$varname} = $value;
 				return true;
 			case 'enum':
 				//Check enum
-				$this->{$varname}=$value;
+				$this->{$varname} = $value;
 				return true;
 			case 'dt':
-				$obj=NULL;
-				if((empty($value))&&($required)){
+				$obj = NULL;
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				if(!empty($value)){
-					$obj=new \Brilliant\BDateTime($value);
-					}
-				$this->{$varname}=$obj;
+				}
+				if (!empty($value)) {
+					$obj = new \Brilliant\BDateTime($value);
+				}
+				$this->{$varname} = $obj;
 				return true;
 			case 'image':
 				bimport('images.single');
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				$img=new BImage();
-				$img->url=$value;
-				$this->{$varname}=$img;
+				}
+				$img = new BImage();
+				$img->url = $value;
+				$this->{$varname} = $img;
 				return true;
 			case 'json':
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				$this->{$varname}=$value;
+				}
+				$this->{$varname} = $value;
 				return true;
-			}
-		return false;
 		}
+		return false;
+	}
 
 	/**
 	 * Set var value by lang.
@@ -389,236 +405,238 @@ abstract class BItemsItem{
 	 * @param bool $required
 	 * @return bool
 	 */
-	public function setvarval_lang($varname,$value,$lang,$required=false){
-		if(!isset($this->fields[$varname])){
+	public function setvarval_lang($varname, $value, $lang, $required = false) {
+		if (!isset($this->fields[$varname])) {
 			return false;
-			}
-		$type=$this->fields[$varname]->type;
-		switch($type){
+		}
+		$type = $this->fields[$varname]->type;
+		switch ($type) {
 			case 'int':
 			case 'integer':
-				$this->{$varname.'_'.$lang}=(int)$value;
+				$this->{$varname . '_' . $lang} = (int)$value;
 				return true;
 			case 'float':
-				$this->{$varname.'_'.$lang}=(float)$value;
+				$this->{$varname . '_' . $lang} = (float)$value;
 				return true;
 			case 'itm':
 			case 'item':
-				$this->{$varname}=(int)$value;
+				$this->{$varname} = (int)$value;
 				return true;
 			case 'bool':
 			case 'boolean':
-				$this->{$varname.'_'.$lang}=(bool)$value;
+				$this->{$varname . '_' . $lang} = (bool)$value;
 				return true;
 			case 'str':
 			case 'string':
-				$value2=$value;
+				$value2 = $value;
 				//If the fiels is alias, that
-				if((empty($value2))&&(!empty($this->fields[$varname]->alias))){
-					$str='';
-					foreach($this->fields[$varname]->alias as $aliasfld){
-						$str.=(empty($str)?'':'-').$this->{$aliasfld.'_'.$lang};
-						}
-					$value2=\Brilliant\CMS\BLang::generatealias($str);
+				if ((empty($value2)) && (!empty($this->fields[$varname]->alias))) {
+					$str = '';
+					foreach ($this->fields[$varname]->alias as $aliasfld) {
+						$str .= (empty($str) ? '' : '-') . $this->{$aliasfld . '_' . $lang};
 					}
-				if((empty($value2))&&($required)){
+					$value2 = \Brilliant\CMS\BLang::generatealias($str);
+				}
+				if ((empty($value2)) && ($required)) {
 					return false;
-					}
-				$this->{$varname.'_'.$lang}=$value2;
+				}
+				$this->{$varname . '_' . $lang} = $value2;
 				return true;
 			case 'binary':
-				$this->{$varname.'_'.$lang}=$value;
+				$this->{$varname . '_' . $lang} = $value;
 				return true;
 			case 'enum':
-				$this->{$varname.'_'.$lang}=$value;
+				$this->{$varname . '_' . $lang} = $value;
 				return true;
 			case 'dt':
-				$obj=NULL;
-				if((empty($value))&&($required)){
+				$obj = NULL;
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
-				if(!empty($value)){
-					$obj=new \Brilliant\BDateTime($value);
-					}
-				$this->{$varname.'_'.$lang}=$obj;
+				}
+				if (!empty($value)) {
+					$obj = new \Brilliant\BDateTime($value);
+				}
+				$this->{$varname . '_' . $lang} = $obj;
 				return true;
 			case 'image':
-				if((empty($value))&&($required)){
+				if ((empty($value)) && ($required)) {
 					return false;
-					}
+				}
 				bimport('images.single');
-				$img=new BImage();
-				$img->url=$value;
-				$this->{$varname.'_'.$lang}=$img;
+				$img = new BImage();
+				$img->url = $value;
+				$this->{$varname . '_' . $lang} = $img;
 				return true;
 			case 'json':
 				//return json_encode($value);
 				return false;
-			}
+		}
 		return false;
-		}
-	/**
-	 *
-	 */
-	protected function getfieldsvalues(&$qr_fields,&$qr_values){
-		$qr_fields=array();
-		$qr_values=array();
-		//Get languages list
-		$languages=\Brilliant\CMS\BLang::langlist();
-		//Process additional fields
-		foreach($this->fields as $fld){
-			//Multi-language field + general field
-			if($fld->multilang===2){
-				$qr_fields[]='`'.$fld->name.'`';
-				$qr_values[]=$this->fieldToSQL($fld->name);
-				foreach($languages as $lng){
-					$qr_fields[]='`'.$fld->name.'_'.$lng.'`';
-					$qr_values[]=$this->fieldToSQL($fld->name,$lng);
-					}
-				}
-			//Simple multi-language
-			elseif($fld->multilang){
-				foreach($languages as $lng){
-					$qr_fields[]='`'.$fld->name.'_'.$lng.'`';
-					$qr_values[]=$this->fieldToSQL($fld->name,$lng);
-					}
-				}
-			//Single language
-			else{
-				$qr_fields[]='`'.$fld->name.'`';
-				$qr_values[]=$this->fieldToSQL($fld->name);
-				}
-			}
-		return true;
-		}
-	/**
-	 *
-	 */
-	protected function dbInsertQuery(){
-		$qr_fields=array();
-		$qr_values=array();
-		$this->getfieldsvalues($qr_fields,$qr_values);
-		$qr='INSERT INTO `'.$this->tableName.'` ('.implode(',',$qr_fields).') VALUES ('.implode(',',$qr_values).')';
-		return $qr;
-		}
-	/**
-	 *
-	 */
-	protected function dbupdatequery(){
-		$qr_fields=array();
-		$qr_values=array();
-		$this->getfieldsvalues($qr_fields,$qr_values);
-		$qr='UPDATE `'.$this->tableName.'` SET ';
-		$first=true;
-		foreach($qr_fields as $i=>$field){
-			$qr.=($first?'':', ').$field.'='.$qr_values[$i];
-			$first=false;
-			}
-		$qr.=' WHERE `'.$this->primaryKeyName.'`='.$this->{$this->primaryKeyName};
-		return $qr;
-		}
+	}
 
 	/**
 	 *
 	 */
-	public function updateCache(){
-		$bcache=\Brilliant\BFactory::getCache();
-		if(empty($bcache)){
-			return false;
-			}
-		$cachekey='';
-		if(is_array($this->primaryKeyName)){
-			foreach($this->primaryKeyName as $pk){
-				$pkk=$this->{$pk};
-				$cachekey.=(empty($cachekey)?'':':').$this->{$pk};
+	protected function getfieldsvalues(&$qr_fields, &$qr_values) {
+		$qr_fields = array();
+		$qr_values = array();
+		//Get languages list
+		$languages = \Brilliant\CMS\BLang::langlist();
+		//Process additional fields
+		foreach ($this->fields as $fld) {
+			//Multi-language field + general field
+			if ($fld->multilang === 2) {
+				$qr_fields[] = '`' . $fld->name . '`';
+				$qr_values[] = $this->fieldToSQL($fld->name);
+				foreach ($languages as $lng) {
+					$qr_fields[] = '`' . $fld->name . '_' . $lng . '`';
+					$qr_values[] = $this->fieldToSQL($fld->name, $lng);
 				}
-			}else{
-			$cachekey=$this->{$this->primaryKeyName};
+			} //Simple multi-language
+			elseif ($fld->multilang) {
+				foreach ($languages as $lng) {
+					$qr_fields[] = '`' . $fld->name . '_' . $lng . '`';
+					$qr_values[] = $this->fieldToSQL($fld->name, $lng);
+				}
+			} //Single language
+			else {
+				$qr_fields[] = '`' . $fld->name . '`';
+				$qr_values[] = $this->fieldToSQL($fld->name);
 			}
-		$cachekey=$this->tableName.':itemid:'.$cachekey;
+		}
+		return true;
+	}
+
+	/**
+	 *
+	 */
+	protected function dbInsertQuery() {
+		$qr_fields = array();
+		$qr_values = array();
+		$this->getfieldsvalues($qr_fields, $qr_values);
+		$qr = 'INSERT INTO `' . $this->tableName . '` (' . implode(',', $qr_fields) . ') VALUES (' . implode(',', $qr_values) . ')';
+		return $qr;
+	}
+
+	/**
+	 *
+	 */
+	protected function dbupdatequery() {
+		$qr_fields = array();
+		$qr_values = array();
+		$this->getfieldsvalues($qr_fields, $qr_values);
+		$qr = 'UPDATE `' . $this->tableName . '` SET ';
+		$first = true;
+		foreach ($qr_fields as $i => $field) {
+			$qr .= ($first ? '' : ', ') . $field . '=' . $qr_values[$i];
+			$first = false;
+		}
+		$qr .= ' WHERE `' . $this->primaryKeyName . '`=' . $this->{$this->primaryKeyName};
+		return $qr;
+	}
+
+	/**
+	 *
+	 */
+	public function updateCache() {
+		$bcache = \Brilliant\BFactory::getCache();
+		if (empty($bcache)) {
+			return false;
+		}
+		$cachekey = '';
+		if (is_array($this->primaryKeyName)) {
+			foreach ($this->primaryKeyName as $pk) {
+				$pkk = $this->{$pk};
+				$cachekey .= (empty($cachekey) ? '' : ':') . $this->{$pk};
+			}
+		} else {
+			$cachekey = $this->{$this->primaryKeyName};
+		}
+		$cachekey = $this->tableName . ':itemid:' . $cachekey;
 		$bcache->delete($cachekey);
 		return true;
-		}
+	}
 	//====================================================
 	// Run Insert query in the database & reload cache
 	// 
 	// returns true if OK and false if not
 	//====================================================
-	public function dbInsert(){
-		BLog::addToLog('[Items.Item.'.$this->tableName.']: Inserting data...');
-		if(!$db=\Brilliant\BFactory::getDBO()){
+	public function dbInsert() {
+		BLog::addToLog('[Items.Item.' . $this->tableName . ']: Inserting data...');
+		if (!$db = \Brilliant\BFactory::getDBO()) {
 			return false;
-			}
+		}
 		//Forming query...
-		$this->modified=new \Brilliant\BDateTime();
+		$this->modified = new \Brilliant\BDateTime();
 		//For import we need ability to set `created`
-		if(empty($this->created)){
-			$this->created=new \Brilliant\BDateTime();
-			}
-		$qr=$this->dbInsertQuery();
+		if (empty($this->created)) {
+			$this->created = new \Brilliant\BDateTime();
+		}
+		$qr = $this->dbInsertQuery();
 		//Running query...
-		$q=$db->query($qr);
-		if(empty($q)){
+		$q = $db->query($qr);
+		if (empty($q)) {
 			return false;
-			}
-		$this->{$this->primaryKeyName}=$db->insertId();
-		$this->isnew=false;
+		}
+		$this->{$this->primaryKeyName} = $db->insertId();
+		$this->isNew = false;
 		//Updating cache...
 		$this->updateCache();
 		//Return result
 		return true;
-		}
+	}
 	//====================================================
 	// Run Update query in the database & reload cache
 	// 
 	// returns true if OK and false if not
 	//====================================================
-	public function dbupdate(){
-		BLog::addToLog('[Items.Item.'.$this->tableName.']: Updating data...');
-		if(empty($this->id)){
+	public function dbupdate() {
+		BLog::addToLog('[Items.Item.' . $this->tableName . ']: Updating data...');
+		if (empty($this->id)) {
 			return false;
-			}
-		if(!$db=\Brilliant\BFactory::getDBO()){
+		}
+		if (!$db = \Brilliant\BFactory::getDBO()) {
 			return false;
-			}
+		}
 		//
-		$this->modified=new \Brilliant\BDateTime();
+		$this->modified = new \Brilliant\BDateTime();
 		//Get query
-		$qr=$this->dbupdatequery();
+		$qr = $this->dbupdatequery();
 		//Running query...
-		$q=$db->query($qr);
-		if(empty($q)){
+		$q = $db->query($qr);
+		if (empty($q)) {
 			return false;
-			}
+		}
 		//Updating cache...
 		$this->updateCache();
 		//Return result
 		return true;
-		}
+	}
+
 	/**
 	 *
 	 */
-	public function saveToDBTimes($limit=5){
-		$i=0;
-		$result=false;
-		while((!$result)&&($i<$limit)){
-			BLog::addToLog('[Items.Item.'.$this->tableName.']: saveToDBTimes('.$i.' / '.$limit.')');
-			$result=$this->saveToDB();
+	public function saveToDBTimes($limit = 5) {
+		$i = 0;
+		$result = false;
+		while ((!$result) && ($i < $limit)) {
+			BLog::addToLog('[Items.Item.' . $this->tableName . ']: saveToDBTimes(' . $i . ' / ' . $limit . ')');
+			$result = $this->saveToDB();
 			$i++;
-			}
-		return $result;
 		}
+		return $result;
+	}
 
 	/**
 	 * Check is and run insert or update query, reload cache.
 	 * @return bool
 	 */
-	public function saveToDB(){
-		BLog::addToLog('[Items.Item.'.$this->tableName.']: saveToDB()');
-		if($this->isnew){
+	public function saveToDB() {
+		BLog::addToLog('[Items.Item.' . $this->tableName . ']: saveToDB()');
+		if ($this->isNew) {
 			return $this->dbInsert();
-			}else{
+		} else {
 			return $this->dbupdate();
-			}
 		}
 	}
+}

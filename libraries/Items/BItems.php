@@ -10,20 +10,20 @@ namespace Brilliant\Items;
 
 use Brilliant\BFactory;
 use Brilliant\Log\BLog;
+use Brilliant\CMS\BLang;
 
 
 abstract class BItems {
 	protected $tableName = '';
 	protected $itemClassName = '';
-
-	protected $searchtablename = '';
+	protected $searchTableName = '';
 	protected $primaryKeyName = 'id';
-	protected $orderingkey = 'ordering';
-	protected $hitskey = '';
-	protected $hits_daily_table = '';
+	protected $orderingKey = 'ordering';
+	protected $hitsKey = '';
+	protected $hitsDailyTable = '';
 	protected $linkedTables = array();
-	protected $cache_items = array();
-	protected $cachetime = 3600;
+	protected $cacheItems = array();
+	protected $cacheTime = 3600;
 
 	/**
 	 * Detect necessary language, if $lang is not set.
@@ -34,8 +34,7 @@ abstract class BItems {
 	 */
 	protected function detectLanguage($lang) {
 		if (empty($lang)) {
-			bimport('cms.language');
-			$lang = \Brilliant\CMS\BLang::$langcode;
+			$lang = BLang::$langcode;
 		}
 		return $lang;
 	}
@@ -44,19 +43,22 @@ abstract class BItems {
 	 * Get sphinx / mysql database.
 	 */
 	public function getDBO() {
-		$db = \Brilliant\BFactory::getDBO();
+		$db = BFactory::getDBO();
 		return $db;
 	}
 
 	/**
-	 *
+	 * @param $tbl
 	 */
 	public function setSearchTableName($tbl) {
-		$this->searchtablename = $tbl;
+		$this->searchTableName = $tbl;
 	}
 
 	/**
 	 * Load data from db/cache array.
+	 *
+	 * @param $ids
+	 * @return array
 	 */
 	public function itemsGet($ids) {
 		if ((!is_array($ids)) || (empty($ids))) {
@@ -74,8 +76,8 @@ abstract class BItems {
 		$ids_k = array(); //IDs as external cache key
 		foreach ($ids as $id) {
 			$idd = is_array($id) ? implode(':', $id) : $id;
-			if (isset($this->cache_items[$idd])) {
-				$items[$idd] = $this->cache_items[$idd];
+			if (isset($this->cacheItems[$idd])) {
+				$items[$idd] = $this->cacheItems[$idd];
 			} else {
 				if (!empty($idd)) {
 					$items[$idd] = NULL;
@@ -91,7 +93,7 @@ abstract class BItems {
 		//-------------------------------------------------
 		//Trying to get left items from external cache
 		//-------------------------------------------------
-		$cache = \Brilliant\BFactory::getCache();
+		$cache = BFactory::getCache();
 		if (!empty($cache)) {
 			$ids_m = array();
 			$ids_q = array();
@@ -103,7 +105,7 @@ abstract class BItems {
 					$classname = $this->itemClassName;
 					$items[$idd] = new $classname();
 					$items[$idd]->load($items_c[$key]);
-					$this->cache_items[$idd] = $items[$idd];
+					$this->cacheItems[$idd] = $items[$idd];
 				} else {
 					array_push($ids_m, $id);
 					array_push($ids_q, $id);
@@ -119,7 +121,7 @@ abstract class BItems {
 		//-------------------------------------------------
 		// Trying to get left items from database
 		//-------------------------------------------------
-		$db = \Brilliant\BFactory::getDBO();
+		$db = BFactory::getDBO();
 		if (empty($db)) {
 			return $items;
 		}
@@ -199,19 +201,16 @@ abstract class BItems {
 			}
 			$items[$k] = new $classname();
 			$items[$k]->load($l);
-			$this->cache_items[$k] = $items[$k];
+			$this->cacheItems[$k] = $items[$k];
 			if (CACHE_TYPE) {
 				$tocache[$this->tableName . ':itemid:' . $k] = $l;
 			}
 		}
-		//if($this->tableName=='news_articles'){
-		//	var_dump($item_obj); die('k2');
-		//	}
 		//-------------------------------------------------
 		// Cache storing, if necessary.
 		//-------------------------------------------------
 		if ((!empty($cache)) && (count($tocache) != 0)) {
-			$cache->mset($tocache, $this->cachetime);//1 hour
+			$cache->mset($tocache, $this->cacheTime);//1 hour
 		}
 		if (DEBUG_LOG_BITEMS) {
 			BLog::addToLog('[BItems.' . $this->tableName . '] itemsGet() All done! Returning items.');
@@ -399,7 +398,7 @@ abstract class BItems {
 		}
 		//
 		if ($bcache) {
-			$bcache->set($hash, $ids, $this->cachetime);
+			$bcache->set($hash, $ids, $this->cacheTime);
 		}
 		//
 		return $ids;
@@ -436,7 +435,7 @@ abstract class BItems {
 	// 
 	// returns values by keys
 	//========================================================
-	protected function split_intcache($intcache, $keys, &$notexist) {
+	protected function splitInternalCache($intcache, $keys, &$notexist) {
 		if (!is_array($intcache)) {
 			$notexist = $keys;
 			return array();
@@ -486,7 +485,7 @@ abstract class BItems {
 	 * @return bool
 	 */
 	public function itemsDelete($ids) {
-		$db = \Brilliant\BFactory::getDBO();
+		$db = BFactory::getDBO();
 		if (empty($db)) {
 			return false;
 		}
@@ -505,7 +504,7 @@ abstract class BItems {
 	 * @return bool
 	 */
 	public function itemsUpdateOrdering($ids, $order) {
-		$db = \Brilliant\BFactory::getDBO();
+		$db = BFactory::getDBO();
 		if (empty($db)) {
 			return false;
 		}
@@ -513,9 +512,9 @@ abstract class BItems {
 		foreach ($ids as $i => $id) {
 			$values[] = '(' . $id . ',' . $i . ')';
 		}
-		$qr = 'INSERT INTO `' . $this->tableName . '` (`' . $this->primaryKeyName . '`,`' . $this->orderingkey . '`)';
+		$qr = 'INSERT INTO `' . $this->tableName . '` (`' . $this->primaryKeyName . '`,`' . $this->orderingKey . '`)';
 		$qr .= ' VALUES ' . implode(',', $values);
-		$qr .= ' ON DUPLICATE KEY UPDATE ' . $this->orderingkey . '=VALUES(' . $this->orderingkey . ')';
+		$qr .= ' ON DUPLICATE KEY UPDATE ' . $this->orderingKey . '=VALUES(' . $this->orderingKey . ')';
 		$q = $db->Query($qr);
 		if (empty($q)) {
 			return false;
@@ -527,10 +526,10 @@ abstract class BItems {
 	 * Flush internal cache.
 	 */
 	public function flushInternalCache() {
-		foreach ($this->cache_items as &$itm) {
+		foreach ($this->cacheItems as &$itm) {
 			unset($itm);
 		}
-		$this->cache_items = array();
+		$this->cacheItems = array();
 	}
 
 	/**
@@ -567,7 +566,7 @@ abstract class BItems {
 			return false;
 		}
 		$this->search_sql($params, $wh);
-		$qr = 'SELECT ' . $this->primaryKeyName . ' from `' . $this->searchtablename . '`';
+		$qr = 'SELECT ' . $this->primaryKeyName . ' from `' . $this->searchTableName . '`';
 		if (!empty($wh)) {
 			$qr .= ' where (' . implode('AND', $wh) . ')';
 		}
@@ -598,10 +597,10 @@ abstract class BItems {
 	 * Hit the item.
 	 */
 	public function hitItem($id) {
-		if (empty($this->hitskey)) {
+		if (empty($this->hitsKey)) {
 			return false;
 		}
-		$db = \Brilliant\BFactory::getDBO();
+		$db = BFactory::getDBO();
 		if (empty($db)) {
 			return false;
 		}
@@ -623,7 +622,7 @@ abstract class BItems {
 			return false;
 		}
 		$this->search_sql($params, $wh);
-		$qr = 'SELECT count(*) as cnt from `' . $this->searchtablename . '`';
+		$qr = 'SELECT count(*) as cnt from `' . $this->searchTableName . '`';
 		if (!empty($wh)) {
 			$qr .= ' where (' . implode('AND', $wh) . ')';
 		}

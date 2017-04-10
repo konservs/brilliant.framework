@@ -15,6 +15,6 @@ class View_users_users extends \Brilliant\mvc\BView{
 		$this->settitle(BLang::_('USERS_LIST_TITLE'));
 		$this->addmeta('description',BLang::_('USERS_LIST_METADESC'));
 		//$this->setlastmodified($this->article->date_modified);
-		return $this->template_load();
+		return $this->templateLoad();
 		}
 	}

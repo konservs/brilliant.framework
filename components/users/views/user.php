@@ -41,6 +41,6 @@ class View_users_user extends \Brilliant\mvc\BView{
 		if(!empty($gurl)){
 			$this->add_link(array('rel'=>'author','href'=>$gurl));
 			}
-		return $this->template_load();
+		return $this->templateLoad();
 		}
 	}

@@ -14,7 +14,7 @@ class View_users_confirm extends \Brilliant\mvc\BView{
 			$this->setLocation($data->redirect,0);
 			return $this->renderredirect();
 			}else{
-			return $this->template_load();
+			return $this->templateLoad();
 			}
 		}
 	}

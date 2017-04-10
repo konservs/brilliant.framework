@@ -25,6 +25,6 @@ class View_users_register extends \Brilliant\mvc\BView{
 		$this->errors=$data->errors;
 		$this->socloginlist=BSocialFabric::getSocialList();
 		$this->setTitle(BLang::_('USERS_REGISTRATION_TITLE'));
-		return $this->template_load();
+		return $this->templateLoad();
 		}
 	}

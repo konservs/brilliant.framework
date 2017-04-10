@@ -528,7 +528,7 @@ class BView{
 	 * @param type $absolute true means absolute name
 	 * @return string
 	 */
-	public function template_load($subname='',$absolute=false){
+	public function templateLoad($subname='', $absolute=false){
 		$this->addpathes();
 		$suffix=BBrowserUseragent::getDeviceSuffix();
 		//

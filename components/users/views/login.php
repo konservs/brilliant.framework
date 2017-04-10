@@ -32,9 +32,9 @@ class View_users_login extends \Brilliant\MVC\BView{
 				}
 			//$this->setLocation($this->redirectto,0);
 			return 'Redirecting to <a href="'.$this->redirectto.'">'.$this->redirectto.'</a>...';
-			//return $this->template_load('done');
+			//return $this->templatLoad('done');
 			}else{
-			return $this->template_load();
+			return $this->templateLoad();
 			}
 
 		}

@@ -12,6 +12,6 @@ class View_users_userpanel extends \Brilliant\mvc\BView{
 		$this->user=$data->user;
 		if(isset($data->lastmod))
 			$this->setlastmodified($data->lastmod);
-		return $this->template_load();
+		return $this->templateLoad();
 		}
 	}

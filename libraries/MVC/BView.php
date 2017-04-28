@@ -13,6 +13,9 @@ class BView {
 	public $paths;
 	public $componentname;
 	public $viewname;
+	/**
+	 * @var BController
+	 */
 	public $controller;
 	public $templatename;
 
@@ -33,14 +36,16 @@ class BView {
 	//====================================================
 	//
 	//====================================================
-	public function addpathes() {
+	public function addPathes() {
 		$this->AddPath(BTEMPLATESPATH . $this->templatename . DIRECTORY_SEPARATOR);
 		$this->AddPath(BTEMPLATESPATH . 'default' . DIRECTORY_SEPARATOR);
 	}
-	//====================================================
-	//
-	//====================================================
-	public function settitle($value) {
+
+	/**
+	 * Set title
+	 * @param $value
+	 */
+	public function setTitle($value) {
 		if (isset($this->controller)) {
 			$this->controller->title = $value;
 		}
@@ -75,10 +80,12 @@ class BView {
 			$this->controller->locationtime = $time;
 		}
 	}
-	//====================================================
-	//
-	//====================================================
-	public function setlastmodified($value) {
+
+	/**
+	 * @param $value
+	 * @return bool
+	 */
+	public function setLastModified($value) {
 		if (!isset($this->controller)) {
 			return false;
 		}
@@ -95,10 +102,13 @@ class BView {
 		}
 		return true;
 	}
-	//====================================================
-	//
-	//====================================================
-	public function addmeta($name, $content, $http_equiv = '') {
+
+	/**
+	 * @param $name
+	 * @param $content
+	 * @param string $http_equiv
+	 */
+	public function addMeta($name, $content, $http_equiv = '') {
 		if (isset($this->controller)) {
 			$this->controller->meta[] = array('name' => $name, 'http_equiv' => $http_equiv, 'content' => $content);
 		}
@@ -107,11 +117,12 @@ class BView {
 	/**
 	 * Add external CSS file or internal style.
 	 *
-	 * @param string $name
+	 * @param $name
 	 * @param string $media
 	 * @param string $data
+	 * @return bool
 	 */
-	public function add_css($name, $media = '', $data = '') {
+	public function addCss($name, $media = '', $data = '') {
 		$lnk = array();
 		$lnk['rel'] = 'stylesheet';
 		$lnk['href'] = $name;
@@ -120,15 +131,16 @@ class BView {
 		if (!empty($media)) {
 			$lnk['media'] = $media;
 		}
-		return $this->add_link($lnk);
+		return $this->addLink($lnk);
 	}
 
 	/**
 	 * Add head link tag
 	 *
-	 * @param type $array
+	 * @param $array
+	 * @return bool
 	 */
-	public function add_link($array) {
+	public function addLink($array) {
 		if (!isset($this->controller)) {
 			return false;
 		}
@@ -233,11 +245,12 @@ class BView {
 	/**
 	 * Add breadcrumbs element.
 	 *
-	 * @param type $url
-	 * @param type $name
-	 * @param type $active
-	 * @param type $class
-	 * @return boolean
+	 * @param $url
+	 * @param $name
+	 * @param bool $active
+	 * @param string $class
+	 * @param array $children
+	 * @return bool
 	 */
 	public function breadcrumbs_add($url, $name, $active = true, $class = '', $children = array()) {
 		if (!isset($this->controller)) {
@@ -509,7 +522,7 @@ class BView {
 	 * @return string
 	 */
 	public function templateLoad($subName = '', $absolute = false) {
-		$this->addpathes();
+		$this->addPathes();
 		$suffix = BBrowserUseragent::getDeviceSuffix();
 		//
 		if ($absolute) {

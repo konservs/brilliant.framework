@@ -20,8 +20,8 @@ class View_users_login extends \Brilliant\MVC\BView{
 		$this->error=$data->error;
 		$this->logged=$data->logged;
 		//Title & meta
-		$this->settitle(BLang::_('USERS_LOGIN_TITLE'));
-		$this->addmeta('description',BLang::_('USERS_LOGIN_METADESC'));
+		$this->setTitle(BLang::_('USERS_LOGIN_TITLE'));
+		$this->addMeta('description',BLang::_('USERS_LOGIN_METADESC'));
 		//
 		if($this->logged){
 			$this->redirectto=$data->redirectto;

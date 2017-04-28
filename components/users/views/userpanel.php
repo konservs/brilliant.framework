@@ -11,7 +11,7 @@ class View_users_userpanel extends \Brilliant\mvc\BView{
 	public function generate($data){
 		$this->user=$data->user;
 		if(isset($data->lastmod))
-			$this->setlastmodified($data->lastmod);
+			$this->setLastModified($data->lastmod);
 		return $this->templateLoad();
 		}
 	}

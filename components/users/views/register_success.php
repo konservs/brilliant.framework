@@ -14,7 +14,7 @@ class View_users_register_success extends \Brilliant\mvc\BView {
 	//========================================================
 	public function generate($data){
 		$this->setTitle(BLang::_('USERS_REGISTER_HTML_TITLE'));
-		$this->addmeta('description',BLang::_('USERS_REGISTER_METADESC'));
+		$this->addMeta('description',BLang::_('USERS_REGISTER_METADESC'));
 		return $this->templateLoad();
 		}
 	}

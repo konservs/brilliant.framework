@@ -17,29 +17,29 @@ class View_users_user extends \Brilliant\mvc\BView{
 		$this->user=$data->user;
 		//
 		if(empty($this->user->title)){
-			$this->settitle(BLang::sprintf('USER_PAGE_TITLE',$this->user->name));
+			$this->setTitle(BLang::sprintf('USER_PAGE_TITLE',$this->user->name));
 			}else{
-			$this->settitle($this->user->title);
+			$this->setTitle($this->user->title);
 			}
 		//Set META description
 		if(empty($this->user->metadesc)){
-			$this->addmeta('description',BLang::sprintf('USER_PAGE_DESCRIPTION',$this->user->name));
+			$this->addMeta('description',BLang::sprintf('USER_PAGE_DESCRIPTION',$this->user->name));
 			}else{
-			$this->addmeta('description',$this->user->metadesc);
+			$this->addMeta('description',$this->user->metadesc);
 			}
 		if(empty($this->user->metakeys)){
-			$this->addmeta('keywords',$this->user->name);
+			$this->addMeta('keywords',$this->user->name);
 			}else{
-			$this->addmeta('keywords',$this->user->metakeys);
+			$this->addMeta('keywords',$this->user->metakeys);
 			}
 
 		if($this->user->indexable == 'N'){
-			$this->addmeta('robots', 'noindex, nofollow');
+			$this->addMeta('robots', 'noindex, nofollow');
 			}
 		//
 		$gurl=$this->user->gplus_url();
 		if(!empty($gurl)){
-			$this->add_link(array('rel'=>'author','href'=>$gurl));
+			$this->addLink(array('rel'=>'author','href'=>$gurl));
 			}
 		return $this->templateLoad();
 		}

@@ -2,6 +2,7 @@
 namespace Brilliant\cms;
 use Brilliant\BSingleton;
 use Brilliant\log\BLog;
+use Brilliant\SQL\BMySQL;
 
 //============================================================
 // Sets of functions and classes to work with language.
@@ -119,7 +120,6 @@ class BLang{
 		if(DEBUG_MODE){
 			BLog::addToLog('[Lang]: Regenerating cache...');
 			}
-		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
 			return;
@@ -241,7 +241,6 @@ class BLang{
 	//
 	//=====================================================
 	public function save($const,$ru,$ua){
-		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
 			return NULL;

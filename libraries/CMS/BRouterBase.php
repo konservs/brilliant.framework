@@ -1143,7 +1143,7 @@ class BRouterBase{
 				}
 			if(isset($c->frameworks)){
 				foreach($c->frameworks as $framework){
-					$bhtml->use_framework($framework);
+					$bhtml->useFramework($framework);
 					}
 				}
 			//Add breadcrumbs elements

@@ -201,10 +201,10 @@ class BHTML{
 	//====================================================
 	//
 	//====================================================
-	public function use_framework($alias=''){
+	public function useFramework($alias=''){
 		require_once(BLIBRARIESAPPLICATIONPATH.'Frameworks.php');
 		$applicationFrameworks = \Application\Frameworks::getInstance();
-		$applicationFrameworks->use_framework($alias);
+		$applicationFrameworks->useFramework($alias);
 		}
 	//====================================================
 	//

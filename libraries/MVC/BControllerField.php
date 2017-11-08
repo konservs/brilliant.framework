@@ -93,7 +93,7 @@ class BControllerField{
 	 * @param string $alias the framework alias
 	 * @return boolean true if ok
 	 */
-	public function use_framework($alias){
+	public function useFramework($alias){
 		if(!isset($this->controller)){
 			return false;
 			}

@@ -5,11 +5,11 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-namespace Brilliant\cache;
+namespace Brilliant\Cache;
 
-use Brilliant\log\BLog;
+use Brilliant\Log\BLog;
 
-class BCacheMemcache extends \Brilliant\cache\BCache{
+class BCacheMemcache extends \Brilliant\Cache\BCache{
 	protected $memcache=NULL;
 	protected $memcache_ver='';
 	//================================================================================

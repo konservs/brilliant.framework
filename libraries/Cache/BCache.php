@@ -4,8 +4,8 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-namespace Brilliant\cache;
-use Brilliant\log\BLog;
+namespace Brilliant\Cache;
+use Brilliant\Log\BLog;
 
 define('DEBUG_CACHE',0);
 class BCache{

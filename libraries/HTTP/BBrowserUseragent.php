@@ -6,7 +6,7 @@
 // Author: Andrii Biriev, a@konservs.com
 // Copyright � Andrii Biriev, http://konservs.com/
 //============================================================
-namespace Brilliant\http;
+namespace Brilliant\HTTP;
 
 define('DEVICE_TYPE_UNKNOWN',0);
 define('DEVICE_TYPE_MPHONE',1);

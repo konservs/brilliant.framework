@@ -7,7 +7,7 @@
 //============================================================
 namespace Brilliant\CMS;
 
-use Brilliant\http\BRequest;
+use Brilliant\HTTP\BRequest;
 
 //Some defines...
 define('PGTYPE_GET',0);

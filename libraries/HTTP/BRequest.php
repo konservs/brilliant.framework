@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\http;
+namespace Brilliant\HTTP;
 //============================================================
 //   Sets of functions and classes to work with GET & POST
 // variables

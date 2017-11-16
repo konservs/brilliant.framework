@@ -1,6 +1,6 @@
 <?php
-namespace Brilliant\cms;
-use Brilliant\cms\BBreadcrumbs;
+namespace Brilliant\CMS;
+use Brilliant\CMS\BBreadcrumbs;
 
 /**
  * General class for inter-component breadcrumbs.

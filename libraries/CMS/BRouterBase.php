@@ -7,15 +7,15 @@
  * 
  * @author Andrii Biriev
  */
-namespace Brilliant\cms;
+namespace Brilliant\CMS;
 
 use Application\BRouter;
 use Brilliant\BFactory;
-use Brilliant\log\BLog;
-use Brilliant\cache\BCache;
-use Brilliant\sql\BMySQL;
-use Brilliant\http\BBrowserUseragent;
-use Brilliant\html\BHTML;
+use Brilliant\Log\BLog;
+use Brilliant\Cache\BCache;
+use Brilliant\Sql\BMySQL;
+use Brilliant\HTTP\BBrowserUseragent;
+use Brilliant\HTML\BHTML;
 
 define('ROUTER_DEBUG',1);
 define('CTYPE_HTML',1);

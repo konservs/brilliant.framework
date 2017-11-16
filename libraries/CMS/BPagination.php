@@ -5,7 +5,7 @@
 //
 // Author: Andrii Birev
 //============================================================
-namespace Brilliant\cms;
+namespace Brilliant\CMS;
 
 use Brilliant\http\BRequest;
 

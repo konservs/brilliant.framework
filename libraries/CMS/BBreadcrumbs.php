@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\cms;
+namespace Brilliant\CMS;
 /**
  * Sets of functions and classes to work with breadcrumbs
  * 

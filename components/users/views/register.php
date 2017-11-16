@@ -7,8 +7,8 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-use \Brilliant\cms\BLang;
-use \Brilliant\users\social\BSocialFabric;
+use \Brilliant\CMS\BLang;
+use \Brilliant\Users\Social\BSocialFabric;
 use \Application\BRouter;
 
 class View_users_register extends \Brilliant\mvc\BView{

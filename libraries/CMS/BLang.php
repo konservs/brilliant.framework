@@ -1,7 +1,7 @@
 <?php
-namespace Brilliant\cms;
+namespace Brilliant\CMS;
 use Brilliant\BSingleton;
-use Brilliant\log\BLog;
+use Brilliant\Log\BLog;
 use Brilliant\SQL\BMySQL;
 
 //============================================================

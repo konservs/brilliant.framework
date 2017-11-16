@@ -4,9 +4,9 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-namespace Brilliant\sql;
+namespace Brilliant\Sql;
 
-use Brilliant\log\BLog;
+use Brilliant\Log\BLog;
 
 class BMySQL {
 	/**

@@ -5,9 +5,9 @@
  * @author Andrii Biriev, a@konservs.com, www.konservs.com
  */
 
-namespace Brilliant\log;
-use Brilliant\log\BLogger;
-use Brilliant\log\BLog;
+namespace Brilliant\Log;
+use Brilliant\Log\BLogger;
+use Brilliant\Log\BLog;
 use Application\BRouter;
 
 class BLoggerHTML extends BLogger{

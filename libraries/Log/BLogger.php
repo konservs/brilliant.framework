@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\log;
+namespace Brilliant\Log;
 
 class BLogger{
 	/**

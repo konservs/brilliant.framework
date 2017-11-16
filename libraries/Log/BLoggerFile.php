@@ -5,8 +5,8 @@
  * @author Andrii Biriev, a@konservs.com, www.konservs.com
  */
 
-namespace Brilliant\log;
-use Brilliant\log\BLogger;
+namespace Brilliant\Log;
+use Brilliant\Log\BLogger;
 
 class BLoggerFile extends BLogger{
 	public $logsDirectory;

@@ -6,8 +6,8 @@
  *
  * @copyright © Andrii Biriev, <a@konservs.com>
  */
-namespace Brilliant\html;
-use Brilliant\log\BLog;
+namespace Brilliant\HTML;
+use Brilliant\Log\BLog;
 define('DOCTYPE_UNKNOWN',0);
 define('DOCTYPE_HTML4_TRANSITIONAL',1);
 //

@@ -13,7 +13,7 @@ use Application\BRouter;
 use Brilliant\BFactory;
 use Brilliant\Log\BLog;
 use Brilliant\Cache\BCache;
-use Brilliant\Sql\BMySQL;
+use Brilliant\SQL\BMySQL;
 use Brilliant\HTTP\BBrowserUseragent;
 use Brilliant\HTML\BHTML;
 

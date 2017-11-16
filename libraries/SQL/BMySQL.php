@@ -4,7 +4,7 @@
 //
 // Author: Andrii Biriev, b@brilliant.ua
 //============================================================
-namespace Brilliant\Sql;
+namespace Brilliant\SQL;
 
 use Brilliant\Log\BLog;
 

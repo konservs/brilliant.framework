@@ -9,7 +9,7 @@
 namespace Brilliant;
 
 use Brilliant\Log\BLog;
-use Brilliant\Sql\BMySQL;
+use Brilliant\SQL\BMySQL;
 use Brilliant\Cache\BCache;
 
 class BFactory {

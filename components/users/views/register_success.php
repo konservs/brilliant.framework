@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class View_users_register_success extends \Brilliant\mvc\BView {
+class View_users_register_success extends \Brilliant\MVC\BView {
 	//========================================================
 	// Process data, necessary for registration, set headers
 	// and load template.

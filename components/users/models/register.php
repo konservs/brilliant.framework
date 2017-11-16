@@ -11,7 +11,7 @@ use \Brilliant\Users\BUser;
 use \Brilliant\Users\BSocial;
 use \Brilliant\HTTP\BRequest;
 
-class Model_users_register extends \Brilliant\mvc\BModel {
+class Model_users_register extends \Brilliant\MVC\BModel {
 	/**
 	 * Get Data and try to registar user, if need.
 	 * @param $segments

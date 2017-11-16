@@ -1,5 +1,5 @@
 <?php
-namespace Brilliant\mvc;
+namespace Brilliant\MVC;
 /**
  * Basic component class. Allow to control models / views and some lists - 
  * additional fields & software modules. Very useful class.

@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class Model_users_users extends \Brilliant\mvc\BModel{
+class Model_users_users extends \Brilliant\MVC\BModel{
 	public function getData($segments){
 		$page=isset($segments['page'])?$segments['page']:1;
 		$page=$page-1;

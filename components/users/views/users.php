@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class View_users_users extends \Brilliant\mvc\BView{
+class View_users_users extends \Brilliant\MVC\BView{
 	public $users;
 
 	public function generate($data){

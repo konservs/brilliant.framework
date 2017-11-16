@@ -7,10 +7,10 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-use \Brilliant\users\BUsers;
-use \Brilliant\users\BUsersSession;
+use \Brilliant\Users\BUsers;
+use \Brilliant\Users\BUsersSession;
 
-class Model_users_userpanel extends \Brilliant\mvc\BModel{
+class Model_users_userpanel extends \Brilliant\MVC\BModel{
 	public function getData($segments){
 		$data=new stdClass;
 		$session=BUsersSession::getInstanceAndStart();

@@ -11,7 +11,7 @@ use \Brilliant\CMS\BLang;
 use \Brilliant\Users\Social\BSocialFabric;
 use \Application\BRouter;
 
-class View_users_register extends \Brilliant\mvc\BView{
+class View_users_register extends \Brilliant\MVC\BView{
 	public $email;
 	public $name;
 	public $errors;

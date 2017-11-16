@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class Model_users_register_success extends \Brilliant\mvc\BModel{
+class Model_users_register_success extends \Brilliant\MVC\BModel{
 	/**
 	 * Get data - no data.
 	 */

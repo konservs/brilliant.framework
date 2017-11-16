@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class View_users_confirm extends \Brilliant\mvc\BView{
+class View_users_confirm extends \Brilliant\MVC\BView{
 	public function generate($data){
 		$this->status=$data->status;
 		if($this->logged){

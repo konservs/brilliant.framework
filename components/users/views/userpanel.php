@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class View_users_userpanel extends \Brilliant\mvc\BView{
+class View_users_userpanel extends \Brilliant\MVC\BView{
 	public function generate($data){
 		$this->user=$data->user;
 		if(isset($data->lastmod))

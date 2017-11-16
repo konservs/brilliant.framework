@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class Controller_users extends \Brilliant\mvc\BController{
+class Controller_users extends \Brilliant\MVC\BController{
 	/**
 	 *
 	 */

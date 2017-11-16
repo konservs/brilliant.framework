@@ -7,7 +7,7 @@
  */
 defined('BEXEC') or die('No direct access!');
 
-class Model_users_confirm extends \Brilliant\mvc\BModel{
+class Model_users_confirm extends \Brilliant\MVC\BModel{
 	/**
 	 *
 	 */

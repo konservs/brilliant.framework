@@ -88,6 +88,24 @@ class BLang{
 			}
 		return $res;
 		}
+	/**
+	 * Function to get language translated string and replace
+	 * the 
+	 */
+	public static function __($short, $chunks){
+		$translated = self::_($short);
+		foreach($chunks as $k=>$v){
+			$translated = str_replace('%'.$k.'%', $v, $translated);
+			}
+		return $translated;
+		}
+	/**
+	 *  
+	 */
+	public static function html($short, $chunks){
+		return htmlspecialchars(self::__($short, $chunks));
+		}
+
 	//=====================================================
 	//
 	//=====================================================

@@ -110,7 +110,7 @@ class BHTML{
 	 * 
 	 * @param type $style
 	 */
-	public function add_css_declaration($style){
+	public function addCSSDeclaration($style){
 		$this->style[]=$style;
 		}
 	/**
@@ -121,14 +121,14 @@ class BHTML{
 	 * with less priority will be loaded before
 	 * @return boolean true if ok
 	 */
-	public function load_css($file,$priority=100){
+	public function loadCSS($file,$priority=100){
 		if(!file_exists($file)){
 			BLog::addToLog('[HTML]: Could not load css file, because it does not exists!',LL_ERROR);
 			return false;
 			}
 		$src=file_get_contents($file);
 		if(!empty($src)){
-			$this->add_css_declaration($src);
+			$this->addCSSDeclaration($src);
 			}
 		return true;
 		}
@@ -138,7 +138,7 @@ class BHTML{
 	 * @param type $name
 	 * @param type $media
 	 */
-	public function add_css($name,$media=''){
+	public function addCSS($name,$media=''){
 		$lnk=array();
 		$lnk['rel']='stylesheet';
 		$lnk['href']=$name;
@@ -176,7 +176,7 @@ class BHTML{
 				if(DEBUG_MODE){
 					BLog::addToLog('[BHTML]: The CSS is actual!');
 					}
-				$this->add_css($name,$media);
+				$this->addCSS($name,$media);
 				return true;
 				}
 			}
@@ -195,7 +195,7 @@ class BHTML{
 		$css = $parser->getCss();
 		//TODO caching css
 		file_put_contents($filename.'.css',$css);
-		$this->add_css($name,$media);
+		$this->addCSS($name,$media);
 		return true;
 		}
 	//====================================================
@@ -209,7 +209,7 @@ class BHTML{
 	//====================================================
 	//
 	//====================================================
-	public function add_js($src,$val='',$priority=100){
+	public function addJS($src,$val='',$priority=100){
 		$this->js[]=array(
 			'src' => $src,
 			'val' => $val,
@@ -363,7 +363,7 @@ class BHTML{
 			'	}else{'.PHP_EOL.
 			'	window.onload=lazy_initall;'.PHP_EOL.
 			'	}'.PHP_EOL;
-		$html->add_js('',$js);
+		$html->addJS('',$js);
 		}
 	/**
 	 * Output the head of the document

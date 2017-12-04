@@ -80,7 +80,7 @@ class BControllerField{
 	 * 
 	 * @return bool true if ok
 	 */
-	public function add_js($file,$src='',$priority=100){
+	public function addJS($file,$src='',$priority=100){
 		if(!isset($this->controller)){
 			return false;
 			}
@@ -107,7 +107,7 @@ class BControllerField{
 	 * @param int $priority
 	 * @return boolean
 	 */
-	public function load_js($file,$priority=100){
+	public function loadJS($file,$priority=100){
 		if(!isset($this->controller)){
 			if(DEBUG_MODE){
 				BDebug::error('[MVC.View]: Could not load js file, because controller is empty!');
@@ -131,7 +131,7 @@ class BControllerField{
 	 * with less priority will be loaded before
 	 * @return boolean true if ok
 	 */
-	public function load_css($file,$priority=100){
+	public function loadCSS($file,$priority=100){
 		if(!isset($this->controller)){
 			if(DEBUG_MODE){
 				BDebug::error('[MVC.View]: Could not load css file, because controller is empty!');
@@ -146,7 +146,7 @@ class BControllerField{
 			}
 		$src=file_get_contents($file);
 		if(!empty($src)){
-			$this->add_css_declaration($src);
+			$this->addCSSDeclaration($src);
 			}
 		return true;
 		}
@@ -156,7 +156,7 @@ class BControllerField{
 	 * @param string $style
 	 * @return boolean
 	 */
-	public function add_css_declaration($style){
+	public function addCSSDeclaration($style){
 		if(!isset($this->controller)){
 			return false;
 			}
@@ -170,7 +170,7 @@ class BControllerField{
 	 * @param string $media
 	 * @param string $data
 	 */
-	public function add_css($name,$media='',$data=''){
+	public function addCSS($name,$media='',$data=''){
 		$lnk=array();
 		$lnk['rel']='stylesheet';
 		$lnk['href']=$name;

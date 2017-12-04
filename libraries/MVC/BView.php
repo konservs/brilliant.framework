@@ -154,7 +154,7 @@ class BView {
 	 * @param int $priority
 	 * @return bool
 	 */
-	public function add_js($file, $src = '', $priority = 100) {
+	public function addJS($file, $src = '', $priority = 100) {
 		if (!isset($this->controller)) {
 			return false;
 		}
@@ -183,7 +183,7 @@ class BView {
 	 * @param int $priority
 	 * @return boolean
 	 */
-	public function load_js($file, $priority = 100) {
+	public function loadJS($file, $priority = 100) {
 		if (!isset($this->controller)) {
 			if (DEBUG_MODE) {
 				BLog::addToLog('[MVC.View]: Could not load js file, because controller is empty!', LL_ERROR);
@@ -208,7 +208,7 @@ class BView {
 	 * with less priority will be loaded before
 	 * @return boolean true if ok
 	 */
-	public function load_css($file, $priority = 100) {
+	public function loadCSS($file, $priority = 100) {
 		if (!isset($this->controller)) {
 			if (DEBUG_MODE) {
 				BLog::addToLog('[MVC.View]: Could not load css file, because controller is empty!', LL_ERROR);
@@ -223,7 +223,7 @@ class BView {
 		}
 		$src = file_get_contents($file);
 		if (!empty($src)) {
-			$this->add_css_declaration($src);
+			$this->addCSSDeclaration($src);
 		}
 		return true;
 	}
@@ -234,7 +234,7 @@ class BView {
 	 * @param string $style
 	 * @return boolean
 	 */
-	public function add_css_declaration($style) {
+	public function addCSSDeclaration($style) {
 		if (!isset($this->controller)) {
 			return false;
 		}

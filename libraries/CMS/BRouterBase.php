@@ -1132,13 +1132,13 @@ class BRouterBase{
 						$jsused[$js['file']]=1;
 						}
 					if(!$wasused){
-						$bhtml->add_js($js['file'],$js['src'],$js['priority']);
+						$bhtml->addJS($js['file'],$js['src'],$js['priority']);
 						}
 					}
 				}
 			if(isset($c->style)){
 				foreach($c->style as $st){
-					$bhtml->add_css_declaration($st);
+					$bhtml->addCSSDeclaration($st);
 					}
 				}
 			if(isset($c->frameworks)){

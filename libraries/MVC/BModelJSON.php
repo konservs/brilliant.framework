@@ -2,18 +2,18 @@
 /**
  *
  */
-defined('BEXEC') or die('No direct access!');
-bimport('mvc.component');
-bimport('mvc.model');
+namespace Brilliant\MVC;
 
-abstract class BModelJSON extends BModel{
+defined('BEXEC') or die('No direct access!');
+
+abstract class BModelJSON extends \Brilliant\MVC\BModel{
 	protected $error;
 	protected $json;
 	/**
 	 * @param $segments
 	 * @return bool
 	 */
-	abstract protected function getDataJson($segments);
+	abstract protected function getDataJson($segments, &$json);
 	/**
 	 * Get data
 	 *
@@ -21,10 +21,9 @@ abstract class BModelJSON extends BModel{
 	 * @return stdClass
 	 */
 	public function getData($segments){
-		$data=new stdClass();
-		$this->json=new stdClass();
-
-		$this->getDataJson($segments);
+		$data=new \stdClass();
+		$this->json=new \stdClass();
+		$this->getDataJson($segments, $this->json);
 
 		$data->error=$this->error;
 		$data->json=$this->json;

@@ -873,6 +873,12 @@ class BRouterBase{
 		if(!file_exists($fn)){
 			$fn=BTEMPLATESPATH.$this->templatename.DIRECTORY_SEPARATOR.'#error_'.$page.'.d.php';
 			}
+		if((!file_exists($fn))&&($this->templatename!='default')){
+			$fn=BTEMPLATESPATH.'default'.DIRECTORY_SEPARATOR.'#error_'.$page.$suffix.'.php';
+			}
+		if((!file_exists($fn))&&($this->templatename!='default')){
+			$fn=BTEMPLATESPATH.'default'.DIRECTORY_SEPARATOR.'#error_'.$page.'.d.php';
+			}
 		//Outputing the template
 		if(file_exists($fn)){
 			include($fn);

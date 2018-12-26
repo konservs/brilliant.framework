@@ -61,6 +61,16 @@ class BRouterBase{
 		$this->router=array();
 		}
 	/**
+	 * Router constructor
+	 * Init microtime, fill some default values
+	 */
+	function __construct() {
+		$starttime = explode(' ', microtime());
+		self::$starttime = $starttime[1] + $starttime[0];
+		//
+		$this->router=array();
+		}
+	/**
 	 * Get current page generation time. Using this for profiling.
 	 * 
 	 * @return int count of microseconds
@@ -898,6 +908,7 @@ class BRouterBase{
 		if(ROUTER_DEBUG){
 			BLog::addToLog('[Router]: Router started! URL='.$URL.'; host='.$host);
 			}
+		$this->init();
 		//bimport('ip.ban');
 		//$r=BIpBan::check();
 		//if($r===false){

@@ -363,7 +363,7 @@ class BHTML{
 			'	}else{'.PHP_EOL.
 			'	window.onload=lazy_initall;'.PHP_EOL.
 			'	}'.PHP_EOL;
-		$html->addJS('',$js);
+		$this->addJS('',$js);
 		}
 	/**
 	 * Output the head of the document

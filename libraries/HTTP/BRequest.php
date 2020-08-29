@@ -181,4 +181,11 @@ class BRequest{
 			}
 		return $result;
 		}
+	/**
+	 * Get raw POST data.
+	 */
+	public static function getInputString(){
+		$s=file_get_contents('php://input');
+		return $s;
+		}
 	}

@@ -1009,6 +1009,7 @@ class BRouterBase{
 			if(!file_exists($fn)){
 				$fn='';
 			}
+                        $componentroot=$path.$cname;
 		}
 		if(!file_exists($fn)){
 			BLog::addToLog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);
@@ -1023,6 +1024,7 @@ class BRouterBase{
 			}
 		$controller=new $class();
 		$controller->componentname=$cname;
+                $controller->componentroot=$componentroot;
 		return $controller;
 		}
 	/**

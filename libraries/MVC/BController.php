@@ -35,6 +35,7 @@ class BController{
 		$this->js=array();
 		$this->style=array();
 		$this->frameworks=array();
+		$this->componentroot='';
 		}
 	/**
 	 * Load fields objects by component & field type
@@ -113,10 +114,7 @@ class BController{
 			bimport('mvc.model');
 			return new BModel();
 			}
-		$fn=BCOMPONENTSAPPLICATIONPATH.$this->componentname.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
-		if(!file_exists($fn)){
-			$fn=BCOMPONENTSFRAMEWORKPATH.$this->componentname.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
-			}
+		$fn=$this->componentroot.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';
 		$class='Model_'.$this->componentname.'_'.$mdlname;
 		if(!file_exists($fn)){
 			echo('File "'.$fn.'" does not exist!');
@@ -134,10 +132,7 @@ class BController{
 	 * @return null|\BView
 	 */
 	public function LoadView($viewname){
-		$fn=BCOMPONENTSAPPLICATIONPATH.$this->componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
-		if(!file_exists($fn)){
-			$fn=BCOMPONENTSFRAMEWORKPATH.$this->componentname.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
-			}
+		$fn=$this->componentroot.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$viewname.'.php';
 		$class='View_'.$this->componentname.'_'.$viewname;
 		if(!file_exists($fn)){
 			return NULL;

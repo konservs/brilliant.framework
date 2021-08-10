@@ -59,39 +59,38 @@ class BRouterBase{
 		self::$starttime = $starttime[1] + $starttime[0];
 		//
 		$this->router=array();
-		}
-	/**
-	 * Router constructor
-	 * Init microtime, fill some default values
-	 */
-	function __construct() {
-		$starttime = explode(' ', microtime());
-		self::$starttime = $starttime[1] + $starttime[0];
-		//
-		$this->router=array();
+		$this->components_paths=array();
                 //
-		$this->components_paths=[];
-		if((BCOMPONENTSFRAMEWORKPATH)&&(BCOMPONENTSFRAMEWORKPATH!=='BCOMPONENTSFRAMEWORKPATH')){
-			array_push($this->components_paths, BCOMPONENTSFRAMEWORKPATH);
-		}
+		#if((BCOMPONENTSFRAMEWORKPATH)&&(BCOMPONENTSFRAMEWORKPATH!=='BCOMPONENTSFRAMEWORKPATH')){
+		#	array_push($this->components_paths, BCOMPONENTSFRAMEWORKPATH);
+		#}
 		if((BCOMPONENTSAPPLICATIONPATH)&&(BCOMPONENTSAPPLICATIONPATH!=='BCOMPONENTSAPPLICATIONPATH')){
 			array_push($this->components_paths, BCOMPONENTSAPPLICATIONPATH);
 		}
-		$bl=['__root__' => 1];
 		if(class_exists('\Composer\InstalledVersions')){
+			$bl=[];
 			$libraries = \Composer\InstalledVersions::getInstalledPackagesByType('library');
 			foreach ($libraries as $lib){
 				if(!$bl[$lib]){
 					$root = \Composer\InstalledVersions::getInstallPath($lib);
 					$components_root = $root.DIRECTORY_SEPARATOR.'components';
-					$controller_file = $components_root.DIRECTORY_SEPARATOR.'controller.php';
-					if((is_dir($components_root))&&(file_exists($controller_file))){
+					if(is_dir($components_root)){
 						array_push($this->components_paths, $components_root.DIRECTORY_SEPARATOR);
 					}
 				$bl[$lib] = 1;
 				}
 			}
 		}
+		if(ROUTER_DEBUG){
+			BLog::addToLog('[Router]: $this->components_paths=['.var_export($this->components_paths,true).']');
+		}
+	}
+	/**
+	 * Router constructor
+	 * Init microtime, fill some default values
+	 */
+	function __construct() {
+		$this->init();
 	}
 	/**
 	 * Get current page generation time. Using this for profiling.
@@ -1001,6 +1000,10 @@ class BRouterBase{
 	public function component_load($cname){
 		//Trying to include component controller file...
 		$fn='';
+		if(!is_array($this->components_paths)){
+			BLog::addToLog('[Router]: incorrect components_paths variable ('.var_export($this->components_paths, true).')!',LL_ERROR);
+			return NULL;
+		}
 		foreach($this->components_paths as $path){
 			$fn=$path.$cname.DIRECTORY_SEPARATOR.'controller.php';
 			if(!file_exists($fn)){

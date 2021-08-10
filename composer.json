@@ -1,8 +1,9 @@
 {
 	"name": "konservs/brilliant.framework",
 	"description": "PHP framework to build websites and web applications.",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"type": "library",
+	"composer-runtime-api": "^2.0",
 	"keywords": ["framework", "brilliant"],
 	"homepage": "https://github.com/konservs/brilliant.framework",
 	"license": "MIT",

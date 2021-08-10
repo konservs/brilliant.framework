@@ -69,7 +69,30 @@ class BRouterBase{
 		self::$starttime = $starttime[1] + $starttime[0];
 		//
 		$this->router=array();
+                //
+		$this->components_paths=[];
+		if((BCOMPONENTSFRAMEWORKPATH)&&(BCOMPONENTSFRAMEWORKPATH!=='BCOMPONENTSFRAMEWORKPATH')){
+			array_push($this->components_paths, BCOMPONENTSFRAMEWORKPATH);
 		}
+		if((BCOMPONENTSAPPLICATIONPATH)&&(BCOMPONENTSAPPLICATIONPATH!=='BCOMPONENTSAPPLICATIONPATH')){
+			array_push($this->components_paths, BCOMPONENTSAPPLICATIONPATH);
+		}
+		$bl=['__root__' => 1];
+		if(class_exists('\Composer\InstalledVersions')){
+			$libraries = \Composer\InstalledVersions::getInstalledPackagesByType('library');
+			foreach ($libraries as $lib){
+				if(!$bl[$lib]){
+					$root = \Composer\InstalledVersions::getInstallPath($lib);
+					$components_root = $root.DIRECTORY_SEPARATOR.'components';
+					$controller_file = $components_root.DIRECTORY_SEPARATOR.'controller.php';
+					if((is_dir($components_root))&&(file_exists($controller_file))){
+						array_push($this->components_paths, $components_root.DIRECTORY_SEPARATOR);
+					}
+				$bl[$lib] = 1;
+				}
+			}
+		}
+	}
 	/**
 	 * Get current page generation time. Using this for profiling.
 	 * 
@@ -977,10 +1000,13 @@ class BRouterBase{
 	 */
 	public function component_load($cname){
 		//Trying to include component controller file...
-		$fn=BCOMPONENTSFRAMEWORKPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
-		if(!file_exists($fn)){
-			$fn=BCOMPONENTSAPPLICATIONPATH.$cname.DIRECTORY_SEPARATOR.'controller.php';
+		$fn='';
+		foreach($this->components_paths as $path){
+			$fn=$path.$cname.DIRECTORY_SEPARATOR.'controller.php';
+			if(!file_exists($fn)){
+				$fn='';
 			}
+		}
 		if(!file_exists($fn)){
 			BLog::addToLog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);
 			return NULL;

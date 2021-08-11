@@ -1005,11 +1005,11 @@ class BRouterBase{
 			return NULL;
 		}
 		foreach($this->components_paths as $path){
-			$fn=$path.$cname.DIRECTORY_SEPARATOR.'controller.php';
-			if(!file_exists($fn)){
-				$fn='';
+			$controllerfn=$path.$cname.DIRECTORY_SEPARATOR.'controller.php';
+			if(file_exists($controllerfn)){
+				$fn=$controllerfn;
+	                        $componentroot=$path.$cname;
 			}
-                        $componentroot=$path.$cname;
 		}
 		if(!file_exists($fn)){
 			BLog::addToLog('[Router]: Could not load component ('.$cname.')!',LL_ERROR);

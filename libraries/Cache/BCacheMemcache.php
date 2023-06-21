@@ -23,9 +23,18 @@ class BCacheMemcache extends \Brilliant\Cache\BCache{
 					}
 				return NULL;
 				}
-			$this->memcache=new Memcache();
+			$this->memcache=new \Memcache();
 			$mc=$this->memcache;
-			$mc->connect("127.0.0.1",11211);
+			$host = '127.0.0.1';
+			if(defined('BCACHE_MEMCACHE_HOST')){
+				$host = BCACHE_MEMCACHE_HOST;
+			}
+			$port = 11211;
+			if(defined('BCACHE_MEMCACHE_PORT')){
+				$port = BCACHE_MEMCACHE_PORT;
+			}
+			$mc->connect($host, $port);
+
 			$this->memcache_ver=$mc->getVersion();
 			if(empty($this->memcache_ver)){
 				unset($this->memcache);

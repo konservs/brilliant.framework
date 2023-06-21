@@ -14,17 +14,6 @@ trait BSingleton{
 	/**
 	 *
 	 */
-	final public function __construct() {
-		$this->init();
-		}
-	/**
-	 *
-	 */
-	protected function init(){
-		}
-	/**
-	 *
-	 */
 	final private function __wakeup(){
 		}
 	/**

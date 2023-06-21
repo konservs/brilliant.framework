@@ -23,15 +23,15 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 				return NULL;
 				}
 			if(DEBUG_MODE){
-				BDebug::message('Memcached]: Connecting to memcached server...');
+				BLog::addToLog('Memcached]: Connecting to memcached server...');
 				}
-			$this->memcached=new Memcached();
+			$this->memcached=new \Memcached();
 			$mc=$this->memcached;
 			$mc->addServer("127.0.0.1",11211);
 			$mc->setOption(Memcached::OPT_BINARY_PROTOCOL,true);
 			$this->memcached_ver=$mc->getVersion();
 			if(DEBUG_MODE){
-				BDebug::message('[Memcached]: ver='.var_export($this->memcached_ver,true));
+				BLog::addToLog('[Memcached]: ver='.var_export($this->memcached_ver,true));
 				}
 			}
 		return $this->memcached;
@@ -41,7 +41,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function get($key){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: Get key('.$key.')');
+			BLog::addToLog('[Memcached]: Get key('.$key.')');
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc))return NULL;
@@ -53,7 +53,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function mget($keys){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: Mget keys('.implode(' | ',$keys).')');
+			BLog::addToLog('[Memcached]: Mget keys('.implode(' | ',$keys).')');
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc))return NULL;
@@ -65,7 +65,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function set($key,$value,$expired){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: Set key('.$key.')');
+			BLog::addToLog('[Memcached]: Set key('.$key.')');
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc))return false;
@@ -77,7 +77,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function mset($values,$expired){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: MSet'.var_export($values,true));
+			BLog::addToLog('[Memcached]: MSet'.var_export($values,true));
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc))return false;
@@ -89,7 +89,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function delete($key){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: Delete key('.$key.')');
+			BLog::addToLog('[Memcached]: Delete key('.$key.')');
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc))return false;
@@ -101,7 +101,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function mdelete($keys){
 		/*if(DEBUG_MODE){
-			BDebug::message('[Memcached]: MSet'.var_export($values,true));
+			BLog::addToLog('[Memcached]: MSet'.var_export($values,true));
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc)){
@@ -115,7 +115,7 @@ class BCacheMemcached extends \Brilliant\Cache\BCache{
 	//================================================================================
 	public function invalidate(){
 		if(DEBUG_MODE){
-			BDebug::message('[Memcached]: Delete key('.$key.')');
+			BLog::addToLog('[Memcached]: Delete key('.$key.')');
 			}
 		$mc=$this->getMemcached();
 		if(empty($mc)){

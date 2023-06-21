@@ -31,8 +31,6 @@ define('CTYPE_REDIRECT302',11);
 if(!defined(DEBUG_PAGES_CACHE)){
 	define(DEBUG_PAGES_CACHE,1);
 	}
-//bimport('log.general');
-
 //Router Class
 class BRouterBase{
 	public $url;
@@ -172,7 +170,6 @@ class BRouterBase{
 	public function parse_adminurl($f_path){
 		$this->templatename='admin';
 		$admincomname='admin';
-		bimport('adminusers.general');
 		$badminusers=BAdminUsers::getInstance();
 		$segments=array();
 		$me=$badminusers->get_logged_user();
@@ -931,7 +928,6 @@ class BRouterBase{
 			BLog::addToLog('[Router]: Router started! URL='.$URL.'; host='.$host);
 			}
 		$this->init();
-		//bimport('ip.ban');
 		//$r=BIpBan::check();
 		//if($r===false){
 		//	header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden');
@@ -1196,7 +1192,6 @@ class BRouterBase{
 				}
 			//Add breadcrumbs elements
 			if(isset($c->breadcrumbs)){
-				bimport('cms.breadcrumbs');
 				$gbc=BGeneralBreadcrumbs::getInstance();
 				foreach($c->breadcrumbs as $bc){
 					$gbc->elements[]=$bc;

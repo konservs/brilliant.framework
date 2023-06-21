@@ -184,7 +184,6 @@ class BHTML{
 		if(DEBUG_MODE){
 			BLog::addToLog('[BHTML]: Time to compile CSS!');
 			}
-		bimport('html.less.Less');
 		$options=array();
 		$options['compress']=true;
 		if(DEBUG_MODE){

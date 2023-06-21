@@ -33,7 +33,6 @@ class BSoftModule{
 	//
 	//===================================================
 	public function updatecache(){
-		bimport('cache.general');
 		$bcache=BCache::getInstance();
 		if(empty($this->group)){
 			$sm=BSoftModules::getInstance();
@@ -69,7 +68,6 @@ class BSoftModule{
 		if(!empty($err)){
 			return $err;
 			}
-		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
 		if(!empty($this->id)){
 			$qr='update soft_modules_rules set';
@@ -109,7 +107,6 @@ class BSoftModule{
 		return $this;
 		}
 	public function delete(){
-		bimport('sql.mysql');
 		$db=BMySQL::getInstanceAndConnect();
 		$qr='delete from `soft_modules_rules` where id='.$this->id;
 		$q=$db->Query($qr);

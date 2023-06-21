@@ -30,11 +30,9 @@ class BCache{
 					self::$instance=new \Brilliant\Cache\BCacheFiles();
 					break;
 				case 'memcache':
-					bimport('cache.memcache');
 					self::$instance=new \Brilliant\Cache\BCacheMemcache();
 					break;
 				case 'memcached':
-					bimport('cache.memcached');
 					self::$instance=new \Brilliant\Cache\BCacheMemcached();
 					break;
 				default:

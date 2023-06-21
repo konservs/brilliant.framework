@@ -284,7 +284,6 @@ abstract class BItemsItem {
 	 */
 	protected function detectLanguage($lang) {
 		if (empty($lang)) {
-			bimport('cms.language');
 			$lang = \Brilliant\CMS\BLang::$langcode;
 		}
 		return $lang;
@@ -295,7 +294,6 @@ abstract class BItemsItem {
 	 */
 	public function getlangvar($varname, $lang = '') {
 		if (empty($lang)) {
-			bimport('cms.language');
 			$lang = \Brilliant\CMS\BLang::$langcode;
 			//var_dump($lang); die('a');
 		}
@@ -378,7 +376,6 @@ abstract class BItemsItem {
 				$this->{$varname} = $obj;
 				return true;
 			case 'image':
-				bimport('images.single');
 				if ((empty($value)) && ($required)) {
 					return false;
 				}
@@ -462,7 +459,6 @@ abstract class BItemsItem {
 				if ((empty($value)) && ($required)) {
 					return false;
 				}
-				bimport('images.single');
 				$img = new BImage();
 				$img->url = $value;
 				$this->{$varname . '_' . $lang} = $img;

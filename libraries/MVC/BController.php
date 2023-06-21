@@ -111,7 +111,6 @@ class BController{
 	 */
 	public function LoadModel($mdlname=''){
 		if(empty($mdlname)){
-			bimport('mvc.model');
 			return new BModel();
 			}
 		$fn=$this->componentroot.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.$mdlname.'.php';

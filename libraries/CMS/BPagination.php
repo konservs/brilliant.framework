@@ -266,7 +266,6 @@ class BPagination{
 		//Load pagination template
 		$brouter=BRouter::getInstance();
 		$template=$brouter->templatename;
-		bimport('http.useragent');
 		$suffix=BBrowserUseragent::getDeviceSuffix();
 		if(!empty($tpl)){
 			$tpl='.'.$tpl;

@@ -560,7 +560,6 @@ abstract class BItems {
 	 *
 	 */
 	public function searchIds($params) {
-		bimport('search.sphinx.sphinxql');
 		$spx = BSearchSphinxQl::getInstanceAndConnect();
 		if (empty($spx)) {
 			return false;
@@ -616,7 +615,6 @@ abstract class BItems {
 	 *
 	 */
 	public function search_count($params) {
-		bimport('search.sphinx.sphinxql');
 		$spx = BSearchSphinxQl::getInstanceAndConnect();
 		if (empty($spx)) {
 			return false;

@@ -5,8 +5,7 @@
 //
 // Author: Andrii Biriev
 //============================================================
-bimport('softmodules.single');
-bimport('softmodules.group');
+
 //============================================================
 // General class
 //============================================================
@@ -84,7 +83,6 @@ class BSoftModules{
 			return $this->groups[$id];
 		//Trying to get Soft Modules groups from external cache...
 		if(CACHE_TYPE){
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			$data=$bcache->get('softmodules:groups:id:'.$id);
 			if($data!==false){
@@ -94,7 +92,6 @@ class BSoftModules{
 				}
 			}
 		//
-		bimport('sql.mysql');		
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
 			BLog::addToLog('BSoftModules: Could not connect to the database!',LL_ERROR);
@@ -117,7 +114,6 @@ class BSoftModules{
 		if(CACHE_TYPE){
 			$id=(int)$l['id'];
 			$alias=$l['alias'];
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			$data=$bcache->set('softmodules:groups:id:'.$id,$l,3600);
 			$data=$bcache->set('softmodules:groups:alias:'.$alias,$l,3600);
@@ -136,7 +132,6 @@ class BSoftModules{
 				return $g;
 		//Trying to get Soft Modules groups from external cache...
 		if(CACHE_TYPE){
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			$data=$bcache->get('softmodules:groups:alias:'.$alias);
 			if($data!==false){
@@ -146,7 +141,6 @@ class BSoftModules{
 				}
 			}
 		//
-		bimport('sql.mysql');		
 		$db=BMySQL::getInstanceAndConnect();
 		if(empty($db)){
 			BLog::addToLog('BSoftModules: Could not connect to the database!',LL_ERROR);
@@ -169,7 +163,6 @@ class BSoftModules{
 		if(CACHE_TYPE){
 			$id=(int)$l['id'];
 			$alias=$l['alias'];
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			$data=$bcache->set('softmodules:groups:id:'.$id,$l,3600);
 			$data=$bcache->set('softmodules:groups:alias:'.$alias,$l,3600);
@@ -228,10 +221,8 @@ class BSoftModules{
 			}
 		$id=false;
 		$external_cache=NULL;
-		bimport('http.useragent');
 		$suffix=BBrowserUseragent::getDeviceSuffix();
 		if(CACHE_TYPE){
-			bimport('cache.general');
 			$bcache=BCache::getInstance();
 			$rules=$bcache->get('softmodules:rules:'.$alias.$suffix);
 			}

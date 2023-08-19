@@ -134,7 +134,7 @@ class BLang{
 	//=====================================================
 	//
 	//=====================================================
-	public function regeneratecache(){
+	public static function regeneratecache(){
 		if(DEBUG_MODE){
 			BLog::addToLog('[Lang]: Regenerating cache...');
 			}
@@ -268,7 +268,7 @@ class BLang{
 		if(empty($q)){
 			return false;
 		}
-		$this->regeneratecache();
+		self::regeneratecache();
 	}
 	//=====================================================
 	//

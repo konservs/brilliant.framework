@@ -14,11 +14,11 @@ trait BSingleton{
 	/**
 	 *
 	 */
-	final private function __wakeup(){
+	final public function __wakeup(){
 		}
 	/**
-	 *
+	 * Protecting from cloning
 	 */
-	final private function __clone(){
+	final public function __clone(){
 		}
 	}

@@ -69,7 +69,7 @@ class BRouterBase{
 			$bl=[];
 			$libraries = \Composer\InstalledVersions::getInstalledPackagesByType('library');
 			foreach ($libraries as $lib){
-				if(!$bl[$lib]){
+				if(!array_key_exists($lib, $bl)){
 					$root = \Composer\InstalledVersions::getInstallPath($lib);
 					$components_root = realpath($root.DIRECTORY_SEPARATOR.'components');
 					if(is_dir($components_root)){
